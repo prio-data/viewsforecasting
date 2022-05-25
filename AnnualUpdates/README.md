@@ -1,0 +1,1 @@
+This folder contains resources related to the annual or irregular update cycles of the ViEWS forecasts, such as our model weighting and evaluation procedures, as well as documentation of our surrogate models (analytics/interpretation tools).
