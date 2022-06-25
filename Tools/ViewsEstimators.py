@@ -105,7 +105,6 @@ class HurdleRegression(BaseEstimator):
         check_is_fitted(self, 'is_fitted_')
         return self.clf_.predict_proba(X)[:, 1] * self.reg_.predict(X)
 
-
 def manual_test():
     """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
     check_estimator(HurdleRegression)
