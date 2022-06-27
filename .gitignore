@@ -1,6 +1,7 @@
 # ignore ALL .p pickle and .pyc files
 *.p
 *.pyc
+*/.DS_Store
 
 # ignore ALL files in ANY directory named:
 memos/
