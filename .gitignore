@@ -1,6 +1,7 @@
-# ignore ALL .p pickle files
+# ignore ALL .p pickle and .pyc files
 *.p
+*.pyc
 
-# ignore ALL files in ANY directory named temp
+# ignore ALL files in ANY directory named:
 memos/
 exploration_pickle/
