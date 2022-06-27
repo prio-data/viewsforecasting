@@ -313,7 +313,7 @@ qs = (Queryset("hh_fatalities_topic", "country_month")
 
 data = qs.publish().fetch()
 
-print(f"hh_fatalities_topics; "
+print(f"hh_fatalities_topic; "
       f"A dataset with {len(data.columns)} columns, with "
       f"data between t {min(data.index.get_level_values(0))} "
       f"and {max(data.index.get_level_values(0))}. "
