@@ -24,11 +24,75 @@ from views_partitioning import data_partitioner, legacy
 from stepshift import views
 import views_dataviz
 
+qs_baseline = (Queryset("fatalities002_baseline", "country_month")
+
+    # target variable
+    .with_column(Column("ln_ged_sb_dep", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )                   
+
+    # timelag 0 of target variable
+    .with_column(Column("ln_ged_sb", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    # Decay functions
+    # sb
+    .with_column(Column("decay_ged_sb_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+     # os
+    .with_column(Column("decay_ged_os_5", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    # Spatial lag decay
+    .with_column(Column("splag_1_decay_ged_sb_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+                )
+
+
+     # From WDI
+        .with_column(Column("wdi_sp_pop_totl", from_table = "wdi_cy", from_column = "wdi_sp_pop_totl")
+                     .transform.missing.fill()
+                     .transform.temporal.tlag(12)
+                     .transform.missing.fill()
+                    )
+
+        .with_theme("fatalities")
+        .describe("""Fatalities conflict history, cm level
+
+            Predicting ln(fatalities) using conflict predictors, ultrashort
+
+        """)
+    )
+data = qs_baseline.publish().fetch()
+
+print(f"fatalities002_baseline; "
+      f"A dataset with {len(data.columns)} columns, with "
+      f"data between t {min(data.index.get_level_values(0))} "
+      f"and {max(data.index.get_level_values(0))}. "
+      f"({len(np.unique(data.index.get_level_values(1)))} units)"
+     )
+
 
 #Mueller & Rauh topic model features
 #tlag 1 variables
 
-qs = (Queryset("hh_fatalities_topic", "country_month")
+qs_topics = (Queryset("fatalities002_topic_stub", "country_month")
 
          
     #Topic 0, religious tensions: original, tlag1, 12 month moving average on tlag1
@@ -311,81 +375,19 @@ qs = (Queryset("hh_fatalities_topic", "country_month")
     """)
         )
 
-data = qs.publish().fetch()
+data = qs_topics.publish().fetch()
 
-print(f"hh_fatalities_topic; "
+print(f"fatalities002_topic_stub; "
       f"A dataset with {len(data.columns)} columns, with "
       f"data between t {min(data.index.get_level_values(0))} "
       f"and {max(data.index.get_level_values(0))}. "
       f"({len(np.unique(data.index.get_level_values(1)))} units)"
      )
 
-# GED, baseline, ln versions of predictors
-# log variables
-
-qs = (Queryset("hh_fat_cm_ged_ln_ultrashort", "country_month")
-
-    # target variable
-    .with_column(Column("ln_ged_sb_dep", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
-                 .transform.ops.ln()
-                 .transform.missing.fill()
-                )                   
-
-    # timelag 0 of target variable
-    .with_column(Column("ln_ged_sb", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
-                 .transform.ops.ln()
-                 .transform.missing.fill()
-                )
-    # Decay functions
-    # sb
-    .with_column(Column("decay_ged_sb_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
-                 .transform.missing.replace_na()
-                 .transform.bool.gte(5)
-                 .transform.temporal.time_since()
-                 .transform.temporal.decay(24)
-                 .transform.missing.replace_na()
-                )
-     # os
-    .with_column(Column("decay_ged_os_5", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
-                 .transform.missing.replace_na()
-                 .transform.bool.gte(5)
-                 .transform.temporal.time_since()
-                 .transform.temporal.decay(24)
-                 .transform.missing.replace_na()
-                )
-    # Spatial lag decay
-    .with_column(Column("splag_1_decay_ged_sb_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
-                 .transform.missing.replace_na()
-                 .transform.bool.gte(5)
-                 .transform.temporal.time_since()
-                 .transform.temporal.decay(24)
-                 .transform.spatial.countrylag(1,1,0,0)
-                 .transform.missing.replace_na()
-                )
+# Topics model and baseline
 
 
-     # From WDI
-        .with_column(Column("wdi_sp_pop_totl", from_table = "wdi_cy", from_column = "wdi_sp_pop_totl")
-                     .transform.missing.fill()
-                     .transform.temporal.tlag(12)
-                     .transform.missing.fill()
-                    )
 
-        .with_theme("fatalities")
-        .describe("""Fatalities conflict history, cm level
-
-            Predicting ln(fatalities) using conflict predictors, ultrashort
-
-        """)
-    )
-data = qs.publish().fetch()
-
-print(f"hh_fat_cm_ged_ln_ultrashort; "
-      f"A dataset with {len(data.columns)} columns, with "
-      f"data between t {min(data.index.get_level_values(0))} "
-      f"and {max(data.index.get_level_values(0))}. "
-      f"({len(np.unique(data.index.get_level_values(1)))} units)"
-     )
 
 
 # ## Long conflict history model
@@ -6090,6 +6092,68 @@ print(f"Fatalities002_imfweo;"
       f"({len(np.unique(data.index.get_level_values(1)))} units)"
      )
 
+
+
+
+# GED, baseline, ln versions of predictors
+# log variables
+
+qs = (Queryset("hh_fat_cm_ged_ln_ultrashort", "country_month")
+
+    # target variable
+    .with_column(Column("ln_ged_sb_dep", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )                   
+
+    # timelag 0 of target variable
+    .with_column(Column("ln_ged_sb", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    # Decay functions
+    # sb
+    .with_column(Column("decay_ged_sb_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+     # os
+    .with_column(Column("decay_ged_os_5", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    # Spatial lag decay
+    .with_column(Column("splag_1_decay_ged_sb_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+                )
+
+
+     # From WDI
+        .with_column(Column("wdi_sp_pop_totl", from_table = "wdi_cy", from_column = "wdi_sp_pop_totl")
+                     .transform.missing.fill()
+                     .transform.temporal.tlag(12)
+                     .transform.missing.fill()
+                    )
+
+        .with_theme("fatalities")
+        .describe("""Fatalities conflict history, cm level
+
+            Predicting ln(fatalities) using conflict predictors, ultrashort
+
+        """)
+    )
+#data = qs.publish().fetch()
 
 
 
