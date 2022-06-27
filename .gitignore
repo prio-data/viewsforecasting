@@ -3,3 +3,4 @@
 
 # ignore ALL files in ANY directory named temp
 memos/
+exploration_pickle/
