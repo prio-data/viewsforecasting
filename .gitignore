@@ -1,7 +1,9 @@
-# ignore ALL .p pickle and .pyc files
+# ignore pickles and other files:
 *.p
 *.pyc
 */.DS_Store
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
 
 # ignore ALL files in ANY directory named:
 memos/
