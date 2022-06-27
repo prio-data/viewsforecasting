@@ -1,0 +1,5 @@
+# ignore ALL .p pickle files
+*.p
+
+# ignore ALL files in ANY directory named temp
+memos/
