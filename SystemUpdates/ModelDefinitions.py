@@ -31,11 +31,11 @@ def DefineEnsembleModels(level):
     nj=12
 
     model = {
-        'modelname':     'fat_baseline_rf',
+        'modelname':     'fatalities002_baseline_rf',
         'algorithm':     XGBRFRegressor(n_estimators=300,n_jobs=nj),
         'depvar':        "ln_ged_sb_dep",
-        'data_train':    'baseline',
-        'queryset':      'hh_fatalities_ged_ln_ultrashort',
+        'data_train':    'baseline002',
+        'queryset':      'fatalities002_baseline',
         'preprocessing': 'float_it',
     }
     ModelList.append(model)
@@ -103,11 +103,31 @@ def DefineEnsembleModels(level):
     ModelList.append(model)
 
     model = {
+        'modelname':  'fatalities002_topics_rf',
+        'algorithm': XGBRFRegressor(n_estimators=300,n_jobs=nj),
+        'depvar': "ln_ged_sb_dep",
+        'data_train':    'topics_002',
+        'queryset':   "fatalities002_topics",
+        'preprocessing': 'float_it',
+    }
+    ModelList.append(model)
+
+    model = {
         'modelname':  'fat_topics_rf',
         'algorithm': XGBRFRegressor(n_estimators=300,n_jobs=nj),
         'depvar': "ln_ged_sb_dep",
         'data_train':    'topics_short',
         'queryset':   "hh_topic_model_short",
+        'preprocessing': 'float_it',
+    }
+    ModelList.append(model)
+
+    model = {
+        'modelname':  'fatalities002_topics_hurdle_lgb',
+        'algorithm': HurdleRegression(clf_name = 'LGBMClassifier', reg_name = 'LGBMRegressor'),
+        'depvar': "ln_ged_sb_dep",
+        'data_train':    'topics_002',
+        'queryset':   "fatalities002_topics",
         'preprocessing': 'float_it',
     }
     ModelList.append(model)

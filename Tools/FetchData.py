@@ -28,12 +28,13 @@ def FetchData(run_id):
     Datasets = []
 
     if run_id == 'Fatalities002':
-        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_ln_ultrashort", "country_month")),'baseline'))
+        Datasets.append(FetchTable((Queryset("fatalities002_baseline", "country_month")),'baseline002'))
         Datasets.append(FetchTable((Queryset("hh_fatalities_ged_acled_ln", "country_month")),'conflictlong_ln'))
         Datasets.append(FetchTable((Queryset("fat_cm_conflict_history", "country_month")),'conflict_ln'))
         Datasets.append(FetchTable((Queryset("fat_cm_conflict_history_exp", "country_month")),'conflict_nolog'))
         Datasets.append(FetchTable((Queryset("hh_fatalities_wdi_short", "country_month")),'wdi_short'))
         Datasets.append(FetchTable((Queryset("hh_fatalities_vdem_short", "country_month")),'vdem_short'))
+        Datasets.append(FetchTable((Queryset("fatalities002_topics", "country_month")),'topics_002'))
         Datasets.append(FetchTable((Queryset("hh_topic_model_short", "country_month")),'topics_short'))
         Datasets.append(FetchTable((Queryset("hh_broad", "country_month")),'broad'))
         Datasets.append(FetchTable((Queryset("fatalities002_greatest_hits", "country_month")),'gh'))

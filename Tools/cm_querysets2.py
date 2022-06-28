@@ -2,7 +2,6 @@
 # Fatalities002 version
 # ## cm level
 # 
-# CHECKING BRANCH - think I am in new-cm-querysets... ...
 
 # ## Importing modules
 
@@ -384,7 +383,7 @@ qs_topics_stub = (Queryset("fatalities002_topics_stub", "country_month")
         .with_theme("fatalities")
         .describe("""Predicting ln(fatalities), cm level
 
-        Queryset with Mueller & Rauh topic model features
+        Stub queryset with Mueller & Rauh topic model features
 
     """)
         )
@@ -411,7 +410,7 @@ qs_topics = (Queryset("fatalities002_topics", "country_month")
         )
 qs_topics.operations = qs_baseline.operations[0:] + qs_topics_stub.operations[0:]
 
-#data = qs_topics.publish().fetch()
+data = qs_topics.publish().fetch()
 
 qslist = [qs_baseline,qs_topics]
 
