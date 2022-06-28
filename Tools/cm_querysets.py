@@ -24,6 +24,146 @@ from views_partitioning import data_partitioner, legacy
 from stepshift import views
 import views_dataviz
 
+#FAO AQUASTAT queryset
+#time lag 48 month
+
+qs_aquastat = (Queryset("fatalities002_aquastat_stub", "country_month")
+
+         
+    #Agricultural water withdrawal as % of total renewable water resources [%]
+    .with_column(Column('agr_withdrawal_pct', from_table = 'fao_aqua_cy', from_column = 'agr_withdrawal_pct')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('agr_withdrawal_pct_t48', from_table = 'fao_aqua_cy', from_column = 'agr_withdrawal_pct') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+      
+    #Dam capacity per capita [m3/inhab]
+    .with_column(Column('dam_cap_pcap', from_table = 'fao_aqua_cy', from_column = 'dam_cap_pcap')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('dam_cap_pcap_t48', from_table = 'fao_aqua_cy', from_column = 'dam_cap_pcap') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+      
+    #Groundwater: leaving the country to other countries (total) [10^9 m3/year]
+    .with_column(Column('groundwater_export', from_table = 'fao_aqua_cy', from_column = 'groundwater_export')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('groundwater_export_t48', from_table = 'fao_aqua_cy', from_column = 'groundwater_export') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+      
+    #MDG 7.5. Freshwater withdrawal as % of total renewable water resources [%]
+    .with_column(Column('fresh_withdrawal_pct', from_table = 'fao_aqua_cy', from_column = 'fresh_withdrawal_pct')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('fresh_withdrawal_pct_t48', from_table = 'fao_aqua_cy', from_column = 'fresh_withdrawal_pct') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #SDG 6.4.1. Industrial Water Use Efficiency [US$/m3]
+    .with_column(Column('ind_efficiency', from_table = 'fao_aqua_cy', from_column = 'ind_efficiency')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('ind_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'ind_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #SDG 6.4.1. Irrigated Agriculture Water Use Efficiency [US$/m3]
+    .with_column(Column('irr_agr_efficiency', from_table = 'fao_aqua_cy', from_column = 'irr_agr_efficiency')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('irr_agr_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'irr_agr_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #SDG 6.4.1. Services Water Use Efficiency [US$/m3]
+    .with_column(Column('services_efficiency', from_table = 'fao_aqua_cy', from_column = 'services_efficiency')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('services_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'services_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #SDG 6.4.1. Water Use Efficiency [US$/m3]
+    .with_column(Column('general_efficiency', from_table = 'fao_aqua_cy', from_column = 'general_efficiency')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('general_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'general_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #SDG 6.4.2. Water Stress [%]
+    .with_column(Column('water_stress', from_table = 'fao_aqua_cy', from_column = 'water_stress')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('water_stress_t48', from_table = 'fao_aqua_cy', from_column = 'water_stress') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #Total internal renewable water resources per capita [m3/inhab/yr]      
+    .with_column(Column('renewable_internal_pcap', from_table = 'fao_aqua_cy', from_column = 'renewable_internal_pcap')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('renewable_internal_pcap_t48', from_table = 'fao_aqua_cy', from_column = 'renewable_internal_pcap') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    #Total annual renewable water resources per capita [m3/inhab/year]
+    .with_column(Column('renewable_pcap', from_table = 'fao_aqua_cy', from_column = 'renewable_pcap')
+                .transform.missing.fill()
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column('renewable_pcap_t48', from_table = 'fao_aqua_cy', from_column = 'renewable_pcap') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    
+        .with_theme("fatalities")
+        .describe("""Predicting ln(fatalities), cm level
+
+        Queryset based on the FAO AQUASTAT data
+
+    """)
+        )
+
+data = qs_aquastat.publish().fetch()
+
+print(f"fatalities002_aquastat_stub; "
+      f"A dataset with {len(data.columns)} columns, with "
+      f"data between t {min(data.index.get_level_values(0))} "
+      f"and {max(data.index.get_level_values(0))}. "
+      f"({len(np.unique(data.index.get_level_values(1)))} units)"
+     )
+
+
+################
+
 qs_baseline = (Queryset("fatalities002_baseline", "country_month")
 
     # target variable
