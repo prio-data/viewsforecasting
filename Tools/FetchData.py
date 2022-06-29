@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn import decomposition
 from sklearn.decomposition import PCA
+import cm_querysets2
 
 
 def SummarizeTable(dfname,df):
@@ -281,4 +282,39 @@ def find_index(dicts, key, value):
 
 def RetrieveFromList(Datasets,name):
     return Datasets[find_index(Datasets, 'Name', name)]['df']
+
+def find_between(s, start, end):
+    return (s.split(start))[1].split(end)[0]
+
+def find_between_brackets(s):
+    return (s.split('['))[1].split(']')[0]
+
+def document_queryset(qslist):
+    ''' Writes a markdown file listing the variables in the querysets passed in the list of querysets '''
+    for qs in cm_querysets2.qslist:
+        print('Model: ',qs.name)
+        ModelMetaData = []
+        i = 0
+        for var in qs.operations:
+            VarMetaData = {
+                'Model': qs.name,
+                'Included variable name': find_between_brackets(str(var[0])),
+                'Database variable name': find_between(str(var[-1]),'name=',' ')
+            }
+            Transformations = []
+            for line in var:
+    #            print('line:',line)
+                item = str(line) 
+                if 'trf' in item:
+                    trf = find_between(item,'name=',' ')
+    #                print('trf:', trf)
+                    if 'util.rename' not in trf:
+                        Transformations.append(trf)
+    #        print(Transformations)
+            VarMetaData['Transformations'] = Transformations
+            ModelMetaData.append(VarMetaData)
+            i= i + 1
+        ModelMetaData_df = pd.DataFrame(ModelMetaData)
+        filename = '../Documentation/Model_' + qs.name + '.md'
+        ModelMetaData_df.to_markdown(index=False, buf=filename)
  

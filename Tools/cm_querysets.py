@@ -79,20 +79,20 @@ qs_baseline = (Queryset("fatalities002_baseline", "country_month")
 
         """)
     )
-data = qs_baseline.publish().fetch()
+#data = qs_baseline.publish().fetch()
 
-print(f"fatalities002_baseline; "
-      f"A dataset with {len(data.columns)} columns, with "
-      f"data between t {min(data.index.get_level_values(0))} "
-      f"and {max(data.index.get_level_values(0))}. "
-      f"({len(np.unique(data.index.get_level_values(1)))} units)"
-     )
+#print(f"fatalities002_baseline; "
+#      f"A dataset with {len(data.columns)} columns, with "
+#      f"data between t {min(data.index.get_level_values(0))} "
+#      f"and {max(data.index.get_level_values(0))}. "
+#      f"({len(np.unique(data.index.get_level_values(1)))} units)"
+#     )
 
 
 #Mueller & Rauh topic model features
 #tlag 1 variables
 
-qs_topics = (Queryset("fatalities002_topic_stub", "country_month")
+qs_topics = (Queryset("fatalities002_topic", "country_month")
 
          
     #Topic 0, religious tensions: original, tlag1, 12 month moving average on tlag1
