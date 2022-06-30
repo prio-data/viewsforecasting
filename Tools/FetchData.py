@@ -6,6 +6,8 @@ from sklearn import decomposition
 from sklearn.decomposition import PCA
 import cm_querysets2
 
+def ReturnQsList():
+    return cm_querysets2.qslist
 
 def SummarizeTable(dfname,df):
     print(f"{dfname}: A dataset with {len(df.columns)} columns, with "
@@ -30,9 +32,8 @@ def FetchData(run_id):
 
     if run_id == 'Fatalities002':
         Datasets.append(FetchTable((Queryset("fatalities002_baseline", "country_month")),'baseline002'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_acled_ln", "country_month")),'conflictlong_ln'))
-        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history", "country_month")),'conflict_ln'))
-        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history_exp", "country_month")),'conflict_nolog'))
+        Datasets.append(FetchTable((Queryset("fatalities002_conflict_history_long", "country_month")),'conflictlong_ln'))
+        Datasets.append(FetchTable((Queryset("fatalities002_conflict_history", "country_month")),'conflict_ln'))
         Datasets.append(FetchTable((Queryset("hh_fatalities_wdi_short", "country_month")),'wdi_short'))
         Datasets.append(FetchTable((Queryset("hh_fatalities_vdem_short", "country_month")),'vdem_short'))
         Datasets.append(FetchTable((Queryset("fatalities002_topics", "country_month")),'topics_002'))
@@ -41,7 +42,7 @@ def FetchData(run_id):
         Datasets.append(FetchTable((Queryset("fatalities002_greatest_hits", "country_month")),'gh'))
         Datasets.append(FetchTable((Queryset("hh_20_features", "country_month")),'hh20'))
         Datasets.append(FetchTable((Queryset("hh_all_features", "country_month")),'all_features'))
-        Datasets.append(FetchTable((Queryset("Fatalities002_aquastat", "country_month")),'aquastat'))
+        Datasets.append(FetchTable((Queryset("fatalities002_aquastat", "country_month")),'aquastat'))
         Datasets.append(FetchTable((Queryset("Fatalities002_faostat", "country_month")),'faostat'))
         Datasets.append(FetchTable((Queryset("Fatalities002_faoprices", "country_month")),'faoprices'))
         Datasets.append(FetchTable((Queryset("Fatalities001_imfweo", "country_month")),'imfweo'))
@@ -317,4 +318,5 @@ def document_queryset(qslist):
         ModelMetaData_df = pd.DataFrame(ModelMetaData)
         filename = '../Documentation/Model_' + qs.name + '.md'
         ModelMetaData_df.to_markdown(index=False, buf=filename)
+
  

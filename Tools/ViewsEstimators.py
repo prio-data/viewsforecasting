@@ -52,8 +52,8 @@ class HurdleRegression(BaseEstimator):
 
         funcs = {'linear': LinearRegression(),
                  'logistic': LogisticRegression(solver='liblinear'),
-                 'LGBMRegressor': LGBMRegressor(n_estimators=200),
-                 'LGBMClassifier': LGBMClassifier(n_estimators=200),
+                 'LGBMRegressor': LGBMRegressor(n_estimators=300),
+                 'LGBMClassifier': LGBMClassifier(n_estimators=300),
                  'RFRegressor': XGBRFRegressor(n_estimators=300,n_jobs=-2),
                  'RFClassifier': XGBRFClassifier(n_estimators=300,n_jobs=-2),
                  'GBMRegressor': GradientBoostingRegressor(n_estimators=200),

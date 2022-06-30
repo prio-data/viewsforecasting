@@ -42,10 +42,10 @@ def DefineEnsembleModels(level):
 
     model = {
         'modelname': 'fat_conflicthistory_rf',
-        'algorithm': XGBRFRegressor(n_estimators=300,n_jobs=nj),
+        'algorithm': XGBRFRegressor(n_estimators=250,n_jobs=nj),
         'depvar': "ln_ged_sb_dep",
         'data_train':    'conflict_ln',
-        'queryset': "fat_cm_conflict_history",
+        'queryset': "fatalities002_conflict_history",
         'preprocessing': 'float_it',
     }
     ModelList.append(model)
@@ -53,10 +53,10 @@ def DefineEnsembleModels(level):
     # Model: GED logged dependent variable, logged conflict history variables, gradient boosting
     model = {
         'modelname': 'fat_conflicthistory_gbm',
-        'algorithm': GradientBoostingRegressor(), 
+        'algorithm': GradientBoostingRegressor(n_estimators=200), 
         'depvar': "ln_ged_sb_dep",
         'data_train':    'conflict_ln',
-        'queryset': "fat_cm_conflict_history",
+        'queryset': "fatalities002_conflict_history",
         'preprocessing': 'float_it',
     }
     ModelList.append(model)       
@@ -67,7 +67,7 @@ def DefineEnsembleModels(level):
         'algorithm': HurdleRegression(clf_name = 'LGBMClassifier', reg_name = 'LGBMRegressor'),
         'depvar': "ln_ged_sb_dep",
         'data_train':    'conflict_ln',
-        'queryset': "fat_cm_conflict_history",
+        'queryset': "fatalities002_conflict_history",
         'preprocessing': 'float_it',
     }
     ModelList.append(model)
@@ -77,7 +77,7 @@ def DefineEnsembleModels(level):
         'algorithm': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=nj),
         'depvar': "ln_ged_sb_dep",
         'data_train':    'conflictlong_ln',
-        'queryset': "hh_fatalities_ged_acled_ln",
+        'queryset': "fatalities002_conflict_history_long",
         'preprocessing': 'float_it',
     }
     ModelList.append(model)
@@ -213,7 +213,7 @@ def DefineEnsembleModels(level):
         'algorithm':     XGBRFRegressor(n_estimators=300,n_jobs=nj),
         'depvar':        "ln_ged_sb_dep",
         'data_train':    'aquastat',
-        'queryset':      'Fatalities002_aquastat',
+        'queryset':      'fatalities002_aquastat',
         'preprocessing': 'float_it',
     }
     ModelList.append(model)
