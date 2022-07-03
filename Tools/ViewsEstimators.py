@@ -7,12 +7,14 @@ from sklearn.base import BaseEstimator
 from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.ensemble import HistGradientBoostingClassifier
 from xgboost import XGBRegressor
 from xgboost import XGBClassifier
 from xgboost import XGBRFRegressor, XGBRFClassifier
-
+from lightgbm import LGBMClassifier, LGBMRegressor
 
 #from lightgbm import LGBMClassifier, LGBMRegressor
 
@@ -50,14 +52,14 @@ class HurdleRegression(BaseEstimator):
 
         funcs = {'linear': LinearRegression(),
                  'logistic': LogisticRegression(solver='liblinear'),
-#                 'LGBMRegressor': LGBMRegressor(n_estimators=50),
-#                 'LGBMClassifier': LGBMClassifier(n_estimators=50)
-                 'RFRegressor': XGBRFRegressor(n_estimators=300,n_jobs=-2),
-                 'RFClassifier': XGBRFClassifier(n_estimators=300,n_jobs=-2),
+                 'LGBMRegressor': LGBMRegressor(n_estimators=250),
+                 'LGBMClassifier': LGBMClassifier(n_estimators=250),
+                 'RFRegressor': XGBRFRegressor(n_estimators=250,n_jobs=-2),
+                 'RFClassifier': XGBRFClassifier(n_estimators=250,n_jobs=-2),
                  'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
                  'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
-                 'XGBRegressor': XGBRegressor(n_estimators=150,learning_rate=0.05,n_jobs=-2),
-                 'XGBClassifier': XGBClassifier(n_estimators=150,learning_rate=0.05,n_jobs=-2),
+                 'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=-2),
+                 'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=-2),
                  'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
                  'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
                 }

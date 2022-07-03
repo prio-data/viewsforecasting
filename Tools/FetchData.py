@@ -4,7 +4,10 @@ import numpy as np
 import pandas as pd
 from sklearn import decomposition
 from sklearn.decomposition import PCA
+import cm_querysets
 
+def ReturnQsList():
+    return cm_querysets2.qslist
 
 def SummarizeTable(dfname,df):
     print(f"{dfname}: A dataset with {len(df.columns)} columns, with "
@@ -28,18 +31,16 @@ def FetchData(run_id):
     Datasets = []
 
     if run_id == 'Fatalities002':
-        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_ln_ultrashort", "country_month")),'baseline'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_acled_ln", "country_month")),'conflictlong_ln'))
-        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history", "country_month")),'conflict_ln'))
-        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history_exp", "country_month")),'conflict_nolog'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_wdi_short", "country_month")),'wdi_short'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_vdem_short", "country_month")),'vdem_short'))
-        Datasets.append(FetchTable((Queryset("hh_topic_model_short", "country_month")),'topics_short'))
-        Datasets.append(FetchTable((Queryset("hh_broad", "country_month")),'broad'))
-        Datasets.append(FetchTable((Queryset("fatalities002_greatest_hits", "country_month")),'gh'))
-        Datasets.append(FetchTable((Queryset("hh_20_features", "country_month")),'hh20'))
-        Datasets.append(FetchTable((Queryset("hh_all_features", "country_month")),'all_features'))
-        Datasets.append(FetchTable((Queryset("Fatalities002_aquastat", "country_month")),'aquastat'))
+        Datasets.append(FetchTable((Queryset("fatalities002_baseline", "country_month")),'baseline002'))
+        Datasets.append(FetchTable((Queryset("fatalities002_conflict_history_long", "country_month")),'conflictlong_ln'))
+        Datasets.append(FetchTable((Queryset("fatalities002_conflict_history", "country_month")),'conflict_ln'))
+        Datasets.append(FetchTable((Queryset("fatalities002_wdi_short", "country_month")),'wdi_short'))
+        Datasets.append(FetchTable((Queryset("fatalities002_vdem_short", "country_month")),'vdem_short'))
+        Datasets.append(FetchTable((Queryset("fatalities002_topics", "country_month")),'topics_002'))
+        Datasets.append(FetchTable((Queryset("fatalities002_joint_broad", "country_month")),'joint_broad'))
+        Datasets.append(FetchTable((Queryset("fatalities002_joint_narrow", "country_month")),'joint_narrow'))
+        Datasets.append(FetchTable((Queryset("fatalities002_all_features", "country_month")),'all_features'))
+        Datasets.append(FetchTable((Queryset("fatalities002_aquastat", "country_month")),'aquastat'))
         Datasets.append(FetchTable((Queryset("Fatalities002_faostat", "country_month")),'faostat'))
         Datasets.append(FetchTable((Queryset("Fatalities002_faoprices", "country_month")),'faoprices'))
         Datasets.append(FetchTable((Queryset("Fatalities001_imfweo", "country_month")),'imfweo'))
@@ -50,25 +51,28 @@ def FetchData(run_id):
         sources = []
         af = {
             'name': 'all features',
-            'dataset': Datasets[10]['df'],
+            'dataset': Datasets[8]['df'],
             'n_comp': 20
         }
         sources.append(af)
+
         topics = {
             'name': 'topics',
-            'dataset': Datasets[6]['df'],
+            'dataset': Datasets[5]['df'],
             'n_comp': 10
         }
         sources.append(topics)
+
         vdem = {
             'name': 'vdem',
-            'dataset': Datasets[5]['df'],
+            'dataset': Datasets[4]['df'],
             'n_comp': 15
         }
         sources.append(vdem)
+
         wdi = {
             'name': 'wdi',
-            'dataset': Datasets[4]['df'],
+            'dataset': Datasets[3]['df'],
             'n_comp': 15
         }
         sources.append(wdi)
@@ -280,4 +284,76 @@ def find_index(dicts, key, value):
 
 def RetrieveFromList(Datasets,name):
     return Datasets[find_index(Datasets, 'Name', name)]['df']
+
+def find_between(s, start, end):
+    return (s.split(start))[1].split(end)[0]
+
+def find_between_brackets(s):
+    return (s.split('['))[1].split(']')[0]
+
+def document_queryset(qslist,dev_id):
+    ''' Writes a markdown file listing the variables in the querysets passed in the list of querysets '''
+
+    file = open("../Documentation/Querysets.md","w")
+    file.write('# Documentation of querysets')
+    file.write(dev_id)
+
+    for qs in cm_querysets2.qslist:
+        print('Model: ',qs.name)
+        file.write(qs.name)
+        ModelMetaData = []
+        i = 0
+        for var in qs.operations:
+            VarMetaData = {
+                'Model': qs.name,
+                'Included variable name': find_between_brackets(str(var[0])),
+                'Database variable name': find_between(str(var[-1]),'name=',' ')
+            }
+            Transformations = []
+            for line in var:
+    #            print('line:',line)
+                item = str(line) 
+                if 'trf' in item:
+                    trf = find_between(item,'name=',' ')
+    #                print('trf:', trf)
+                    if 'util.rename' not in trf:
+                        Transformations.append(trf)
+    #        print(Transformations)
+            VarMetaData['Transformations'] = Transformations
+            ModelMetaData.append(VarMetaData)
+            i= i + 1
+        ModelMetaData_df = pd.DataFrame(ModelMetaData)
+        filename = '../Documentation/Model_' + qs.name + '.md'
+        ModelMetaData_df.to_markdown(index=False, buf=filename)
+        this_qs = ModelMetaData_df.to_markdown(index=False)
+        file.write(this_qs)
+        file.write('')
+    file.close()
+
+
+def document_ensemble(ModelList, outcome):
+    ''' Writes a markdown file listing the models passed in the list of models '''
+    
+    i = 0
+    EnsembleMetaData = []
+    for model in ModelList:
+        print(i, model['modelname'], model['data_train'])
+        ModelMetaData = {
+            'Model name': model['modelname'],
+            'Description': model['description'],
+            'Dependent variable': model['depvar'],
+            'Queryset': model['queryset'],
+            'Algorithm': str(model['algorithm']).split('(')[0],
+            'Long description': model['long_description']
+        }
+        if model['preprocessing'] == 'pca_it':
+            ModelMetaData['PCA'] = 'True'
+        else:
+            ModelMetaData['PCA'] = 'False'
+        
+        EnsembleMetaData.append(ModelMetaData)
+        i= i + 1
+        EnsembleMetaData_df = pd.DataFrame(EnsembleMetaData)
+        filename = f'../Documentation/Ensemble_{outcome}.md'
+        EnsembleMetaData_df.to_markdown(index=False, buf=filename)    
  

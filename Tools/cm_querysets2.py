@@ -2,7 +2,6 @@
 # Fatalities002 version
 # ## cm level
 # 
-# 
 
 # ## Importing modules
 
@@ -22,6 +21,9 @@ import views_runs
 from views_partitioning import data_partitioner, legacy
 from stepshift import views
 import views_dataviz
+
+
+###########################################################################################################################
 
 qs_baseline = (Queryset("fatalities002_baseline", "country_month")
 
@@ -87,7 +89,7 @@ print(f"fatalities002_baseline; "
       f"({len(np.unique(data.index.get_level_values(1)))} units)"
      )
 
-
+###########################################################################################################################
 #Mueller & Rauh topic model features
 #tlag 1 variables
 
@@ -384,7 +386,7 @@ qs_topics_stub = (Queryset("fatalities002_topics_stub", "country_month")
         .with_theme("fatalities")
         .describe("""Predicting ln(fatalities), cm level
 
-        Queryset with Mueller & Rauh topic model features
+        Stub queryset with Mueller & Rauh topic model features
 
     """)
         )
@@ -398,6 +400,533 @@ print(f"fatalities002_topics_stub; "
       f"({len(np.unique(data.index.get_level_values(1)))} units)"
      )
 
+
+###########################################################################################################################
+qs_aquastat_stub = (Queryset("fatalities002_aquastat_stub", "country_month")
+
+         
+    #Agricultural water withdrawal as % of total renewable water resources [%]
+    .with_column(Column('agr_withdrawal_pct_t48', from_table = 'fao_aqua_cy', from_column = 'agr_withdrawal_pct') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+      
+    #Dam capacity per capita [m3/inhab]
+    .with_column(Column('dam_cap_pcap_t48', from_table = 'fao_aqua_cy', from_column = 'dam_cap_pcap') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+      
+    #Groundwater: leaving the country to other countries (total) [10^9 m3/year]
+    .with_column(Column('groundwater_export_t48', from_table = 'fao_aqua_cy', from_column = 'groundwater_export') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+      
+    #MDG 7.5. Freshwater withdrawal as % of total renewable water resources [%]
+    .with_column(Column('fresh_withdrawal_pct_t48', from_table = 'fao_aqua_cy', from_column = 'fresh_withdrawal_pct') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #SDG 6.4.1. Industrial Water Use Efficiency [US$/m3]
+    .with_column(Column('ind_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'ind_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #SDG 6.4.1. Irrigated Agriculture Water Use Efficiency [US$/m3]
+    .with_column(Column('irr_agr_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'irr_agr_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #SDG 6.4.1. Services Water Use Efficiency [US$/m3]
+    .with_column(Column('services_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'services_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #SDG 6.4.1. Water Use Efficiency [US$/m3]
+    .with_column(Column('general_efficiency_t48', from_table = 'fao_aqua_cy', from_column = 'general_efficiency') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #SDG 6.4.2. Water Stress [%]
+    .with_column(Column('water_stress_t48', from_table = 'fao_aqua_cy', from_column = 'water_stress') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #Total internal renewable water resources per capita [m3/inhab/yr]    
+    .with_column(Column('renewable_internal_pcap_t48', from_table = 'fao_aqua_cy', from_column = 'renewable_internal_pcap') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+
+    #Total annual renewable water resources per capita [m3/inhab/year]
+    .with_column(Column('renewable_pcap_t48', from_table = 'fao_aqua_cy', from_column = 'renewable_pcap') 
+                .transform.missing.fill()
+                .transform.missing.replace_na()
+                .transform.temporal.tlag(48)
+                .transform.missing.fill())
+    
+        .with_theme("fatalities")
+        .describe("""Predicting ln(fatalities), cm level
+
+        Queryset based on the FAO AQUASTAT data
+
+    """)
+        )
+
+data = qs_aquastat_stub.publish().fetch()
+
+print(f"fatalities002_aquastat_stub; "
+      f"A dataset with {len(data.columns)} columns, with "
+      f"data between t {min(data.index.get_level_values(0))} "
+      f"and {max(data.index.get_level_values(0))}. "
+      f"({len(np.unique(data.index.get_level_values(1)))} units)"
+     )
+
+###########################################################################################################################'
+
+
+# ## Shorter conflict history model stub
+
+# log variables
+
+qs_conflict_stub = (Queryset("fatalities002_cm_conflict_history_stub", "country_month")
+
+    # Lags
+    .with_column(Column("ln_ged_sb_tlag_1", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(1)
+                 .transform.missing.fill()
+                )
+
+    .with_column(Column("ln_ged_sb_tlag_2", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(2)
+                 .transform.missing.fill()
+                )
+
+    .with_column(Column("ln_ged_sb_tlag_3", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(3)
+                 .transform.missing.fill()
+                )
+
+    .with_column(Column("ln_ged_sb_tlag_4", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(4)
+                 .transform.missing.fill()
+                )
+
+    .with_column(Column("ln_ged_sb_tlag_5", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(5)
+                 .transform.missing.fill()
+                )
+
+    .with_column(Column("ln_ged_sb_tlag_6", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(6)
+                 .transform.missing.fill()
+                )
+    # Moving sums
+    .with_column(Column("ln_ged_sb_tsum_24", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.temporal.moving_sum(24)
+                 .transform.ops.ln()
+                 .transform.missing.replace_na()
+                )
+
+
+    # Decay functions
+    # sb
+
+    .with_column(Column("decay_ged_sb_100", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(100)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_sb_500", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(500)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    # os
+             
+    .with_column(Column("decay_ged_os_100", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(100)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    # ns
+    .with_column(Column("decay_ged_ns_5", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_ns_100", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(100)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+
+    # Other independent variables
+    .with_column(Column("ln_ged_ns", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_ged_os", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_sb", from_table = "acled2_cm", from_column = "acled_sb_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_sb_count", from_table = "acled2_cm", from_column = "acled_sb_count")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_os", from_table = "acled2_cm", from_column = "acled_os_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+
+    # time-lagged by 0-2 independent variables
+    .with_column(Column("ln_ged_os_tlag_1", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(1)
+                 .transform.missing.fill()
+                )
+
+    # 12-month decay dummy of independent variables
+    .with_column(Column("decay_acled_sb_5", from_table = "acled2_cm", from_column = "acled_sb_fat")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_acled_os_5", from_table = "acled2_cm", from_column = "acled_os_fat")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_acled_ns_5", from_table = "acled2_cm", from_column = "acled_ns_fat")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+     # Spatial lags of decay functions
+    .with_column(Column("splag_1_decay_ged_os_5", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("splag_1_decay_ged_ns_5", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+    )
+             
+
+    # gwnos
+    .with_column(Column("gleditsch_ward", from_table = "country", from_column = "gwcode")
+            )
+
+
+        .with_theme("fatalities")
+        .describe("""Fatalities conflict history, cm level
+
+            Predicting ln(fatalities) using conflict predictors
+
+        """)
+    )
+data = qs_conflict_stub.publish().fetch()
+
+print(f"fatalities002_cm_conflict_history_stub; "
+      f"A dataset with {len(data.columns)} columns, with "
+      f"data between t {min(data.index.get_level_values(0))} "
+      f"and {max(data.index.get_level_values(0))}. "
+      f"({len(np.unique(data.index.get_level_values(1)))} units)"
+     )
+
+
+
+###########################################################################################################################
+
+# ## Long conflict history model
+# log variables
+qs_conflict_ext = (Queryset("fatalities002_cm_conflict_history_ext", "country_month")
+
+    # Moving sums
+    .with_column(Column("ln_ged_sb_tsum_12", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.temporal.moving_sum(12)
+                 .transform.ops.ln()
+                 .transform.missing.replace_na()
+                )
+
+    .with_column(Column("ln_ged_sb_tsum_48", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.temporal.moving_sum(48)
+                 .transform.ops.ln()
+                 .transform.missing.replace_na()
+                )
+
+    # Spatial lags
+    .with_column(Column("splag_1_ged_sb", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.spatial.countrylag(1,1,0,0)
+                )
+    .with_column(Column("splag_2_ged_sb", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.spatial.countrylag(1,2,0,0)
+                )
+    .with_column(Column("splag_1_ged_os", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.spatial.countrylag(1,1,0,0)
+                )
+    .with_column(Column("splag_1_ged_ns", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.spatial.countrylag(1,1,0,0)
+                )
+    # Decay functions
+    # sb
+    .with_column(Column("decay_ged_sb_1", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(1)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+
+    .with_column(Column("decay_ged_sb_25", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(25)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    # os
+    .with_column(Column("decay_ged_os_1", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(1)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_os_5", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(5)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_os_25", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(25)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_os_500", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(500)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    # ns
+    .with_column(Column("decay_ged_ns_1", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(1)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_ns_25", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(25)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("decay_ged_ns_500", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(500)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.missing.replace_na()
+        )
+    # Spatial lags of decays
+    .with_column(Column("splag_1_decay_ged_sb_100", from_table = "ged2_cm", from_column = "ged_sb_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(100)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("splag_1_decay_ged_os_100", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(100)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+                )
+    .with_column(Column("splag_1_decay_ged_ns_100", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.missing.replace_na()
+                 .transform.bool.gte(100)
+                 .transform.temporal.time_since()
+                 .transform.temporal.decay(24)
+                 .transform.spatial.countrylag(1,1,0,0)
+                 .transform.missing.replace_na()
+    )
+
+    # Other independent variables
+    .with_column(Column("ln_acled_prx_count", from_table = "acled2_cm", from_column = "acled_prx_count")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_pr_count", from_table = "acled2_cm", from_column = "acled_pr_count")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_prx_fat", from_table = "acled2_cm", from_column = "acled_prx_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_sb_gov", from_table = "acled2_cm", from_column = "acled_bat_gov_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_sb_reb", from_table = "acled2_cm", from_column = "acled_bat_reb_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_ns", from_table = "acled2_cm", from_column = "acled_ns_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                )
+
+    # time-lagged by 0-2 independent variables
+    .with_column(Column("ln_ged_ns_tlag_1", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(1)
+                 .transform.missing.fill()
+                )               
+    .with_column(Column("ln_ged_ns_tlag_2", from_table = "ged2_cm", from_column = "ged_ns_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(2)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_ged_os_tlag_2", from_table = "ged2_cm", from_column = "ged_os_best_sum_nokgi")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(2)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_sb_tlag_1", from_table = "acled2_cm", from_column = "acled_sb_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(1)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_sb_tlag_2", from_table = "acled2_cm", from_column = "acled_sb_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(2)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_os_tlag_1", from_table = "acled2_cm", from_column = "acled_os_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(1)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_os_tlag_2", from_table = "acled2_cm", from_column = "acled_os_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(2)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_ns_tlag_1", from_table = "acled2_cm", from_column = "acled_ns_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(1)
+                 .transform.missing.fill()
+                )
+    .with_column(Column("ln_acled_ns_tlag_2", from_table = "acled2_cm", from_column = "acled_os_fat")
+                 .transform.ops.ln()
+                 .transform.missing.fill()
+                 .transform.temporal.tlag(2)
+                 .transform.missing.fill()
+                )
+
+    .with_theme("fatalities")
+    .describe("""Fatalities conflict history extensions, cm level
+
+        Predicting ln(fatalities) using conflict predictors, extended longer conflict history
+
+    """)
+)
+data = qs_conflict_ext.publish().fetch()
+
+print(f"fatalities002_cm_conflict_history_ext; "
+      f"A dataset with {len(data.columns)} columns, with "
+      f"data between t = {min(data.index.get_level_values(0))} "
+      f"and {max(data.index.get_level_values(0))}. "
+      f"({len(np.unique(data.index.get_level_values(1)))} units)"
+     )
+
+
+###########################################################################################################################
 # Combined querysets
 # Topics model and baseline
 
@@ -411,7 +940,57 @@ qs_topics = (Queryset("fatalities002_topics", "country_month")
         )
 qs_topics.operations = qs_baseline.operations[0:] + qs_topics_stub.operations[0:]
 
-#data = qs_topics.publish().fetch()
+data = qs_topics.publish().fetch()
 
-qslist = [qs_baseline,qs_topics]
+###########################################################################################################################
+# Aquastat model and baseline
+
+qs_aquastat = (Queryset("fatalities002_aquastat", "country_month")
+        .with_theme("fatalities002")
+        .describe("""Predicting ln(fatalities), cm level
+
+        Queryset with baseline and aquastat features
+
+        """)
+        )
+qs_aquastat.operations = qs_baseline.operations[0:] + qs_aquastat_stub.operations[0:]
+
+data = qs_aquastat.publish().fetch()
+
+###########################################################################################################################
+# Conflict history model and baseline
+
+qs_conflict = (Queryset("fatalities002_conflict_history", "country_month")
+        .with_theme("fatalities002")
+        .describe("""Predicting ln(fatalities), cm level
+
+        Queryset with baseline and first set of conflict history features
+
+        """)
+        )
+qs_conflict.operations = qs_baseline.operations[0:] + qs_conflict_stub.operations[0:]
+
+data = qs_conflict.publish().fetch()
+
+
+###########################################################################################################################
+# Conflict history model, extension, and baseline
+
+qs_conflict_long = (Queryset("fatalities002_conflict_history_long", "country_month")
+        .with_theme("fatalities002")
+        .describe("""Predicting ln(fatalities), cm level
+
+        Queryset with baseline, first set and extended set of conflict history features
+
+        """)
+        )
+qs_conflict_long.operations = qs_conflict.operations[0:] + qs_conflict_ext.operations[0:]
+
+data = qs_conflict_long.publish().fetch()
+
+###########################################################################################################################
+# Collecting combined queryset objects in a list
+
+
+qslist = [qs_baseline,qs_topics,qs_aquastat,qs_conflict,qs_conflict_long]
 
