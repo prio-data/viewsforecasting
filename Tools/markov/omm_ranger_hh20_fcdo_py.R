@@ -1,6 +1,10 @@
-source('markov/package_checker.R')
-source('markov/vmm_fatalities211210.R')
-source('markov/models2.R')
+this_parent <- dirname(getwd())
+markov_path <- '/Tools/markov/'
+this_path=paste(this_parent,'/Tools/markov/',sep="")
+
+source(paste(this_path,'package_checker.R',sep=""))
+source(paste(this_path,'vmm_fatalities211210.R',sep=""))
+source(paste(this_path,'models2.R',sep=""))
 library(ranger)
 library(tidyverse)
 library(magrittr)

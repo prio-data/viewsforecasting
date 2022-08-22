@@ -58,14 +58,13 @@ def gam_calibrated(y_true_calpart,y_pred_calpart,y_pred_test,n_splines):
 # Retrieving the predictions for calibration and test partitions
 # The ModelList contains the predictions organized by model
 
-def RetrieveStoredPredictions(ModelList,steps,EndOfHistory,dev_id):
+def RetrieveStoredPredictions(ModelList, steps, EndOfHistory, dev_id, level, get_future):
     ''' This function retrieves the predictions stored in ViEWS prediction storage for all models in the list passed to it.
     It assumes that each element in the list is a dictionary that contains a model['modelname'] '''
     i=0
     stepcols = ['ln_ged_sb_dep']
     for step in steps:
         stepcols.append('step_pred_' + str(step))
-    level = 'cm'
     for model in ModelList:
         print(i, model['modelname'])
         stored_modelname_calib = level + '_' + model['modelname'] + '_calib'
@@ -75,34 +74,37 @@ def RetrieveStoredPredictions(ModelList,steps,EndOfHistory,dev_id):
         model['predictions_calib_df'].replace([np.inf, -np.inf], 0, inplace=True)
         model['predictions_test_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_test, run=dev_id)[stepcols]
         model['predictions_test_df'].replace([np.inf, -np.inf], 0, inplace=True)
+        if get_future:
+            model['predictions_future_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_future, run=dev_id)
+            model['predictions_future_df'].replace([np.inf, -np.inf], 0, inplace=True)
         i = i + 1
     print('All done')
     return(ModelList)
 
-def RetrieveStoredPredictions_pgm(ModelList, steps, EndOfHistory, run_id, level, get_future):
-    ''' This function retrieves the predictions stored in ViEWS prediction storage for all models in the list passed to it.
-    It assumes that each element in the list is a dictionary that contains a model['modelname'] '''
-    i = 0
-    stepcols = ['ln_ged_sb_dep']
-    for step in steps:
-        stepcols.append('step_pred_' + str(step))
-    for model in ModelList:
-        print(i, model['modelname'])
-        stored_modelname_calib = level + '_' + model['modelname'] + '_calib'
-        stored_modelname_test = level + '_' + model['modelname'] + '_test'
-        stored_modelname_future = level + '_' + model['modelname'] + '_f' + str(EndOfHistory)
-        model['predictions_calib_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_calib, run=run_id)[
-                stepcols]
-        model['predictions_calib_df'].replace([np.inf, -np.inf], 0, inplace=True)
-        model['predictions_test_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_test, run=run_id)[
-                stepcols]
-        model['predictions_test_df'].replace([np.inf, -np.inf], 0, inplace=True)
-        if get_future:
-            model['predictions_future_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_future, run=run_id)
-            model['predictions_future_df'].replace([np.inf, -np.inf], 0, inplace=True)
-        i = i + 1
-    print('All done')
-    return (ModelList)
+#def RetrieveStoredPredictions_pgm(ModelList, steps, EndOfHistory, run_id, level, get_future):
+#    ''' This function retrieves the predictions stored in ViEWS prediction storage for all models in the list passed to it.
+#    It assumes that each element in the list is a dictionary that contains a model['modelname'] '''
+#    i = 0
+#    stepcols = ['ln_ged_sb_dep']
+#    for step in steps:
+#        stepcols.append('step_pred_' + str(step))
+#    for model in ModelList:
+#        print(i, model['modelname'])
+#        stored_modelname_calib = level + '_' + model['modelname'] + '_calib'
+#        stored_modelname_test = level + '_' + model['modelname'] + '_test'
+#        stored_modelname_future = level + '_' + model['modelname'] + '_f' + str(EndOfHistory)
+#        model['predictions_calib_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_calib, run=run_id)[
+#                stepcols]
+#        model['predictions_calib_df'].replace([np.inf, -np.inf], 0, inplace=True)
+#        model['predictions_test_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_test, run=run_id)[
+#                stepcols]
+#        model['predictions_test_df'].replace([np.inf, -np.inf], 0, inplace=True)
+#        if get_future:
+#            model['predictions_future_df'] = pd.DataFrame.forecasts.read_store(stored_modelname_future, run=run_id)
+#            model['predictions_future_df'].replace([np.inf, -np.inf], 0, inplace=True)
+#        i = i + 1
+#    print('All done')
+#    return (ModelList)
 
     # Calibration
 def CalibratePredictions(ModelList, FutureStart, steps):
