@@ -5,32 +5,115 @@ import pandas as pd
 from sklearn import decomposition
 from sklearn.decomposition import PCA
 import cm_querysets
+import pgm_querysets
+import ModelDefinitions
 
-def ReturnQsList():
-    return cm_querysets2.qslist
+
+def ReturnQsList(level):
+    if level == 'cm':
+        return cm_querysets.get_cm_querysets()
+    elif level == 'pgm':
+        return pgm_querysets.get_pgm_querysets()
+    else:
+        raise Exception(f'unrecognised level {level}')
+
 
 def SummarizeTable(dfname,df):
     print(f"{dfname}: A dataset with {len(df.columns)} columns, with "
-      f"data between t = {min(df.index.get_level_values(0))} "
-      f"and {max(df.index.get_level_values(0))}; "
-      f"{len(np.unique(df.index.get_level_values(1)))} units."
-     )
+          f"data between t = {min(df.index.get_level_values(0))} "
+          f"and {max(df.index.get_level_values(0))}; "
+          f"{len(np.unique(df.index.get_level_values(1)))} units."
+          )
+
 
 def FetchTable(Queryset, name):
     df = Queryset.fetch().astype(float)
     df.name = name
     SummarizeTable(name,df)
-    Data = {
+    data = {
             'Name': name,
             'df': df
         }
-    return(Data)
+    return data
+
 
 def FetchData(run_id):
     print(f'Fetching data using querysets; {run_id}; returns as list of dictionaries containing datasets')
     Datasets = []
 
-    if run_id == 'Fatalities002':
+    if run_id == 'Fatalities001':
+        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_ln_ultrashort", "country_month")), 'baseline'))
+        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_acled_ln", "country_month")), 'conflictlong_ln'))
+        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history", "country_month")), 'conflict_ln'))
+        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history_exp", "country_month")), 'conflict_nolog'))
+        Datasets.append(FetchTable((Queryset("hh_fatalities_wdi_short", "country_month")), 'wdi_short'))
+        Datasets.append(FetchTable((Queryset("hh_fatalities_vdem_short", "country_month")), 'vdem_short'))
+        Datasets.append(FetchTable((Queryset("hh_topic_model_short", "country_month")), 'topics_short'))
+        Datasets.append(FetchTable((Queryset("hh_broad", "country_month")), 'broad'))
+        #        Datasets.append(FetchTable((Queryset("hh_prs", "country_month")),'prs'))
+        Datasets.append(FetchTable((Queryset("hh_greatest_hits", "country_month")), 'gh'))
+        Datasets.append(FetchTable((Queryset("hh_20_features", "country_month")), 'hh20'))
+        Datasets.append(FetchTable((Queryset("hh_all_features", "country_month")), 'all_features'))
+
+        # PCA
+        Standard_features = ['ln_ged_sb_dep', 'ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
+                             'wdi_sp_pop_totl']
+
+        sources = []
+        af = {
+            'name': 'all features',
+            'dataset': Datasets[10]['df'],
+            'n_comp': 20
+        }
+        sources.append(af)
+        topics = {
+            'name': 'topics',
+            'dataset': Datasets[6]['df'],
+            'n_comp': 10
+        }
+        sources.append(topics)
+        vdem = {
+            'name': 'vdem',
+            'dataset': Datasets[5]['df'],
+            'n_comp': 15
+        }
+        sources.append(vdem)
+        wdi = {
+            'name': 'wdi',
+            'dataset': Datasets[4]['df'],
+            'n_comp': 15
+        }
+        sources.append(wdi)
+
+        EndOfPCAData = 516
+        for source in sources:
+            source = PCA(source, Standard_features, EndOfPCAData)
+
+        Data = {
+            'Name': 'pca_all',
+            'df': af['result']
+        }
+        Datasets.append(Data)
+
+        Data = {
+            'Name': 'pca_topics',
+            'df': topics['result']
+        }
+        Datasets.append(Data)
+
+        Data = {
+            'Name': 'pca_vdem',
+            'df': vdem['result']
+        }
+        Datasets.append(Data)
+
+        Data = {
+            'Name': 'pca_wdi',
+            'df': wdi['result']
+        }
+        Datasets.append(Data)
+
+    elif run_id == 'Fatalities002':
         Datasets.append(FetchTable((Queryset("fatalities002_baseline", "country_month")),'baseline002'))
         Datasets.append(FetchTable((Queryset("fatalities002_conflict_history_long", "country_month")),'conflictlong_ln'))
         Datasets.append(FetchTable((Queryset("fatalities002_conflict_history", "country_month")),'conflict_ln'))
@@ -41,9 +124,9 @@ def FetchData(run_id):
         Datasets.append(FetchTable((Queryset("fatalities002_joint_narrow", "country_month")),'joint_narrow'))
         Datasets.append(FetchTable((Queryset("fatalities002_all_features", "country_month")),'all_features'))
         Datasets.append(FetchTable((Queryset("fatalities002_aquastat", "country_month")),'aquastat'))
-        Datasets.append(FetchTable((Queryset("Fatalities002_faostat", "country_month")),'faostat'))
-        Datasets.append(FetchTable((Queryset("Fatalities002_faoprices", "country_month")),'faoprices'))
-        Datasets.append(FetchTable((Queryset("Fatalities001_imfweo", "country_month")),'imfweo'))
+        Datasets.append(FetchTable((Queryset("fatalities002_faostat", "country_month")),'faostat'))
+        Datasets.append(FetchTable((Queryset("fatalities002_faoprices", "country_month")),'faoprices'))
+        Datasets.append(FetchTable((Queryset("fatalities002_imfweo", "country_month")),'imfweo'))
 
         # PCA
         Standard_features = ['ln_ged_sb_dep','ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5', 'wdi_sp_pop_totl']
@@ -105,79 +188,111 @@ def FetchData(run_id):
         }
         Datasets.append(Data)
 
-    if run_id == 'Fatalities001':
-        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_ln_ultrashort", "country_month")),'baseline'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_ged_acled_ln", "country_month")),'conflictlong_ln'))
-        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history", "country_month")),'conflict_ln'))
-        Datasets.append(FetchTable((Queryset("fat_cm_conflict_history_exp", "country_month")),'conflict_nolog'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_wdi_short", "country_month")),'wdi_short'))
-        Datasets.append(FetchTable((Queryset("hh_fatalities_vdem_short", "country_month")),'vdem_short'))
-        Datasets.append(FetchTable((Queryset("hh_topic_model_short", "country_month")),'topics_short'))
-        Datasets.append(FetchTable((Queryset("hh_broad", "country_month")),'broad'))
-#        Datasets.append(FetchTable((Queryset("hh_prs", "country_month")),'prs'))
-        Datasets.append(FetchTable((Queryset("hh_greatest_hits", "country_month")),'gh'))
-        Datasets.append(FetchTable((Queryset("hh_20_features", "country_month")),'hh20'))
-        Datasets.append(FetchTable((Queryset("hh_all_features", "country_month")),'all_features'))
+    else:
+        raise Exception(f"run_id {run_id} not recognised")
 
-        # PCA
-        Standard_features = ['ln_ged_sb_dep','ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5', 'wdi_sp_pop_totl']
+    return(Datasets)
 
-        sources = []
-        af = {
-            'name': 'all features',
-            'dataset': Datasets[10]['df'],
-            'n_comp': 20
-        }
-        sources.append(af)
-        topics = {
-            'name': 'topics',
-            'dataset': Datasets[6]['df'],
+
+def get_df_from_datasets_by_name(Datasets,name):
+    for ds in Datasets:
+        if name in ds['Name']:
+            return ds['df']
+    else:
+        raise Exception('No Dataset similar to ',name,'found')
+
+
+def fetch_cm_data_from_model_def(qslist):
+
+    level = 'cm'
+
+    ModelList = ModelDefinitions.DefineEnsembleModels(level)
+
+    defined_querysets=[qs.name for qs in qslist]
+
+    model_querysets=list(set([model['queryset'] for model in ModelList]))
+
+    qs_short_names={}
+    for model in ModelList:
+        qs_short_names[model['queryset']]=model['data_train']
+
+    Datasets=[]
+
+    for model_qs in model_querysets:
+        if model_qs not in defined_querysets:
+            raise Exception(f'queryset',model_qs,'is not defined in the imported queryset definitions file')
+
+        Datasets.append(FetchTable((Queryset(model_qs, "country_month")), qs_short_names[model_qs]))
+
+    # PCA
+    Standard_features = ['ln_ged_sb_dep', 'ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
+                         'wdi_sp_pop_totl']
+
+    sources = []
+
+    name = 'all_features'
+    af = {
+        'name': name,
+        'dataset': get_df_from_datasets_by_name(Datasets,name),
+        'n_comp': 20
+         }
+
+    sources.append(af)
+
+    name = 'topics'
+    topics = {
+            'name': name,
+            'dataset': get_df_from_datasets_by_name(Datasets, name),
             'n_comp': 10
         }
-        sources.append(topics)
-        vdem = {
-            'name': 'vdem',
-            'dataset': Datasets[5]['df'],
+    sources.append(topics)
+
+    name = 'vdem'
+    vdem = {
+            'name': name,
+            'dataset': get_df_from_datasets_by_name(Datasets, name),
             'n_comp': 15
         }
-        sources.append(vdem)
-        wdi = {
-            'name': 'wdi',
-            'dataset': Datasets[4]['df'],
+    sources.append(vdem)
+
+    name = 'wdi'
+    wdi = {
+            'name': name,
+            'dataset': get_df_from_datasets_by_name(Datasets, name),
             'n_comp': 15
         }
-        sources.append(wdi)
+    sources.append(wdi)
 
-        EndOfPCAData = 516
-        for source in sources:
-            source = PCA(source, Standard_features,EndOfPCAData)
+    EndOfPCAData = 516
+    for source in sources:
+        source = PCA(source, Standard_features,EndOfPCAData)
 
-        Data = {
+    Data = {
             'Name': 'pca_all',
             'df': af['result']
         }
-        Datasets.append(Data)
+    Datasets.append(Data)
 
-        Data = {
+    Data = {
             'Name': 'pca_topics',
             'df': topics['result']
         }
-        Datasets.append(Data)
+    Datasets.append(Data)
 
-        Data = {
+    Data = {
             'Name': 'pca_vdem',
             'df': vdem['result']
         }
-        Datasets.append(Data)
+    Datasets.append(Data)
 
-        Data = {
+    Data = {
             'Name': 'pca_wdi',
             'df': wdi['result']
         }
-        Datasets.append(Data)
-        
+    Datasets.append(Data)
 
-    return(Datasets)
+    return Datasets
+
 
 def FetchData_pgm(run_id):
     print('Fetching data using querysets; returns as list of dictionaries containing datasets')
@@ -194,6 +309,31 @@ def FetchData_pgm(run_id):
 
         return(Datasets)
 
+
+def fetch_pgm_data_from_model_def(qslist):
+
+    level = 'pgm'
+
+    ModelList = ModelDefinitions.DefineEnsembleModels(level)
+
+    defined_querysets=[qs.name for qs in qslist]
+
+    model_querysets=list(set([model['queryset'] for model in ModelList]))
+
+    qs_short_names={}
+    for model in ModelList:
+        qs_short_names[model['queryset']]=model['data_train']
+
+    Datasets=[]
+
+    for model_qs in model_querysets:
+        if model_qs not in defined_querysets:
+            raise Exception(f'queryset',model_qs,'is not defined in the imported queryset definitions file')
+
+        Datasets.append(FetchTable((Queryset(model_qs, "country_month")), qs_short_names[model_qs]))
+
+    return Datasets
+
 def get_training_data(Datasets, ModelList, model_name):
     for model in ModelList:
         if model['modelname'] == model_name:
@@ -209,6 +349,7 @@ def get_training_data(Datasets, ModelList, model_name):
     else:
         print('model', model_name, 'not found')
         return None
+
 
 def data_integrity_check(dataset, depvar):
     if depvar not in dataset['df'].columns:
@@ -252,6 +393,7 @@ def index_check(model, df_with_wanted_index):
 
     return
 
+
 def PCA(source, Standard_features, EndOfPCAData):
     df = source['dataset'].loc[121:EndOfPCAData].copy()
     df = df.replace([np.inf, -np.inf], 0) 
@@ -282,14 +424,18 @@ def find_index(dicts, key, value):
     else:
         raise ValueError('no dict with the key and value combination found')
 
+
 def RetrieveFromList(Datasets,name):
     return Datasets[find_index(Datasets, 'Name', name)]['df']
+
 
 def find_between(s, start, end):
     return (s.split(start))[1].split(end)[0]
 
+
 def find_between_brackets(s):
     return (s.split('['))[1].split(']')[0]
+
 
 def document_queryset(qslist,dev_id):
     ''' Writes a markdown file listing the variables in the querysets passed in the list of querysets '''
@@ -298,7 +444,7 @@ def document_queryset(qslist,dev_id):
     file.write('# Documentation of querysets')
     file.write(dev_id)
 
-    for qs in cm_querysets2.qslist:
+    for qs in qslist:
         print('Model: ',qs.name)
         file.write(qs.name)
         ModelMetaData = []
@@ -352,8 +498,129 @@ def document_ensemble(ModelList, outcome):
             ModelMetaData['PCA'] = 'False'
         
         EnsembleMetaData.append(ModelMetaData)
-        i= i + 1
+        i = i + 1
         EnsembleMetaData_df = pd.DataFrame(EnsembleMetaData)
         filename = f'../Documentation/Ensemble_{outcome}.md'
-        EnsembleMetaData_df.to_markdown(index=False, buf=filename)    
- 
+        EnsembleMetaData_df.to_markdown(index=False, buf=filename)
+
+# calibration of pgm predictions using cm predictions:
+def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=False, super_calibrate=False):
+    try:
+        assert df_pgm.index.names[0] == 'month_id'
+    except AssertionError:
+        raise ValueError(f"Expected pgm df to have month_id as 1st index")
+
+    try:
+        assert df_pgm.index.names[1] in ['priogrid_gid', 'priogrid_id', 'pg_id']
+    except AssertionError:
+        raise ValueError(f"Expected pgm df to have one of priogrid_gid, priogrid_id, pg_id as 2nd index")
+
+    try:
+        assert df_cm.index.names[0] == 'month_id'
+    except AssertionError:
+        raise ValueError(f"Expected cm df to have month_id as 1st index")
+
+    try:
+        assert df_cm.index.names[1] in ['country_id', 'c_id']
+    except AssertionError:
+        raise ValueError(f"Expected cm df to have one of country_id, c_id as 2nd index")
+
+    try:
+        assert column in df_pgm.columns
+    except AssertionError:
+        raise ValueError(f"Specified column not in pgm df")
+
+    try:
+        assert column in df_cm.columns
+    except AssertionError:
+        raise ValueError(f"Specified column not in cm df")
+
+    input_months_cm = list(set(df_cm.index.get_level_values(0)))
+    input_months_pgm = list(set(df_pgm.index.get_level_values(0)))
+
+    input_months_cm.sort()
+    input_months_pgm.sort()
+
+    try:
+        assert input_months_cm == input_months_pgm
+    except AssertionError:
+        raise ValueError(f"Inconsistent months found in input dfs")
+
+    input_countries = list(set(df_cm.index.get_level_values(1)))
+    input_pgs = list(set(df_pgm.index.get_level_values(1)))
+    input_pgs.sort()
+
+    if df_pg_id_c_id is None:
+        print('Fetching pd-month-->country-month df from service')
+        df_pg_id_c_id = fetch_df_pg_id_c_id()
+
+    pg_size = len(input_pgs)
+
+    normalised = np.zeros((df_pgm[column].size))
+
+    if log_feature:
+        df_to_calib = pd.DataFrame(index=df_pgm.index, columns=[column, ], data=np.exp(df_pgm[column].values) - 1)
+        df_calib_from = pd.DataFrame(index=df_cm.index, columns=[column, ], data=np.exp(df_cm[column].values) - 1)
+    else:
+        df_to_calib = pd.DataFrame(index=df_pgm.index, columns=[column, ], data=df_pgm[column].values)
+        df_calib_from = pd.DataFrame(index=df_cm.index, columns=[column, ], data=df_cm[column].values)
+
+    for imonth, month in enumerate(input_months_pgm):
+
+        istart = imonth * pg_size
+        iend = istart + pg_size
+
+        normalised_month = np.zeros((pg_size))
+
+        df_data_month_pgm = pd.DataFrame(df_to_calib[column].loc[month])
+
+        values_month_pgm = df_to_calib[column].loc[month].values.reshape(pg_size)
+
+        df_data_month_cm = pd.DataFrame(df_calib_from[column].loc[month])
+
+        map_month = df_pg_id_c_id.loc[month].values.reshape(pg_size)
+
+        input_countries = list(set(df_data_month_cm.index.get_level_values(0)))
+
+        for country in input_countries:
+            month_country = df_data_month_cm[column].loc[country]
+            mask = (map_month == country)
+
+            nmask = np.count_nonzero(mask)
+
+            pg_sum = np.sum(values_month_pgm[mask])
+
+            value_month_cm = df_calib_from[column].loc[month, country]
+
+            if pg_sum > 0:
+                normalisation = value_month_cm / pg_sum * np.ones((nmask))
+
+                normalised_month[mask] = values_month_pgm[mask] * normalisation
+
+        if super_calibrate:
+            sum_month_cm = np.sum(df_data_month_cm[column])
+            if np.sum(normalised_month) > 0:
+                normalisation = sum_month_cm / np.sum(normalised_month)
+                normalised_month *= normalisation
+
+        normalised[istart:iend] = normalised_month
+
+    if log_feature:
+        normalised = np.log(normalised + 1)
+
+    df_out = pd.DataFrame(index=df_pgm.index, columns=[column, ], data=normalised)
+
+    return df_out
+
+
+# helper function for pgm-cm calibration, which fetches country-ids for pg-ids
+def fetch_df_pg_id_c_id():
+    qs = (Queryset("jed_pgm_cm", "priogrid_month")
+          .with_column(Column("country_id", from_table="country_month", from_column="country_id")
+
+                       )
+          )
+
+    df_pg_id_c_id = qs.publish().fetch()
+
+    return df_pg_id_c_id
