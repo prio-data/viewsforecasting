@@ -502,6 +502,7 @@ def document_ensemble(ModelList, outcome):
         EnsembleMetaData_df = pd.DataFrame(EnsembleMetaData)
         filename = f'../Documentation/Ensemble_{outcome}.md'
         EnsembleMetaData_df.to_markdown(index=False, buf=filename)
+        return(EnsembleMetaData_df)
 
 # calibration of pgm predictions using cm predictions:
 def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=False, super_calibrate=False):
