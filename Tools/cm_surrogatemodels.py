@@ -97,6 +97,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':             'Conflict history',
             'Shortname':        'CH',
+            'Longdescription':  'long description in here',
             'Columns':          ['ln_ged_sb_dep'],
             'Data':             Ensemble_df[[f'depvar_s_{step}']],
             'GAM':              LinearGAM(s(0,n_splines=10)),
@@ -108,6 +109,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Democracy',
             'Shortname': 'Dem',
+            'Longdescription':  'long description in here',
             'Columns':    ['vdem_v2x_libdem'],
             'Data':      Ensemble_df[[f'libdem_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=7)),
@@ -119,6 +121,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Rule of law',
             'Shortname': 'Rule',
+            'Longdescription':  'long description in here',
             'Columns':    ['vdem_v2x_rule'],
             'Data':      Ensemble_df[[f'rule_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=7)),
@@ -130,6 +133,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Population',
             'Shortname': 'Pop',
+            'Longdescription':  'long description in here',
             'Columns':    ['wdi_sp_pop_totl'],
             'Data':      Ensemble_df[[f'pop_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=10)),
@@ -141,6 +145,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Infant mortality',
             'Shortname': 'IMR',
+            'Longdescription':  'long description in here',
             'Columns':    ['wdi_sp_dyn_imrt_in'],
             'Data':      Ensemble_df[[f'imr_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=5)),
@@ -152,6 +157,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Neighborhood conflict',
             'Shortname': 'NCH',
+            'Longdescription':  'long description in here',
             'Columns':    ['splag_1_decay_ged_sb_5'],
             'Data':      Ensemble_df[[f'nb_conflict_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=5)),
@@ -163,6 +169,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Topics: conflict and conflict stock',
             'Shortname': 'Topic10',
+            'Longdescription':  'long description in here',
             'Columns':    ['topic10_conflict_t1','topic10_conflict_t1_stock'],
             'Data':      Ensemble_df[[f'topic_conflict_s_{step}',f'topic_conflict_stock_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
@@ -175,6 +182,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Water services efficiency',
             'Shortname': 'Water',
+            'Longdescription':  'long description in here',
             'Columns':    ['general_efficiency_t48'],
             'Data':      Ensemble_df[[f'water_efficiency_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=5)),
@@ -190,6 +198,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Infant mortality and conflict history',
             'Shortname': 'IMRCH',
+            'Longdescription':  'long description in here',
             'Columns':    ['wdi_sp_dyn_imrt_in','ln_ged_sb_dep'],
             'Data':      Ensemble_df[[f'imr_s_{step}',f'depvar_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=10) + s(1,n_splines=10)),
@@ -201,6 +210,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':       'Population and conflict history',
             'Shortname':  'PopCH',
+            'Longdescription':  'long description in here',
             'Columns':    ['wdi_sp_pop_totl','ln_ged_sb_dep'],
             'Data':       Ensemble_df[[f'pop_s_{step}',f'depvar_s_{step}']],
             'GAM':        LinearGAM(s(0,n_splines=10) + s(1,n_splines=10)),
@@ -212,6 +222,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Democracy and conflict history',
             'Shortname': 'DemCH',
+            'Longdescription':  'long description in here',
             'Columns':    ['vdem_v2x_libdem','ln_ged_sb_dep'],
             'Data':      Ensemble_df[[f'libdem_s_{step}',f'depvar_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=10) + s(1,n_splines=10)),
@@ -223,6 +234,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         {
             'Name':      'Democracy and infant mortality',
             'Shortname': 'DIMR',
+            'Longdescription':  'long description in here',
             'Columns':    ['vdem_v2x_libdem','wdi_sp_dyn_imrt_in'],
             'Data':      Ensemble_df[[f'libdem_s_{step}',f'imr_s_{step}']],
             'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
@@ -238,6 +250,7 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             ModelDict = {
                 'Modelname':   's' + str(step) + ' ' + IVset['Name'],
                 'Shortname':   IVset['Shortname'],
+                'Longdescription':    IVset['Longdescription'],
                 'Step':        step,
                 'Columns':     IVset['Columns'],
                 'IVs':         IVset['Data'],
