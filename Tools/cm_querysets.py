@@ -67,7 +67,8 @@ def get_cm_querysets():
                                 .transform.missing.replace_na()
                                 )
 
-                   # From WDI
+                   # From 
+                   
                    .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy", from_column="wdi_sp_pop_totl")
                                 .transform.missing.fill()
                                 .transform.temporal.tlag(12)
@@ -1331,12 +1332,11 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        )
 
-                          # .with_column(Column("vdem_v2x_civlib", from_table="vdem_v11_cy",
-                          # from_column="vdem_v2x_civlib")
-                          # .transform.missing.fill()
-                          # .transform.temporal.tlag(12)
-                          # .transform.missing.fill()
-                          # )
+                           .with_column(Column("vdem_v2x_civlib", from_table="vdem_v11_cy", from_column="vdem_v2x_civlib")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
 
                           .with_column(Column("vdem_v2x_clphy", from_table="vdem_v11_cy", from_column="vdem_v2x_clphy")
                                        .transform.missing.fill()
@@ -1681,12 +1681,6 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("wdi_se_enr_prim_fm_zs", from_table="wdi_cy",
-                                              from_column="wdi_se_enr_prim_fm_zs")
-                                       .transform.missing.fill()
-                                       .transform.temporal.tlag(12)
-                                       .transform.missing.fill()
-                                       )
 
                           .with_theme("fatalities")
                           .describe("""Predicting ln(fatalities), cm level
@@ -1756,8 +1750,22 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
 
-                         .with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
-                                             from_column="wdi_ny_gdp_mktp_kd")
+                         #.with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
+                         #                    from_column="wdi_ny_gdp_mktp_kd")
+                         #             .transform.missing.fill()
+                         #             .transform.temporal.tlag(12)
+                         #             .transform.missing.fill()
+                         #             )
+                         
+                         .with_column(Column("wdi_ny_gdp_pcap_kd", from_table="wdi_cy",
+                                             from_column="wdi_ny_gdp_pcap_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("wdi_sp_dyn_le00_in", from_table="wdi_cy",
+                                             from_column="wdi_sp_dyn_le00_in")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
@@ -1776,7 +1784,14 @@ def get_cm_querysets():
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
-
+                         
+                         .with_column(Column("wdi_se_prm_nenr", from_table="wdi_cy",
+                                             from_column="wdi_se_prm_nenr")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                         
                          .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
                                              from_column="wdi_sh_sta_maln_zs")
                                       .transform.missing.fill()
@@ -1905,6 +1920,7 @@ def get_cm_querysets():
                                       .transform.spatial.countrylag(1, 1, 0, 0)
                                       .transform.missing.replace_na()
                                       )
+                         
 
                          .with_theme("fatalities")
                          .describe("""Predicting ln(fatalities), cm level
