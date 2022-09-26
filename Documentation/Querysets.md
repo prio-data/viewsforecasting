@@ -1,4 +1,7 @@
-# Documentation of querysetsFatalities002fatalities002_baseline| Model                  | Included variable name   | Database variable name          | Transformations                                                                                                                     |
+# Documentation of querysets used in the *cm* ensemble for **sb** conflict
+
+
+| Model                  | Included variable name   | Database variable name          | Transformations                                                                                                                     |
 |:-----------------------|:-------------------------|:--------------------------------|:------------------------------------------------------------------------------------------------------------------------------------|
 | fatalities002_baseline | 'ln_ged_sb_dep'          | 'ged2_cm.ged_sb_best_sum_nokgi' | ["'missing.fill'", "'ops.ln'"]                                                                                                      |
 | fatalities002_baseline | 'ln_ged_sb'              | 'ged2_cm.ged_sb_best_sum_nokgi' | ["'missing.fill'", "'ops.ln'"]                                                                                                      |
