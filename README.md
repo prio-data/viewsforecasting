@@ -10,11 +10,13 @@ Authors and contributors are acknowledged in the commit history of the repositor
 
 ## Copyright
 
-The political Violence Early-Warning System (ViEWS), 2017 -
+The Violence & Impacts Early-Warning System (VIEWS), 2017 -
 
 ## How to cite
 
-Please use the following reference when using the resources in this repository:
+Please use the following references when using the resources in this repository:
+
+> Hegre, H. et al. (2022) ‘Forecasting fatalities’, Uppsala University, Report. URN: [urn:nbn:se:uu:diva-476476](http://urn.kb.se/resolve?urn=urn:nbn:se:uu:diva-476476). 
 
 > Hegre, H. et al. (2021) ‘ViEWS2020: Revising and evaluating the ViEWS political Violence Early-Warning System’, Journal of Peace Research, 58(3), pp. 599–611. doi: [10.1177/0022343320962157](https://doi.org/10.1177/0022343320962157).
 
