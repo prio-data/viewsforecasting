@@ -34,7 +34,7 @@ def DefineEnsembleModels(level):
 
         model = {
             'modelname':        'fatalities003_baseline_ons',
-            'algorithm':        OnsetRegressor(ons_name='LGBMClassifier', cont_name='LGBMRegressor',onset_indicator = ''),
+            'algorithm':        FixedFirstSplitRegression(ones_name='LGBMClassifier', zeros_name='LGBMRegressor',onset_indicator = ''),
             'depvar':           'ln_ged_sb_dep',
             'data_train':       'baseline002',
             'queryset':         'fatalities002_baseline',
