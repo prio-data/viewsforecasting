@@ -476,6 +476,20 @@ def document_queryset(qslist,dev_id):
         file.write('')
     file.close()
 
+# we want long des for querysets (in sofia's codebook)
+# add to repo th documentation version of the markdown (sofia) 
+# add fetchdata.py and the function I wrote to read in the dataframe
+# for each var in qs.operations, do a lookup in the df, retrieve the long de and print into the df
+# Maybe: def function in FEtchdata.py to read a markdown and returns a pandas def. can then call that function in this function. 
+
+
+# store Sofias as a json
+# read json from git and store into my branch in git  
+# returns a df with the proper index, maybe read from json and index 
+# then call this function in the
+
+# think about how to update this json
+    
 
 def document_ensemble(ModelList, outcome):
     ''' Writes a markdown file listing the models passed in the list of models '''
@@ -624,3 +638,22 @@ def fetch_df_pg_id_c_id():
     df_pg_id_c_id = qs.publish().fetch()
 
     return df_pg_id_c_id
+
+
+
+
+class SurrogateMetadata:
+    def __init__(self, surrogate_model_list):
+        df = surrogate_model_list.copy()
+        df = pd.DataFrame([self.__filter_key(i) for i in df])
+        df['Modelname'] = df.apply(lambda row: ' '.join(row['Modelname'].split()[1:]), axis=1)
+        df['Columns'] = df.apply(lambda row: ', '.join(row['Columns']), axis=1)
+        df = df.drop_duplicates()
+        self.surrogate_model_list = df
+
+    @staticmethod
+    def __filter_key(surrogate_model):
+        return {key: surrogate_model[key] for key in ('Modelname','Shortname','Longdescription','Columns')}
+    
+    def to_markdown(self, path=None):
+        return self.surrogate_model_list.to_markdown(buf=path)
