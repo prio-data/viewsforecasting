@@ -67,7 +67,8 @@ def get_cm_querysets():
                                 .transform.missing.replace_na()
                                 )
 
-                   # From WDI
+                   # From 
+                   
                    .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy", from_column="wdi_sp_pop_totl")
                                 .transform.missing.fill()
                                 .transform.temporal.tlag(12)
@@ -1282,385 +1283,391 @@ def get_cm_querysets():
     qs_vdem_short_stub = (Queryset("fatalities002_vdem_short_stub", "country_month")
 
                           # Features from vdem
-                          .with_column(Column("vdem_v2x_delibdem", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_delibdem")
+                          .with_column(Column("vdem_v2x_delibdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_delibdem")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_egaldem", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_egaldem")
+                          .with_column(Column("vdem_v2x_egaldem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_egaldem")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_libdem", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_libdem")
+                          .with_column(Column("vdem_v2x_libdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_libdem")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_libdem_48", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_libdem")
+                          .with_column(Column("vdem_v2x_libdem_48", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_libdem")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(60)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_partip", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_partip")
+                          .with_column(Column("vdem_v2x_partip", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_partip")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_partipdem", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_partipdem")
+                          .with_column(Column("vdem_v2x_partipdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_partipdem")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_accountability", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_accountability")
+                          .with_column(Column("vdem_v2x_accountability", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_accountability")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          # .with_column(Column("vdem_v2x_civlib", from_table="vdem_v11_cy",
-                          # from_column="vdem_v2x_civlib")
-                          # .transform.missing.fill()
-                          # .transform.temporal.tlag(12)
-                          # .transform.missing.fill()
-                          # )
-
-                          .with_column(Column("vdem_v2x_clphy", from_table="vdem_v11_cy", from_column="vdem_v2x_clphy")
+                           .with_column(Column("vdem_v2x_civlib", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_civlib")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_cspart", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_cspart")
+                          .with_column(Column("vdem_v2x_clphy", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clphy")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_divparctrl")
+                          .with_column(Column("vdem_v2x_cspart", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_cspart")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_edcomp_thick", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_edcomp_thick")
+                          .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_divparctrl")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_egal", from_table="vdem_v11_cy", from_column="vdem_v2x_egal")
+                          .with_column(Column("vdem_v2x_edcomp_thick", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_edcomp_thick")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_execorr", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_execorr")
+                          .with_column(Column("vdem_v2x_egal", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_egal")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_frassoc_thick", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_frassoc_thick")
+                          .with_column(Column("vdem_v2x_execorr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_execorr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_gencs", from_table="vdem_v11_cy", from_column="vdem_v2x_gencs")
+                          .with_column(Column("vdem_v2x_frassoc_thick", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_frassoc_thick")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_gender", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_gender")
+                          .with_column(Column("vdem_v2x_gencs", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_gencs")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_genpp", from_table="vdem_v11_cy", from_column="vdem_v2x_genpp")
+                          .with_column(Column("vdem_v2x_gender", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_gender")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_horacc", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_horacc")
+                          .with_column(Column("vdem_v2x_genpp", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_genpp")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_neopat", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_neopat")
+                          .with_column(Column("vdem_v2x_horacc", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_horacc")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_pubcorr", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_pubcorr")
+                          .with_column(Column("vdem_v2x_neopat", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_neopat")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_rule", from_table="vdem_v11_cy", from_column="vdem_v2x_rule")
+                          .with_column(Column("vdem_v2x_pubcorr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_pubcorr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_veracc", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_veracc")
+                          .with_column(Column("vdem_v2x_rule", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_rule")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_ex_military")
+                          .with_column(Column("vdem_v2x_veracc", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_veracc")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_ex_party")
+                          .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_ex_military")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_freexp", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_freexp")
+                          .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_ex_party")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xcl_acjst", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcl_acjst")
+                          .with_column(Column("vdem_v2x_freexp", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_freexp")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcl_dmove")
+                          .with_column(Column("vdem_v2xcl_acjst", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_acjst")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcl_prpty")
+                          .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_dmove")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v11_cy", from_column="vdem_v2xcl_rol")
+                          .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_prpty")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xcl_slave", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcl_slave")
+                          .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v12_cy", from_column="vdem_v12_v2xcl_rol")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xdd_dd", from_table="vdem_v11_cy", from_column="vdem_v2xdd_dd")
+                          .with_column(Column("vdem_v2xcl_slave", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_slave")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xdl_delib", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xdl_delib")
+                          .with_column(Column("vdem_v2xdd_dd", from_table="vdem_v12_cy", from_column="vdem_v12_v2xdd_dd")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xeg_eqdr")
+                          .with_column(Column("vdem_v2xdl_delib", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xdl_delib")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xeg_eqprotec")
+                          .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqdr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xel_frefair", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xel_frefair")
+                          .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqprotec")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xel_regelec", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xel_regelec")
+                          .with_column(Column("vdem_v2xel_frefair", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xel_frefair")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xme_altinf", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xme_altinf")
+                          .with_column(Column("vdem_v2xel_regelec", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xel_regelec")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xnp_client", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xnp_client")
+                          .with_column(Column("vdem_v2xme_altinf", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xme_altinf")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xnp_regcorr")
+                          .with_column(Column("vdem_v2xnp_client", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xnp_client")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xpe_exlecon", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xpe_exlecon")
+                          .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xnp_regcorr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xpe_exlpol")
+                          .with_column(Column("vdem_v2xpe_exlecon", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlecon")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xpe_exlgeo")
+                          .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlpol")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xpe_exlgender")
+                          .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlgeo")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xpe_exlsocgr")
+                          .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlgender")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xps_party", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xps_party")
+                          .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlsocgr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xcs_ccsi", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcs_ccsi")
+                          .with_column(Column("vdem_v2xps_party", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xps_party")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xnp_pres", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xnp_pres")
+                          .with_column(Column("vdem_v2xcs_ccsi", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcs_ccsi")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2xeg_eqaccess", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xeg_eqaccess")
+                          .with_column(Column("vdem_v2xnp_pres", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xnp_pres")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_diagacc")
+                          .with_column(Column("vdem_v2xeg_eqaccess", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqaccess")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )
+
+                          .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_diagacc")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+                          .with_column(Column("vdem_v2clrgunev", from_table="tbl_734eevdem_v12_cy",
+                                              from_column="vdem_v12_v2clrgunev")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+                          
 
                           # Spatial lags
 
-                          .with_column(Column("splag_vdem_v2x_libdem", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_libdem")
+                          .with_column(Column("splag_vdem_v2x_libdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_libdem")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.spatial.countrylag(1, 1, 0, 0)
                                        .transform.missing.replace_na()
                                        )
 
-                          .with_column(Column("splag_vdem_v2xcl_dmove", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcl_dmove")
+                          .with_column(Column("splag_vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_dmove")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.spatial.countrylag(1, 1, 0, 0)
                                        .transform.missing.replace_na()
                                        )
 
-                          .with_column(Column("splag_vdem_v2x_accountability", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2x_accountability")
+                          .with_column(Column("splag_vdem_v2x_accountability", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_accountability")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.spatial.countrylag(1, 1, 0, 0)
                                        .transform.missing.replace_na()
                                        )
 
-                          .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xpe_exlsocgr")
+                          .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlsocgr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.spatial.countrylag(1, 1, 0, 0)
                                        .transform.missing.replace_na()
                                        )
 
-                          .with_column(Column("splag_vdem_v2xcl_rol", from_table="vdem_v11_cy",
-                                              from_column="vdem_v2xcl_rol")
+                          .with_column(Column("splag_vdem_v2xcl_rol", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_rol")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.spatial.countrylag(1, 1, 0, 0)
@@ -1681,12 +1688,6 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        )
 
-                          .with_column(Column("wdi_se_enr_prim_fm_zs", from_table="wdi_cy",
-                                              from_column="wdi_se_enr_prim_fm_zs")
-                                       .transform.missing.fill()
-                                       .transform.temporal.tlag(12)
-                                       .transform.missing.fill()
-                                       )
 
                           .with_theme("fatalities")
                           .describe("""Predicting ln(fatalities), cm level
@@ -1756,8 +1757,22 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
 
-                         .with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
-                                             from_column="wdi_ny_gdp_mktp_kd")
+                         #.with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
+                         #                    from_column="wdi_ny_gdp_mktp_kd")
+                         #             .transform.missing.fill()
+                         #             .transform.temporal.tlag(12)
+                         #             .transform.missing.fill()
+                         #             )
+                         
+                         .with_column(Column("wdi_ny_gdp_pcap_kd", from_table="wdi_cy",
+                                             from_column="wdi_ny_gdp_pcap_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("wdi_sp_dyn_le00_in", from_table="wdi_cy",
+                                             from_column="wdi_sp_dyn_le00_in")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
@@ -1776,7 +1791,14 @@ def get_cm_querysets():
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
-
+                         
+                         .with_column(Column("wdi_se_prm_nenr", from_table="wdi_cy",
+                                             from_column="wdi_se_prm_nenr")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                         
                          .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
                                              from_column="wdi_sh_sta_maln_zs")
                                       .transform.missing.fill()
@@ -1905,6 +1927,7 @@ def get_cm_querysets():
                                       .transform.spatial.countrylag(1, 1, 0, 0)
                                       .transform.missing.replace_na()
                                       )
+                         
 
                          .with_theme("fatalities")
                          .describe("""Predicting ln(fatalities), cm level
@@ -2188,48 +2211,48 @@ def get_cm_querysets():
                                     )
 
                        # From Vdem
-                       .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v11_cy", from_column="vdem_v2xcl_dmove")
+                       .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v12_cy", from_column="vdem_v12_v2xcl_dmove")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
                                     )
 
-                       .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v11_cy", from_column="vdem_v2xcl_rol")
+                       .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v12_cy", from_column="vdem_v12_v2xcl_rol")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
                                     )
 
-                       .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v11_cy", from_column="vdem_v2xeg_eqdr")
+                       .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy", from_column="vdem_v12_v2xeg_eqdr")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
                                     )
 
-                       .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v11_cy",
-                                           from_column="vdem_v2xpe_exlpol")
+                       .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v12_cy",
+                                           from_column="vdem_v12_v2xpe_exlpol")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
                                     )
 
-                       .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
-                                           from_column="vdem_v2xpe_exlsocgr")
+                       .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                           from_column="vdem_v12_v2xpe_exlsocgr")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
                                     )
 
-                       .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
-                                           from_column="vdem_v2xpe_exlsocgr")
+                       .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                           from_column="vdem_v12_v2xpe_exlsocgr")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.spatial.countrylag(1, 1, 0, 0)
                                     .transform.missing.replace_na()
                                     )
 
-                       .with_column(Column("splag_vdem_v2xcl_rol", from_table="vdem_v11_cy",
-                                           from_column="vdem_v2xcl_rol")
+                       .with_column(Column("splag_vdem_v2xcl_rol", from_table="vdem_v12_cy",
+                                           from_column="vdem_v12_v2xcl_rol")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.spatial.countrylag(1, 1, 0, 0)
@@ -2933,133 +2956,133 @@ def get_cm_querysets():
                                         )
 
                            # From Vdem
-                           .with_column(Column("vdem_v2x_horacc", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_horacc")
+                           .with_column(Column("vdem_v2x_horacc", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_horacc")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xnp_client", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xnp_client")
+                           .with_column(Column("vdem_v2xnp_client", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xnp_client")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_veracc", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_veracc")
+                           .with_column(Column("vdem_v2x_veracc", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_veracc")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_divparctrl")
+                           .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_divparctrl")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xpe_exlpol")
+                           .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xpe_exlpol")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_diagacc")
+                           .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_diagacc")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xpe_exlgeo")
+                           .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xpe_exlgeo")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xpe_exlgender")
+                           .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xpe_exlgender")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xpe_exlsocgr")
+                           .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xpe_exlsocgr")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_ex_party")
+                           .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_ex_party")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_genpp", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_genpp")
+                           .with_column(Column("vdem_v2x_genpp", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_genpp")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xeg_eqdr")
+                           .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xeg_eqdr")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xcl_prpty")
+                           .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xcl_prpty")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xeg_eqprotec")
+                           .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xeg_eqprotec")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_ex_military")
+                           .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_ex_military")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xcl_dmove")
+                           .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xcl_dmove")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_clphy", from_table="vdem_v11_cy", from_column="vdem_v2x_clphy")
+                           .with_column(Column("vdem_v2x_clphy", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clphy")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2x_hosabort", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_hosabort")
+                           .with_column(Column("vdem_v2x_hosabort", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_hosabort")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
                                         )
 
-                           .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xnp_regcorr")
+                           .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xnp_regcorr")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
@@ -3067,40 +3090,40 @@ def get_cm_querysets():
 
                            # Spatial lags
 
-                           .with_column(Column("splag_vdem_v2x_libdem", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_libdem")
+                           .with_column(Column("splag_vdem_v2x_libdem", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_libdem")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.spatial.countrylag(1, 1, 0, 0)
                                         .transform.missing.replace_na()
                                         )
 
-                           .with_column(Column("splag_vdem_v2xcl_dmove", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xcl_dmove")
+                           .with_column(Column("splag_vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xcl_dmove")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.spatial.countrylag(1, 1, 0, 0)
                                         .transform.missing.replace_na()
                                         )
 
-                           .with_column(Column("splag_vdem_v2x_accountability", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2x_accountability")
+                           .with_column(Column("splag_vdem_v2x_accountability", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2x_accountability")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.spatial.countrylag(1, 1, 0, 0)
                                         .transform.missing.replace_na()
                                         )
 
-                           .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xpe_exlsocgr")
+                           .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xpe_exlsocgr")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.spatial.countrylag(1, 1, 0, 0)
                                         .transform.missing.replace_na()
                                         )
 
-                           .with_column(Column("splag_vdem_v2xcl_rol", from_table="vdem_v11_cy",
-                                               from_column="vdem_v2xcl_rol")
+                           .with_column(Column("splag_vdem_v2xcl_rol", from_table="vdem_v12_cy",
+                                               from_column="vdem_v12_v2xcl_rol")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.spatial.countrylag(1, 1, 0, 0)
