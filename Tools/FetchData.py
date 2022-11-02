@@ -6,14 +6,16 @@ from sklearn import decomposition
 from sklearn.decomposition import PCA
 import cm_querysets
 import pgm_querysets
-import ModelDefinitions
+#this is the addition of a new queryset
+import cm_queryset_google_topics
+import ModelDefinitions_media
 
 
 def ReturnQsList(level):
     if level == 'cm':
-        return cm_querysets.get_cm_querysets()
+        return cm_queryset_google_topics.get_cm_querysets()
     elif level == 'pgm':
-        return pgm_querysets.get_pgm_querysets()
+        return pgm_queryset_google_topics.get_pgm_querysets()
     else:
         raise Exception(f'unrecognised level {level}')
 
@@ -187,6 +189,12 @@ def FetchData(run_id):
             'df': wdi['result']
         }
         Datasets.append(Data)
+        
+    elif run_id == 'fat_dev_mc_media':
+        Datasets.append(FetchTable((Queryset("fat_dev_mc_media_baseline", "country_month")),'media_baseline'))
+        Datasets.append(FetchTable((Queryset("fat_dev_mc_media_topics", "country_month")),'media_topics'))
+        Datasets.append(FetchTable((Queryset("fat_dev_mc_media_google_internet", "country_month")),'media_google_internet'))
+        Datasets.append(FetchTable((Queryset("fat_dev_mc_media_all_features", "country_month")),'media_all_features'))
 
     else:
         raise Exception(f"run_id {run_id} not recognised")
@@ -196,6 +204,7 @@ def FetchData(run_id):
 
 def get_df_from_datasets_by_name(Datasets,name):
     for ds in Datasets:
+        print(ds['Name'])
         if name in ds['Name']:
             return ds['df']
     else:
@@ -203,10 +212,12 @@ def get_df_from_datasets_by_name(Datasets,name):
 
 
 def fetch_cm_data_from_model_def(qslist):
+    
+    print('no. qss',len(qslist))
 
     level = 'cm'
 
-    ModelList = ModelDefinitions.DefineEnsembleModels(level)
+    ModelList = ModelDefinitions_media.DefineEnsembleModels(level)
 
     defined_querysets=[qs.name for qs in qslist]
 
@@ -217,79 +228,82 @@ def fetch_cm_data_from_model_def(qslist):
         qs_short_names[model['queryset']]=model['data_train']
 
     Datasets=[]
-
+    print('defined',defined_querysets)
+    print('model',model_querysets)
     for model_qs in model_querysets:
         if model_qs not in defined_querysets:
             raise Exception(f'queryset',model_qs,'is not defined in the imported queryset definitions file')
 
         Datasets.append(FetchTable((Queryset(model_qs, "country_month")), qs_short_names[model_qs]))
 
+        
+    print('len datasets',len(Datasets))
     # PCA
-    Standard_features = ['ln_ged_sb_dep', 'ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
-                         'wdi_sp_pop_totl']
+    #Standard_features = ['ln_ged_sb_dep', 'ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
+    #                     'wdi_sp_pop_totl']
 
-    sources = []
+    #sources = []
 
-    name = 'all_features'
-    af = {
-        'name': name,
-        'dataset': get_df_from_datasets_by_name(Datasets,name),
-        'n_comp': 20
-         }
+    #name = 'all_features'
+    #af = {
+     #   'name': name,
+     #   'dataset': get_df_from_datasets_by_name(Datasets,name),
+     #   'n_comp': 20
+     #    }
 
-    sources.append(af)
+    #sources.append(af)
 
-    name = 'topics'
-    topics = {
-            'name': name,
-            'dataset': get_df_from_datasets_by_name(Datasets, name),
-            'n_comp': 10
-        }
-    sources.append(topics)
+    #name = 'topics'
+    #topics = {
+    #        'name': name,
+    #        'dataset': get_df_from_datasets_by_name(Datasets, name),
+    #       'n_comp': 10
+     #   }
+    #sources.append(topics)
 
-    name = 'vdem'
-    vdem = {
-            'name': name,
-            'dataset': get_df_from_datasets_by_name(Datasets, name),
-            'n_comp': 15
-        }
-    sources.append(vdem)
+    #name = 'vdem'
+    #vdem = {
+    #        'name': name,
+    #        'dataset': get_df_from_datasets_by_name(Datasets, name),
+    #        'n_comp': 15
+    #    }
+    #sources.append(vdem)
 
-    name = 'wdi'
-    wdi = {
-            'name': name,
-            'dataset': get_df_from_datasets_by_name(Datasets, name),
-            'n_comp': 15
-        }
-    sources.append(wdi)
+    #name = 'wdi'
+    #wdi = {
+    #        'name': name,
+    #        'dataset': get_df_from_datasets_by_name(Datasets, name),
+    #        'n_comp': 15
+    #    }
+    #sources.append(wdi)
 
-    EndOfPCAData = 516
-    for source in sources:
-        source = PCA(source, Standard_features,EndOfPCAData)
+    #EndOfPCAData = 516
+    #for source in sources:
+    #    source = PCA(source, Standard_features,EndOfPCAData)
 
-    Data = {
-            'Name': 'pca_all',
-            'df': af['result']
-        }
-    Datasets.append(Data)
+    #Data = {
+    #        'Name': 'pca_all',
+    #        'df': af['result']
+    #    }
+    #Datasets.append(Data)
 
-    Data = {
-            'Name': 'pca_topics',
-            'df': topics['result']
-        }
-    Datasets.append(Data)
+    #Data = {
+    #        'Name': 'pca_topics',
+    #        'df': topics['result']
+    #    }
+    #Datasets.append(Data)
 
-    Data = {
-            'Name': 'pca_vdem',
-            'df': vdem['result']
-        }
-    Datasets.append(Data)
+    #Data = {
+    #        'Name': 'pca_vdem',
+    #        'df': vdem['result']
+    #    }
+    #Datasets.append(Data)
 
-    Data = {
-            'Name': 'pca_wdi',
-            'df': wdi['result']
-        }
-    Datasets.append(Data)
+    #Data = {
+    #        'Name': 'pca_wdi',
+    #        'df': wdi['result']
+    #    }
+    #Datasets.append(Data)
 
     return Datasets
 
@@ -314,7 +328,7 @@ def fetch_pgm_data_from_model_def(qslist):
 
     level = 'pgm'
 
-    ModelList = ModelDefinitions.DefineEnsembleModels(level)
+    ModelList = ModelDefinitions_media.DefineEnsembleModels(level)
 
     defined_querysets=[qs.name for qs in qslist]
 
