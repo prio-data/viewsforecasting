@@ -1,0 +1,44 @@
+The following documentation lists all of the changes that were necessary in order to customize/develop a model using the existing fat002 main branch. 
+
+step 1. create a branch off the main branch on which to house the model. note that the main branch evolves and some specific details may change. 
+    a. at this time, look at the previous run_id for all the models, easiest place to see is datagrip
+    b. come up with a unique name, do not use capital letters, use underscores, e.g., for google model the name was fat_dev_mc_media (fatalities, developing, malika/chandler, media related model i.e., news and google)
+
+
+step 2. in the Tools folder, create a queryset .py file. (this step should be done once you have completed ingestion of any data updates or new data addition)
+    a. for simplicity, I created a cm_queryset_google_topics.py to write a custom set of querysets for the current model
+    b. additional notes, ensure that the appropriate lag is applied depending on the last data update period
+    c. ensure that you also create an everything model which contains all of the variables, this is needed at cm level
+    d. ensure that at the end of the queryset creation/definition py you have a qslist where each of your new querysets is added to qslist
+    e. for 
+    
+    
+    
+step 3. in the SystemUpdates folder, create a new ModelDefinition .py file
+    a. for ease, create a new .py ModelDefinition file, e.g., ModelDefinition_media.py
+    b. define models based on the descriptions previously used, of note you need to list a short name for model in the data_train section of the description
+    c. adjust nj to match the number of cores your computer has (AppleMac -- aboutthismac -- systemreport) <= number of cores
+    d. there is not a single location for all model algorythm types yet, but there is a document with them listed in the Tools folder, ViewsEstimator.py file
+
+
+step 4. in the Tools folder, update FetchData.py with your new queryset
+    a. makes sure to import the new cm_queryset_.....py which houses your new querysets at the front end of the notebook
+    b. adjust ReturnQsList function with a .py file where your new querysets are stored
+    c. create an elif run_id == 'model_run_id_name' here where you create Datasets that append each of your new querysets 
+    d. use the same id as you plan to use for the run_id later
+    d. in the fetch_cm_data_from_model_def function, comment out everything #PCA down until you are ready to build the surrogate model, adjust these according to the variables you used once you are ready to build surrogate models (if you do not, surrogate model inputs will be searched for and cause a crash of constituent model creation)
+
+
+step 5. in the SystemUpdates folder, make a copy of existing cm_constituent model notebook for ease of editing
+    a. no adjustment is needed to be made to import portion
+    b. in the dev_id, list that run_id that you thought of earlier, e.g., fat_dev_mc_media
+    c. for the first run ever, there is a code that starts with "Try" that needs to be commented out, this will create your run_id in the internal storage, only needs to be run once ever. Make sure to adjust your description here, or you can do so by hand in datagrip if you forgot. 
+    d. adjust the FutureStart to the month wanted, this will probably become EndOfHistory eventually to be consistent across notebooks
+    e. in the step that trains models, you should probably adjust author name to yourself for ease of review, but I forgot to do so. 
+    f. once you get to Markov models, you will need a ln_leg_sb_dep target calibration, so in the target_calib and target_test, refer to a baseline model that you have just made. e.g., cm_fat_dev_mc_media_baseline_xgbrf_calib and cm_fat_dev_mc_media_baseline_xgbrf_test respectivelly)
+    
+    
+Additional information on next steps will be added as progress is made
+last update on 2/11/2022
+    
+    
