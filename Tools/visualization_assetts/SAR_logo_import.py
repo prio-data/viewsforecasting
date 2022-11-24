@@ -1,6 +1,9 @@
 #small function to import SAR_logo
+from Tools.visualization_assetts.external_imports_all import*
 
-import os
-import matplotlib
-
-im = plt.imread('/Users/malika/Desktop/viewsforecasting/Tools/visualization_assetts/SAR_logo.png')
+def import_SAR_logo():
+    this_dir = os.path.dirname(__file__)
+    SAR_logo_path = os.path.join(this_dir, 'SAR_logo.png')
+    output = plt.imread(SAR_logo_path)
+    print(f'{user}, logo imported')
+    return output
