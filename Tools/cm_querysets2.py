@@ -20,7 +20,6 @@ from viewser import Queryset, Column
 import views_runs
 from views_partitioning import data_partitioner, legacy
 from stepshift import views
-import views_dataviz
 
 
 #######################################################################################################################
