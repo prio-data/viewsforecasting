@@ -41,7 +41,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      'Baseline model with a few conflict history features as well as log population, random forests regression model.',
-            'long_description':  'A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'
+            'long_description':  '''A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'''
         }
         ModelList.append(model)
 
@@ -54,7 +54,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      'A collection of variables that together map the conflict history of a country, random forests regression model.' ,
-            'long_description': 'A collection of variables that together map the conflict history of a country. The features include lagged dependent variables for each conflict type as coded by the UCDP (state-based, one-sided, or non-state) for up to each of the preceding six months, decay functions of time since conflict caused 5, 100, and 500 deaths in a month, for each type of violence, whether ACLED (https://doi.org/10.1177/0022343310378914 recorded similar violence, and whether there was recent violence in any neighboring countries.'
+            'long_description': '''A collection of variables that together map the conflict history of a country. The features include lagged dependent variables for each conflict type as coded by the UCDP (state-based, one-sided, or non-state) for up to each of the preceding six months, decay functions of time since conflict caused 5, 100, and 500 deaths in a month, for each type of violence, whether ACLED (https://doi.org/10.1177/0022343310378914 recorded similar violence, and whether there was recent violence in any neighboring countries.'''
         }
         ModelList.append(model)
 
@@ -68,7 +68,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      'A collection of variables that together map the conflict history of a country, scikit gradient boosting regression model.',
-            'long_description': ''
+            'long_description': ''''''
         }
         ModelList.append(model)
 
@@ -81,7 +81,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -94,7 +94,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -107,7 +107,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -133,7 +133,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -146,7 +146,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
         model = {
@@ -171,7 +171,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -184,7 +184,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -197,7 +197,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -210,7 +210,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -223,7 +223,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -237,7 +237,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'pca_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -250,7 +250,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -263,7 +263,7 @@ def DefineEnsembleModels(level):
             'preprocessing': 'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
         }
         ModelList.append(model)
 
@@ -276,7 +276,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description': ''
+            'long_description': ''''''
         }
         ModelList.append(model)
 
@@ -289,7 +289,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description': ''
+            'long_description': ''''''
         }
         ModelList.append(model)
 
@@ -302,7 +302,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description': ''
+            'long_description': ''''''
         }
         ModelList.append(model)
 
@@ -315,7 +315,7 @@ def DefineEnsembleModels(level):
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      '',
-            'long_description': ''
+            'long_description': ''''''
         }
         ModelList.append(model)
 
@@ -352,7 +352,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -366,7 +366,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -380,7 +380,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -394,7 +394,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -408,7 +408,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -422,7 +422,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -436,7 +436,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -450,7 +450,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -464,7 +464,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -478,7 +478,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
 
@@ -493,7 +493,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
@@ -507,7 +507,7 @@ def DefineEnsembleModels(level):
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
-            'long_description':      ''
+            'long_description':      ''''''
 
         }
         ModelList.append(model)
