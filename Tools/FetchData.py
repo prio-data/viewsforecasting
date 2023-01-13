@@ -624,3 +624,36 @@ def fetch_df_pg_id_c_id():
     df_pg_id_c_id = qs.publish().fetch()
 
     return df_pg_id_c_id
+
+
+class SurrogateMetadata:
+    def __init__(self, surrogate_model_list):
+        df = surrogate_model_list.copy()
+        df = pd.DataFrame([self.__filter_key(i) for i in df])
+        df['Modelname'] = df.apply(lambda row: ' '.join(row['Modelname'].split()[1:]), axis=1)
+        df['Columns'] = df.apply(lambda row: ', '.join(row['Columns']), axis=1)
+        df = df.drop_duplicates()
+        self.surrogate_model_list = df
+
+    @staticmethod
+    def __filter_key(surrogate_model):
+        return {key: surrogate_model[key] for key in ('Modelname','Shortname','Longdescription','Columns')}
+    
+    def to_markdown(self, path=None):
+        return self.surrogate_model_list.to_markdown(buf=path)
+    
+class EnsembleMetadata:
+    def __init__(self, EnsembleList):
+        df = EnsembleList.copy()
+        df = pd.DataFrame([self.__filter_key(i) for i in df])
+        df['modelname'] = df.apply(lambda row: ' '.join(row['modelname'].split()[1:]), axis=1)
+        #df['Columns'] = df.apply(lambda row: ', '.join(row['Columns']), axis=1)
+        df = df.drop_duplicates()
+        self.EnsembleList = df
+
+    @staticmethod
+    def __filter_key(EnsembleList):
+        return {key: EnsembleList[key] for key in ('modelname','depvar','algorithm', 'Algorithm_text')}
+    
+    def to_markdown(self, path=None):
+        return self.EnsembleList.to_markdown(buf=path)
