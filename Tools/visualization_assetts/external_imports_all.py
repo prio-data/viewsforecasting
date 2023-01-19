@@ -1,5 +1,6 @@
 #importing all the necessary functions
 # Basics
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -23,15 +24,6 @@ import sys
 import os
 home = os.path.expanduser("~")
 user = os.getlogin()
-
-#fix for the Ensembling folder location in comparison to the working directory
-#def get_2up_dir(directory):
-    #import os
-    #return os.path.dirname(os.path.dirname((directory)))  
-#viewsforecasting = get_2up_dir(os.getcwd())
-#sys.path.append(viewsforecasting+'/Tools')
-#sys.path.append(viewsforecasting+'/Intermediates')
-#sys.path.append(viewsforecasting+'/SystemUpdates')
 
 #MapperTools
 import os
