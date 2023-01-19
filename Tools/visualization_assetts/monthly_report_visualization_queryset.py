@@ -163,9 +163,38 @@ def publish_querysets():
 
     running_average_qs.publish().fetch()
     print('published Monthly_update_running_average_cm queryset')
+    
+    #now getting the montly running average for mapping at pgm level
+
+    running_average_qs_pgm = (Queryset("Monthly_update_running_average_pgm", "priogrid_month")
 
 
+    # target variable
+    .with_column(Column("ged_sb_run_average_6_ln1", from_table = "ged2_pgm", from_column = "ged_sb_best_sum_nokgi")
+        .transform.missing.replace_na()
+        .transform.temporal.moving_average(6)
+        .transform.ops.ln()
+        )
+      .with_column(Column("ged_ns_run_average_6_ln1", from_table = "ged2_pgm", from_column = "ged_ns_best_sum_nokgi")
+        .transform.missing.replace_na()
+        .transform.temporal.moving_average(6)
+        .transform.ops.ln()
+        )
+      .with_column(Column("ged_os_run_average_6_ln1", from_table = "ged2_pgm", from_column = "ged_os_best_sum_nokgi")
+        .transform.missing.replace_na()
+        .transform.temporal.moving_average(6)
+        .transform.ops.ln()
+        )
+                
+    .with_theme("monthly_update")
+                         
+            .describe("""Features for the monthly report""")
+    )
+              
 
+    running_average_pgm_master=running_average_qs_pgm.publish().fetch()
+    print('published Monthly_update_running_average_pgm queryset')
+    
     #country name and region association queryset
     country_names_and_regions_qs = (Queryset('Monthly_update_country_names_and_regions', 'country_month')
             .with_column(Column('name', from_table = 'country', from_column = 'name'))
