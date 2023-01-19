@@ -26,17 +26,12 @@ from viewser import Queryset, Column
 import views_runs
 from views_partitioning import data_partitioner, legacy
 from stepshift import views
-import views_dataviz
 from views_runs import storage, ModelMetadata
 from views_runs.storage import store, retrieve, fetch_metadata
 from views_forecasts.extensions import *
 
 # Mapper
 import geopandas as gpd
-
-from views_dataviz.map import mapper, utils
-from views_dataviz import color
-from views_dataviz.map.presets import ViewsMap
 
 import sqlalchemy as sa
 from ingester3.config import source_db_path
@@ -247,6 +242,10 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
         
         Prediction = Ensemble_df[f'step_pred_{step}']
         for IVset in IV_list:
+            if (IVset['Data'].isna().sum().sum())>0:
+                print('Warning - null values detected:')
+                print('s' + str(step) + ' ' + IVset['Name'],IVset['Data'].isnull().sum())
+                IVset['Data'] = IVset['Data'].fillna(0)
             ModelDict = {
                 'Modelname':   's' + str(step) + ' ' + IVset['Name'],
                 'Shortname':   IVset['Shortname'],
