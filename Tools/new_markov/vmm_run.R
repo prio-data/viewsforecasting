@@ -50,7 +50,7 @@ vmm_run <- function(data,s,model_type,train_start,train_end,test_start,test_end,
                                                                   T ~ weighted_prediction))
   }
   if(return_only_prediction){
-    return(vmm_test %>% mutate(step = s) %>% select(country_id,target_month_id,step,weighted_prediction)) %>%
+    return(vmm_test %>% mutate(step = s) %>% select(target_month_id,country_id,step,weighted_prediction)) %>%
       set_names(c('country_id','month_id','weighted_prediction'))
   }else{
     return(vmm_test %>% mutate(step = s))
