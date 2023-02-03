@@ -294,7 +294,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fat_hh20_Markov_glm',
+            'modelname':        'fatalities002_Markov_glm',
             'algorithm':        'Rscript',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',
@@ -307,7 +307,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fat_hh20_Markov_rf',
+            'modelname':        'fatalities002_Markov_rf',
             'algorithm':        'Rscript',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',
