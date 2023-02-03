@@ -78,15 +78,16 @@ ss_predictions <- vmm_predictions %>% pivot_wider(values_from = 'weighted_predic
 
 if(predict_type == 'future'){
   sc_predictions <- vmm_predictions %>% filter(month_id - step == end_of_history)
-  write_parquet(ss_predictions,paste(save_path,'markov_',save_name,'_ss_',model_type,'_',end_of_history,'.parquet',sep=""))
-  write_parquet(sc_predictions,paste(save_path,'markov_',save_name,'_sc_',model_type,'_',end_of_history,'.parquet',sep=""))
+  write_parquet(ss_predictions,paste('tmps/tmp_ss_',model_type,'.parquet',sep=""))
+  write_parquet(sc_predictions,paste('tmps/tmp_sc_',model_type,'.parquet',sep=""))
 }else{
   
-  write_parquet(ss_predictions,paste(save_path,'markov_',save_name,'_ss_',predict_type,'_',model_type,'.parquet',sep=""))
-  for(i in test_start:test_end){
-  sc_predictions <- vmm_predictions %>% filter(month_id - step == i-1)
-  write_parquet(sc_predictions,paste(save_path,'markov_',save_name,'_sc_',i,'_',predict_type,'_',model_type,'.parquet',sep=""))
-  }
+  write_parquet(ss_predictions,paste('tmps/tmp_ss_',model_type,'.parquet',sep=""))
+  # This can be changed if sc predictions are needed for test/calib/custom
+  #for(i in test_start:test_end){
+  #sc_predictions <- vmm_predictions %>% filter(month_id - step == i-1)
+  #write_parquet(sc_predictions,paste(save_path,'markov_',save_name,'_sc_',i,'_',predict_type,'_',model_type,'.parquet',sep=""))
+  #}
   
 }
 }
