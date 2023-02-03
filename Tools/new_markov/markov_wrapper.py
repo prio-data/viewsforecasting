@@ -7,12 +7,12 @@ import shutil
 
 
 os.makedirs('tmps', exist_ok=True)
-os.makedirs('results', exist_ok=True)
+#os.makedirs('results', exist_ok=True)
 
 qs2 = Queryset(qs,'country_month')
 
-#data = qs2.fetch()
-#data.to_parquet('tmps/tmp_data.parquet')
+data = qs2.fetch()
+data.to_parquet('tmps/tmp_data.parquet')
 
 pd.DataFrame({'s':steps}).to_parquet('tmps/tmp_steps.parquet')
 
