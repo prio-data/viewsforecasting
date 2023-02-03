@@ -68,7 +68,7 @@ if(model_type == 'glm'){
   data <- data %>% select(-any_of(unwanted_vars))
 }
 
-
+## Note: target_month_id renamed to month_id below for ViEWS consistency purposes
 #tictoc::tic()
 vmm_predictions <- steps %>% map(~vmm_run(data,.x,model_type,train_start,train_end,test_start,test_end,predict_type = predict_type, end_of_history = end_of_history)) %>% bind_rows()
 #tictoc::toc()
@@ -76,16 +76,15 @@ vmm_predictions <- steps %>% map(~vmm_run(data,.x,model_type,train_start,train_e
 ss_predictions <- vmm_predictions %>% pivot_wider(values_from = 'weighted_prediction',names_from='step',names_prefix = 'step_pred_')
 
 
-
 if(predict_type == 'future'){
-  sc_predictions <- vmm_predictions %>% filter(target_month_id - step == end_of_history)
+  sc_predictions <- vmm_predictions %>% filter(month_id - step == end_of_history)
   write_parquet(ss_predictions,paste(save_path,'markov_',save_name,'_ss_',model_type,'_',end_of_history,'.parquet',sep=""))
   write_parquet(sc_predictions,paste(save_path,'markov_',save_name,'_sc_',model_type,'_',end_of_history,'.parquet',sep=""))
 }else{
   
   write_parquet(ss_predictions,paste(save_path,'markov_',save_name,'_ss_',predict_type,'_',model_type,'.parquet',sep=""))
   for(i in test_start:test_end){
-  sc_predictions <- vmm_predictions %>% filter(target_month_id - step == i-1)
+  sc_predictions <- vmm_predictions %>% filter(month_id - step == i-1)
   write_parquet(sc_predictions,paste(save_path,'markov_',save_name,'_sc_',i,'_',predict_type,'_',model_type,'.parquet',sep=""))
   }
   
