@@ -3,6 +3,7 @@
 
 import numpy as np
 import pandas as pd
+from scipy.special import logit, expit
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import AnchoredText
 
