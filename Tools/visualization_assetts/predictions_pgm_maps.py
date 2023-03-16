@@ -50,11 +50,6 @@ predictions_dich_df = predictions_dich_df.reset_index()
 predictions_dich_df['step'] = predictions_dich_df['month_id'] - EndOfHistory
 predictions_dich_df = predictions_dich_df.set_index(['step', 'priogrid_id'], drop = True)
 predictions_dich_df.rename(columns = prediction_dich_name_default, inplace = True)
-for variable in variables_wanted_predictions_dich:
-    predictions_dich_df = predictions_dich_df.copy()
-    predictions_dich_df[variable] = np.where(predictions_dich_df[variable] == 0, 0.000001, predictions_dich_df[variable])
-    predictions_dich_df[variable] = np.where(predictions_dich_df[variable] == 1, 0.999999, predictions_dich_df[variable])
-    predictions_dich_df[variable] = logit(predictions_dich_df[variable])
 
 print(f'{user}, prediction data at pgm level successfully fetched')
 
@@ -150,6 +145,11 @@ def predictions_pgm_maps_dich():
     #prep data
     #this process took a while and we technically just need the end of history month
     data= predictions_dich_df.copy().reset_index().set_index(['priogrid_id'])
+    for variable in variables_wanted_predictions_dich:
+        data[variable] = np.where(data[variable] == 0, 0.000001, data[variable])
+        data[variable] = np.where(data[variable] == 1, 0.999999, data[variable])
+        data[variable] = logit(data[variable])
+    
     gdf = gdf_pid_master.copy().query(f"month_id == {EndOfHistory}").reset_index().drop('month_id', axis = 1).rename(columns = {'priogrid_gid':'priogrid_id'}).set_index(['priogrid_id'])
 
     data_pid = pd.merge(left = data, right = gdf, left_index = True, right_index = True, how= 'left').reset_index().set_index(['step', 'priogrid_id'])
