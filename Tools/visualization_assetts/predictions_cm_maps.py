@@ -31,11 +31,6 @@ predictions_dich_df = predictions_dich_df.reset_index()
 predictions_dich_df['step'] = predictions_dich_df['month_id'] - EndOfHistory
 predictions_dich_df = predictions_dich_df.set_index(['step', 'country_id'], drop = True)
 predictions_dich_df.rename(columns = prediction_dich_name_default, inplace = True)
-for variable in variables_wanted_predictions_dich:
-    predictions_dich_df = predictions_dich_df.copy()
-    predictions_dich_df[variable] = np.where(predictions_dich_df[variable] == 0, 0.000001, predictions_dich_df[variable])
-    predictions_dich_df[variable] = np.where(predictions_dich_df[variable] == 1, 0.999999, predictions_dich_df[variable])
-    predictions_dich_df[variable] = logit(predictions_dich_df[variable])
     
 
 print(f'{user}, prediction data at cm level successfully fetched')
@@ -136,6 +131,11 @@ def predictions_cm_maps_dich():
 
     #prep data
     data= predictions_dich_df.copy()
+    for variable in variables_wanted_predictions_dich:
+        data[variable] = np.where(data[variable] == 0, 0.000001, data[variable])
+        data[variable] = np.where(data[variable] == 1, 0.999999, data[variable])
+        data[variable] = logit(data[variable])
+    
     gdf = gdf_ci_master.copy()
 
     data = data.join(gdf.set_index("country_id"))
