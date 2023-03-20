@@ -9,9 +9,14 @@ import ModelDefinitions
 from ingester3.ViewsMonth import ViewsMonth
 from ingester3.Country import Country
 import math
-
+import matplotlib.pyplot as plt
 
 def get_fatalities(level: str, dev_id: str, EndOfHistory: int) -> pd.DataFrame:
+    """
+    Gathers the number of fatalities 36 months before and after the EndOfHistory in a Pandas DataFrame
+    
+    Example: fatalities = get_fatalities(level=level, dev_id=dev_id, EndOfHistory=EndOfHistory)
+    """
     qs1 = (Queryset("actuals_monthly", "country_month")
             .with_column(Column("ged_best_sb", from_table= "ged2_cm", from_column="ged_sb_best_sum_nokgi")
                         .transform.missing.fill())   
@@ -35,6 +40,18 @@ def get_fatalities(level: str, dev_id: str, EndOfHistory: int) -> pd.DataFrame:
     predictions_df.rename(columns={'step_combined':'fatalities'}, inplace=True)
 
     merge = pd.concat([actuals, predictions_df], axis=0)
+    
+    
+    def cid2name(country_id):
+        name = Country(country_id).name
+        return name
+       
+    merge = merge.reset_index(drop=False)
+    c_id = [int(x) for x in merge['country_id']] 
+    country_names = [Country(x).name for x in c_id]
+    merge['country'] = country_names
+    
+    merge = merge.set_index(['step', 'country_id'], drop=True)
     
     return merge
 
@@ -244,7 +261,7 @@ def get_nochange_shortlist(nochangelist, step_value, step_value2):
 
 
 def fatcat_compare(fatcat, step_value, step_value2):
-    fatcat_step = f'fatcat_{step_value}'  # dynamic variable name
+    fatcat_step = f'fatcat_{step_value}'  
     fatcat_step = fatcat.reset_index(drop=False)
     fatcat_step = fatcat_step[fatcat_step['step'] == step_value] 
     fatcat_step_pivot = pd.pivot_table(fatcat_step, values=['fatalities','fatcat', 'fatcat_nominal', 'fatcat_change', 'monthly_change', 'rolling_mean_violence', 'intensity_lvl'], index=['country_id'])
@@ -323,6 +340,43 @@ def fatcat_compare(fatcat, step_value, step_value2):
     return fatcat_list
 
 
+def plot_pastfuture(df, country_id):
+    
+    df = df.copy()
+    df = df.reset_index(drop=False)
+    df = df.loc[df['step'] >= -36]
+    df['fatilities_log1p'] = np.log1p(df['fatalities'])
+    
+    # Filter the DataFrame to include only the specified country
+    country_df = df[df['country_id'] == country_id]
+
+    # Get the country name from the 'country' column
+    country_name = country_df['country'].iloc[0]
+
+    plt.style.use('ggplot')
+
+    # Create the plot with a different color for each range
+    fig, ax = plt.subplots(figsize=(14, 4))
+
+    ax.plot(country_df.loc[country_df['step'] <= 0, 'step'], country_df.loc[country_df['step'] <= 0, 'fatilities_log1p'], color='darkorange', label='Actuals')
+    ax.plot(country_df.loc[country_df['step'] >= 0, 'step'], country_df.loc[country_df['step'] >= 0, 'fatilities_log1p'], color='cornflowerblue', label='Predictions')
+
+    # Add a red vertical dashed line at step 0
+    ax.axvline(x=0, color='lightcoral', linestyle='--')
+
+    # Set axis labels and legend with the country name
+    ax.set_title(f'Number of Reported and Predicted Fatalities for {country_name}')
+    ax.set_xlabel('Step')
+    ax.set_ylabel('Fatalities')
+
+    ax.set_xlim(-36, 36)
+    ax.set_xticks([-36, -27, -18, -9, -3, -6, 0, 3, 6, 9, 18, 27, 36])
+
+    # Set the lower limit of the y-axis to 0
+    ax.set_ylim(bottom=0)
+
+    ax.legend()
+    plt.show()
 
 
 
