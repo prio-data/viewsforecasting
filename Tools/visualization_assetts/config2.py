@@ -55,13 +55,7 @@ for i in raw_dich_values:
 dich_ticklabels=['<= 0.1%', '0.2%', '0.5%', '1%', '2%', '5%', '10%', '20%', '40%', '60%', '80%', '90%', '95%', '99%']
 dichotomous_dictionary_cm = dict(zip(dich_ticklabels, dich_values))
 
-raw_dich_values2 = np.array([0.0001, 0.0002, 0.0005, 0.001,0.002,0.005, 0.01, 0.02, 0.05, 0.1])
-dich_values2 = []
-for i in raw_dich_values2:
-    temp1 = logit(i)
-    dich_values2.append(temp1)
-dich_ticklabels2=['<= 0.01%', '0.02%', '0.05%', '0.1%', '0.2%', '0.5%', '1%', '2%', '5%', '>=10%']
-dictionary_dichotomous_pgm = dict(zip(dich_ticklabels2, dich_values2))
+dictionary_dichotomous_pgm = dichotomous_dictionary_cm
 
 #for fetching predicitons, currently there is only one thing that is fetched, which is called step_combined
 #this can potentially change in the future
