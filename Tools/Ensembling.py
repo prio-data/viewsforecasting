@@ -223,6 +223,8 @@ def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=F
 
         istart = imonth * pg_size
         iend = istart + pg_size
+        
+        print(imonth,month)
 
         normalised_month = np.zeros((pg_size))
 
@@ -235,6 +237,8 @@ def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=F
         map_month = df_pg_id_c_id.loc[month].values.reshape(pg_size)
 
         input_countries = list(set(df_data_month_cm.index.get_level_values(0)))
+        
+#        print(input_countries)
 
         for country in input_countries:
             month_country = df_data_month_cm[column].loc[country]
@@ -245,9 +249,11 @@ def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=F
             pg_sum = np.sum(values_month_pgm[mask])
 
             value_month_cm = df_calib_from[column].loc[month, country]
-
+            
             if pg_sum > 0:
                 normalisation = value_month_cm / pg_sum * np.ones((nmask))
+                
+                print('value_month_cm',value_month_cm)
 
                 normalised_month[mask] = values_month_pgm[mask] * normalisation
 
@@ -258,6 +264,7 @@ def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=F
                 normalised_month *= normalisation
 
         normalised[istart:iend] = normalised_month
+        print('max normalised',np.max(normalised_month),np.max(normalised))
 
     if log_feature:
         normalised = np.log(normalised + 1)
