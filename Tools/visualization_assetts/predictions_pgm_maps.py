@@ -145,6 +145,11 @@ def predictions_pgm_maps_dich():
     #prep data
     #this process took a while and we technically just need the end of history month
     data= predictions_dich_df.copy().reset_index().set_index(['priogrid_id'])
+    for variable in variables_wanted_predictions_dich:
+        data[variable] = np.where(data[variable] == 0, 0.000001, data[variable])
+        data[variable] = np.where(data[variable] == 1, 0.999999, data[variable])
+        data[variable] = logit(data[variable])
+    
     gdf = gdf_pid_master.copy().query(f"month_id == {EndOfHistory}").reset_index().drop('month_id', axis = 1).rename(columns = {'priogrid_gid':'priogrid_id'}).set_index(['priogrid_id'])
 
     data_pid = pd.merge(left = data, right = gdf, left_index = True, right_index = True, how= 'left').reset_index().set_index(['step', 'priogrid_id'])
