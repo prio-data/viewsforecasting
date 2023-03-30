@@ -3,9 +3,9 @@
 ## Set working directory to specified file
 # setwd(getSrcDirectory(function(){})[1]) # This does not work, but wd seems to be set to file location regardless so should work anyway...
 
-source("package_checker.R")
-source("vmm_fatalities221016.R")
-source('vmm_run.R')
+source("../Tools/new_markov/package_checker.R")
+source("../Tools/new_markov/vmm_fatalities221016.R")
+source('../Tools/new_markov/vmm_run.R')
 
 library(ranger)
 library(tidyverse)
