@@ -38,6 +38,7 @@ pars <- read_parquet('tmps/tmp_pars.parquet')
 mt <- pars$model_type # This should be read in as var
 
 
+
 steps <- read_parquet('tmps/tmp_steps.parquet')$s
 predict_type <- pars$predict_type # This should be read in as var
 save_name <- pars$save_name
@@ -46,7 +47,7 @@ save_path <- pars$save_path
 if(predict_type == 'future'){
 end_of_history <- as.numeric(pars$end_of_history)
 test_start <- end_of_history + steps[1]
-test_end <- end_of_history + tail(steps)[1]
+test_end <- end_of_history + rev(steps)[1]
 train_start <- 121 #
 train_end <- end_of_history 
 }else{
