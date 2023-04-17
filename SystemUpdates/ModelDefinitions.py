@@ -307,7 +307,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalaities002_Markov_rf',
+            'modelname':        'fatalities002_Markov_rf',
             'algorithm':        'glm',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',

@@ -65,8 +65,8 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             ['pop_s_' + str(step),'wdi_sp_pop_totl'],
             ['imr_s_' + str(step),'wdi_sp_dyn_imrt_in'],
             ['nb_conflict_s_' + str(step),'splag_1_decay_ged_sb_5'],
-            ['topic_conflict_s_' + str(step),'topic10_conflict_t1'],
-            ['topic_conflict_stock_s_' + str(step),'topic10_conflict_t1_stock'],
+#            ['ste10_conflict_s_' + str(step),'ste_theta10'],
+#            ['ste10stock_conflict_s_' + str(step),'ste_theta10_stock'], 
             ['water_efficiency_s_' + str(step),'general_efficiency_t48'],
         ]
         for col in colnames:
@@ -161,18 +161,17 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             'scale_naming': log_scale_naming,
             'rotation':         30
         },
-        {
-            'Name':      'Topics: conflict and conflict stock',
-            'Shortname': 'Topic10',
-            'Longdescription':  'long description in here',
-            'Columns':    ['topic10_conflict_t1','topic10_conflict_t1_stock'],
-            'Data':      Ensemble_df[[f'topic_conflict_s_{step}',f'topic_conflict_stock_s_{step}']],
-            'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
-            'Predictors': ['Share of conflict in news','Share of conflict in news, stock'],
-            'scale_value':  [0, 0.25, 0.5, 0.75, 1], 
-            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
-            'rotation':         30
-        },
+#        {
+#            'Name':      'Topics: conflict and conflict stock',
+#            'Shortname': 'Topic10',
+#            'Columns':    ['ste_theta10','ste_theta10_stock'],
+#            'Data':      Ensemble_df[[f'ste10_conflict_s_{step}',f'ste10stock_conflict_s_{step}']],
+#            'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
+#            'Predictors': ['Share of conflict in news','Share of conflict in news, stock'],
+#            'scale_value':  [0, 0.25, 0.5, 0.75, 1], 
+#            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
+#            'rotation':         30
+#        },
 
         {
             'Name':      'Water services efficiency',
