@@ -1,0 +1,20 @@
+### Readme for Markov models
+
+Run the markov model(s) by running: python markov_wrapper.py
+
+Configurate the run in markov_params.py with the following options
+
+qs: any country_month queryset available in views
+save_name: short name of the queryset used in the save file
+save_path: path in which to store the predictions, defaults to 'results/' in the working directory
+EndOfHistory: the month for which to produce predictions (only when doing future predictions)
+calib_partitioner_dict: should correspond to calib
+test_partitioner_dict: should correspond to test
+custom_partitioner_dict: for use if you want different train and predict periods
+model_type: which type of markov model to be run, can be rf, glm, or both
+predict_type: are these a test, calib, or future run
+
+cleenup: logical which removes all temporary files after a run (otherwise data, params, and partitions are saved in the folder tmps)
+
+Currently the function writes the predictions to the folder 'results' (created if does not exist) with the format markov_[sc/ss]_[month_id/calib/future]_[rf/glm].parquet. 
+

@@ -295,7 +295,7 @@ def DefineEnsembleModels(level):
 
         model = {
             'modelname':        'fatalities002_Markov_glm',
-            'algorithm':        'Rscript',
+            'algorithm':        'rf',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',
             'queryset':         'fatalities002_joint_narrow',
@@ -308,7 +308,7 @@ def DefineEnsembleModels(level):
 
         model = {
             'modelname':        'fatalities002_Markov_rf',
-            'algorithm':        'Rscript',
+            'algorithm':        'glm',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',
             'queryset':         'fatalities002_joint_narrow',

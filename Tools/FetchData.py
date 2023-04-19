@@ -37,7 +37,7 @@ def FetchTable(Queryset, name):
     return data
 
 
-def FetchData(run_id):
+def FetchData(run_id, EndOfPCAData):
     print(f'Fetching data using querysets; {run_id}; returns as list of dictionaries containing datasets')
     Datasets = []
 
@@ -85,7 +85,6 @@ def FetchData(run_id):
         }
         sources.append(wdi)
 
-        EndOfPCAData = 516
         for source in sources:
             source = PCA(source, Standard_features, EndOfPCAData)
 
@@ -160,7 +159,6 @@ def FetchData(run_id):
         }
         sources.append(wdi)
 
-        EndOfPCAData = 516
         for source in sources:
             source = PCA(source, Standard_features,EndOfPCAData)
 
@@ -202,7 +200,7 @@ def get_df_from_datasets_by_name(Datasets,name):
         raise Exception('No Dataset similar to ',name,'found')
 
 
-def fetch_cm_data_from_model_def(qslist):
+def fetch_cm_data_from_model_def(qslist, EndOfPCAData):
 
     level = 'cm'
 
@@ -263,7 +261,6 @@ def fetch_cm_data_from_model_def(qslist):
         }
     sources.append(wdi)
 
-    EndOfPCAData = 516
     for source in sources:
         source = PCA(source, Standard_features,EndOfPCAData)
 
