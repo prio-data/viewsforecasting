@@ -1180,6 +1180,1009 @@ def get_pgm_querysets():
     data = qs_sptime_dist.publish().fetch()
 
     report(data)
+    
+
+
+    # Full protest model + political institutions III + economic development (country level)
+
+    qs_protest_full = (Queryset("fatalities003_protest_full_elect_econ_national", "priogrid_month")
+
+           # target variable
+           .with_column(Column("ln_ged_sb_dep", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.ops.ln()
+                        )
+
+           # timelag 0 of target variable
+           .with_column(Column("ln_ged_sb", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+
+           # Decay functions
+           # sb
+           .with_column(Column("decay_ged_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+
+           .with_column(Column("decay_ged_sb_25", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(25)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+           # os
+           .with_column(Column("decay_ged_os_1", from_table="ged2_pgm", from_column="ged_os_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+
+           # Spatial lag
+           .with_column(Column("splag_1_1_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.spatial.lag(1, 1, 0, 0)
+                        .transform.missing.replace_na()
+                        )
+
+           # Spatial lag decay
+           .with_column(Column("splag_1_decay_ged_sb_1", from_table="ged2_pgm",
+                               from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.spatial.lag(1, 1, 0, 0)
+                        .transform.missing.replace_na()
+                        )
+
+           # Log population as control
+           .with_column(Column("ln_pop_gpw_sum", from_table="priogrid_year", from_column="pop_gpw_sum")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        .transform.missing.replace_na()
+                        )
+
+
+
+
+          # Moving average over 24 months
+          .with_column(Column("mov_avg_12_ged_best_sb", from_table = "ged2_pgm", from_column = "ged_sb_best_sum_nokgi")
+                             .transform.ops.ln()
+                             .transform.missing.replace_na()
+                             .transform.temporal.moving_average(24)
+                             .transform.missing.fill()
+                            )
+
+          ## PROTEST FEATURES - Dynamic Local
+
+          .with_column(Column("decay_ts_6_acled_prex_dummy", from_table = "acled2_pgm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_acled_prpe_dummy", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prin_dummy", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prri_dummy", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prpe_dummy", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prex_dummy", from_table = "acled2_pgm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prin_dummy", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prri_dummy", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          # protest with excessive violence against protester (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prex_count", from_table = "acled2_pgm", from_column = "acled_c3_count") 
+                             .transform.missing.replace_na()
+                            )
+          # peaceful protest (interaction codes: 60, 66, or 67.)
+          .with_column(Column("acled_prpe_count", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with intervention (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prin_count", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with riots (interaction codes: inter 1 or 2 has 5)
+          .with_column(Column("acled_prri_count", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                            )
+
+          ## PROTEST FEATURES - Dynamic national
+
+          .with_column(Column("decay_ts_6_acled_prex_dummy_cm", from_table = "acled2_cm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_acled_prpe_dummy_cm", from_table = "acled2_cm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prin_dummy_cm", from_table = "acled2_cm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prri_dummy_cm", from_table = "acled2_cm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          # protest with excessive violence against protester (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prex_count_cm", from_table = "acled2_cm", from_column = "acled_c3_count") 
+                             .transform.missing.replace_na()
+                            )
+          # peaceful protest (interaction codes: 60, 66, or 67.)
+          .with_column(Column("acled_prpe_count_cm", from_table = "acled2_cm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with intervention (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prin_count_cm", from_table = "acled2_cm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with riots (interaction codes: inter 1 or 2 has 5)
+          .with_column(Column("acled_prri_count_cm", from_table = "acled2_cm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                            )
+
+          # population
+          .with_column(Column("wdi_sp_pop_totl", from_table = "wdi_cy", from_column = "wdi_sp_pop_totl")
+                             .transform.missing.fill()
+                             .transform.missing.extrapolate()
+                             .transform.missing.replace_na()
+                            )
+
+          ### ECONOMIC DEVELOPMENT, Country level
+          .with_column(Column("wdi_ny_gdp_pcap_kd", from_table = "wdi_cy", from_column = "wdi_ny_gdp_pcap_kd")
+                             .transform.missing.fill()
+                            )
+#          .with_column(Column("wdi_ny_gdp_pcap_kd_zg", from_table = "wdi_cy", from_column = "wdi_ny_gdp_pcap_kd_zg")
+#                             .transform.missing.fill()
+#                            )
+#          .with_column(Column("wdi_sl_uem_totl_zs", from_table = "wdi_cy", from_column = "wdi_ny_gdp_pcap_kd_zg")
+#                             .transform.missing.fill()
+#                            )
+
+          # POL. INSTIUTIONS
+          # Electoral democracy.
+          .with_column(Column("vdem_v2x_polyarchy_tlag12", from_table = "vdem_v12_cy", from_column = "vdem_v12_v2x_polyarchy")
+                             .transform.missing.fill()
+                             .transform.temporal.tlag(12)
+                             .transform.missing.fill()
+                            )
+
+          # Civil liberties
+          .with_column(Column("vdem_v2x_civlib_tlag12", from_table = "vdem_v12_cy", from_column = "vdem_v12_v2x_civlib")
+                             .transform.missing.fill()
+                             .transform.temporal.tlag(12)
+                             .transform.missing.fill()
+                            )
+
+          #.with_column(Column("vdem_v2clrgunev_tlag12", from_table = "vdem_v12_cy", from_column = "vdem_v2clrgunev")
+                             #.transform.missing.fill()
+                             #.transform.temporal.tlag(12)
+                             #.transform.missing.fill()
+                      #)
+
+          .with_column(Column("vdem_v2clrgunev_tlag12", from_table = "tbl_734eevdem_v12_cy", from_column = "vdem_v12_v2clrgunev")
+                             .transform.missing.fill()
+                             .transform.temporal.tlag(12)
+                             .transform.missing.fill()
+                      )
+
+          # Elections.
+          .with_column(Column("lastelection", from_table = "reign_cm", from_column = "lastelection")
+                             .transform.missing.replace_na()
+                            )
+          .with_column(Column("anticipation", from_table = "reign_cm", from_column = "anticipation")
+                             .transform.missing.replace_na()
+                            )
+
+
+          .with_theme("protest_paper")
+          .describe("""National dynamic protest model including local dynamic model, economic delveopment (national), political institutions III (full) and extended baseline variables, pgm level
+
+                Predicting armed conflict (dummy) using protest data, extended baseline
+
+                """)
+        )
+
+
+    data = qs_protest_full.publish().fetch()
+
+    report(data)
+
+    # Protest
+
+    qs_protest_dynamic = (Queryset("fatalities003_protest_pr_dynamic_national", "priogrid_month")
+
+           # target variable
+           .with_column(Column("ln_ged_sb_dep", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.ops.ln()
+                        )
+
+           # timelag 0 of target variable
+           .with_column(Column("ln_ged_sb", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+
+           # Decay functions
+           # sb
+           .with_column(Column("decay_ged_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+
+           .with_column(Column("decay_ged_sb_25", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(25)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+           # os
+           .with_column(Column("decay_ged_os_1", from_table="ged2_pgm", from_column="ged_os_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+
+           # Spatial lag
+           .with_column(Column("splag_1_1_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.spatial.lag(1, 1, 0, 0)
+                        .transform.missing.replace_na()
+                        )
+
+           # Spatial lag decay
+           .with_column(Column("splag_1_decay_ged_sb_1", from_table="ged2_pgm",
+                               from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.spatial.lag(1, 1, 0, 0)
+                        .transform.missing.replace_na()
+                        )
+
+           # Log population as control
+           .with_column(Column("ln_pop_gpw_sum", from_table="priogrid_year", from_column="pop_gpw_sum")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        .transform.missing.replace_na()
+                        )
+
+
+         ## 24 months 
+        .with_column(Column("decay_ts_24_ged_sb_dummy", from_table = "ged2_pgm", from_column = "ged_sb_best_sum_nokgi")
+             .transform.missing.replace_na()
+             .transform.bool.gte(1)
+             .transform.temporal.time_since()
+             .transform.temporal.decay(24)
+             .transform.missing.fill()
+            )
+
+
+          # Moving average over 24 months
+          .with_column(Column("mov_avg_12_ged_best_sb", from_table = "ged2_pgm", from_column = "ged_sb_best_sum_nokgi")
+                             .transform.ops.ln()
+                             .transform.missing.replace_na()
+                             .transform.temporal.moving_average(24)
+                             .transform.missing.fill()
+                            )
+
+          ## PROTEST FEATURES - Dynamic Local
+
+          .with_column(Column("decay_ts_6_acled_prex_dummy", from_table = "acled2_pgm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_acled_prpe_dummy", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prin_dummy", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prri_dummy", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prpe_dummy", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prex_dummy", from_table = "acled2_pgm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prin_dummy", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prri_dummy", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          # protest with excessive violence against protester (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prex_count", from_table = "acled2_pgm", from_column = "acled_c3_count") 
+                             .transform.missing.replace_na()
+                            )
+          # peaceful protest (interaction codes: 60, 66, or 67.)
+          .with_column(Column("acled_prpe_count", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with intervention (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prin_count", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with riots (interaction codes: inter 1 or 2 has 5)
+          .with_column(Column("acled_prri_count", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                            )
+
+          ## PROTEST FEATURES - Dynamic national
+
+          .with_column(Column("decay_ts_6_acled_prex_dummy_cm", from_table = "acled2_cm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_acled_prpe_dummy_cm", from_table = "acled2_cm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prin_dummy_cm", from_table = "acled2_cm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prri_dummy_cm", from_table = "acled2_cm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          # protest with excessive violence against protester (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prex_count_cm", from_table = "acled2_cm", from_column = "acled_c3_count") 
+                             .transform.missing.replace_na()
+                            )
+          # peaceful protest (interaction codes: 60, 66, or 67.)
+          .with_column(Column("acled_prpe_count_cm", from_table = "acled2_cm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with intervention (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prin_count_cm", from_table = "acled2_cm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with riots (interaction codes: inter 1 or 2 has 5)
+          .with_column(Column("acled_prri_count_cm", from_table = "acled2_cm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                            )
+
+          # population
+          .with_column(Column("wdi_sp_pop_totl", from_table = "wdi_cy", from_column = "wdi_sp_pop_totl")
+                             .transform.missing.fill()
+                             .transform.missing.extrapolate()
+                             .transform.missing.replace_na()
+                            )
+
+
+
+          .with_theme("protest_paper")
+          .describe("""National dynamic protest model including local dynamic model and extended baseline variables, pgm level
+
+                Predicting armed conflict (dummy) using protest data, extended baseline
+
+                """)
+        )
+
+
+    data = qs_protest_dynamic.publish().fetch()
+
+    report(data)
+    
+
+    # ACLED
+
+    qs_acled = (Queryset("fatalities003_acled", "priogrid_month")
+
+           # target variable
+           .with_column(Column("ln_ged_sb_dep", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.ops.ln()
+                        )
+
+           # timelag 0 of target variable
+           .with_column(Column("ln_ged_sb", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+
+           # Decay functions
+           # sb
+           .with_column(Column("decay_ged_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+
+           .with_column(Column("decay_ged_sb_25", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(25)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+           # os
+           .with_column(Column("decay_ged_os_1", from_table="ged2_pgm", from_column="ged_os_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.missing.replace_na()
+                        )
+
+           # Spatial lag
+           .with_column(Column("splag_1_1_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.spatial.lag(1, 1, 0, 0)
+                        .transform.missing.replace_na()
+                        )
+
+           # Spatial lag decay
+           .with_column(Column("splag_1_decay_ged_sb_1", from_table="ged2_pgm",
+                               from_column="ged_sb_best_sum_nokgi")
+                        .transform.missing.replace_na()
+                        .transform.bool.gte(1)
+                        .transform.temporal.time_since()
+                        .transform.temporal.decay(24)
+                        .transform.spatial.lag(1, 1, 0, 0)
+                        .transform.missing.replace_na()
+                        )
+
+           # Log population as control
+           .with_column(Column("ln_pop_gpw_sum", from_table="priogrid_year", from_column="pop_gpw_sum")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        .transform.missing.replace_na()
+                        )
+          ## ACLED conflict features
+                
+           # timelag 0 of target variable
+           .with_column(Column("acled_sb_fat", from_table="acled2_pgm", from_column="acled_sb_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+          .with_column(Column("decay_ts_6_acled_sb_100", from_table = "acled2_pgm", from_column = "acled_sb_fat")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(100)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_sb_1", from_table = "acled2_pgm", from_column = "acled_sb_fat")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+           .with_column(Column("acled_ns_fat", from_table="acled2_pgm", from_column="acled_ns_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_os_fat", from_table="acled2_pgm", from_column="acled_os_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_ns_fat", from_table="acled2_pgm", from_column="acled_ns_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+#           .with_column(Column("acled_c1_fat", from_table="acled2_pgm", from_column="acled_c1_fat")
+#                        .transform.ops.ln()
+#                        .transform.missing.fill()
+#                        )
+#                       .transform.ops.ln()
+#                        .transform.missing.fill()
+#                        )
+#           .with_column(Column("acled_c3_fat", from_table="acled2_pgm", from_column="acled_c3_fat")
+#                        .transform.ops.ln()
+#                        .transform.missing.fill()
+#                        )
+#           .with_column(Column("acled_c4_fat", from_table="acled2_pgm", from_column="acled_c4_fat")
+#                        .transform.ops.ln()
+#                        .transform.missing.fill()
+#                        )
+#           .with_column(Column("acled_c5_fat", from_table="acled2_pgm", from_column="acled_c5_fat")
+#                        .transform.ops.ln()
+#                        .transform.missing.fill()
+#                        )
+           .with_column(Column("acled_st_abd_fat", from_table="acled2_pgm", from_column="acled_st_abd_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_agg_fat", from_table="acled2_pgm", from_column="acled_st_agg_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_arr_fat", from_table="acled2_pgm", from_column="acled_st_arr_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_chg_fat", from_table="acled2_pgm", from_column="acled_st_chg_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_wea_fat", from_table="acled2_pgm", from_column="acled_st_wea_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_hqb_fat", from_table="acled2_pgm", from_column="acled_st_hqb_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_loo_fat", from_table="acled2_pgm", from_column="acled_st_loo_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_ter_fat", from_table="acled2_pgm", from_column="acled_st_ter_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_st_oth_fat", from_table="acled2_pgm", from_column="acled_st_oth_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_bat_gov_fat", from_table="acled2_pgm", from_column="acled_bat_gov_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_bat_reb_fat", from_table="acled2_pgm", from_column="acled_bat_reb_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+           .with_column(Column("acled_bat_fat", from_table="acled2_pgm", from_column="acled_bat_fat")
+                        .transform.ops.ln()
+                        .transform.missing.fill()
+                        )
+               
+
+          ## ACLED PROTEST FEATURES - Dynamic Local
+
+          .with_column(Column("decay_ts_6_acled_prex_dummy", from_table = "acled2_pgm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_acled_prpe_dummy", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prin_dummy", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          .with_column(Column("decay_ts_6_acled_prri_dummy", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prpe_dummy", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prex_dummy", from_table = "acled2_pgm", from_column = "acled_c3_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prin_dummy", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+
+          .with_column(Column("decay_ts_6_splag_1_2_acled_prri_dummy", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.spatial.lag(1,2,0,0)
+                             .transform.missing.replace_na()
+                             .transform.bool.gte(1)
+                             .transform.temporal.time_since()
+                             .transform.temporal.decay(6)
+                             .transform.missing.fill()
+                            )
+          # protest with excessive violence against protester (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prex_count", from_table = "acled2_pgm", from_column = "acled_c3_count") 
+                             .transform.missing.replace_na()
+                            )
+          # peaceful protest (interaction codes: 60, 66, or 67.)
+          .with_column(Column("acled_prpe_count", from_table = "acled2_pgm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with intervention (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prin_count", from_table = "acled2_pgm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with riots (interaction codes: inter 1 or 2 has 5)
+          .with_column(Column("acled_prri_count", from_table = "acled2_pgm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                            )
+
+
+          # protest with excessive violence against protester (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prex_count_cm", from_table = "acled2_cm", from_column = "acled_c3_count") 
+                             .transform.missing.replace_na()
+                            )
+          # peaceful protest (interaction codes: 60, 66, or 67.)
+          .with_column(Column("acled_prpe_count_cm", from_table = "acled2_cm", from_column = "acled_c1_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with intervention (interaction codes: 16, 26, 36, 46, 56, 68.)
+          .with_column(Column("acled_prin_count_cm", from_table = "acled2_cm", from_column = "acled_c2_count")
+                             .transform.missing.replace_na()
+                            )
+          # protest with riots (interaction codes: inter 1 or 2 has 5)
+          .with_column(Column("acled_prri_count_cm", from_table = "acled2_cm", from_column = "acled_c5_count")
+                             .transform.missing.replace_na()
+                            )
+
+
+
+          .with_theme("fatalities003")
+          .describe("""ACLED features
+
+                """)
+        )
+
+
+    data = qs_acled.publish().fetch()
+
+    report(data)
+    
+    
+    qs_cm_pgm = (Queryset("fatalities002_pgm_country_level", "priogrid_month")
+
+                   # target variable
+                   .with_column(Column("ln_ged_sb_dep", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.ops.ln()
+                                )
+
+                   # timelag 0 of target variable
+                   .with_column(Column("ln_ged_sb", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.ops.ln()
+                                .transform.missing.fill()
+                                )
+
+                   # Decay functions
+                   # sb
+                   .with_column(Column("decay_ged_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+
+                   .with_column(Column("decay_ged_sb_25", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   # os
+                   .with_column(Column("decay_ged_os_1", from_table="ged2_pgm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+
+                   # Spatial lag
+                   .with_column(Column("splag_1_1_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.lag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+
+                   # Spatial lag decay
+                   .with_column(Column("splag_1_decay_ged_sb_1", from_table="ged2_pgm",
+                                       from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.lag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+
+                   # Log population as control
+                   .with_column(Column("ln_pop_gpw_sum", from_table="priogrid_year", from_column="pop_gpw_sum")
+                                .transform.ops.ln()
+                                .transform.missing.fill()
+                                .transform.missing.replace_na()
+                                )
+
+                   # sb
+                   .with_column(Column("decay_ged_sb_5", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                    .with_column(Column("decay_ged_sb_500", from_table="ged2_cm",
+                                        from_column="ged_sb_best_sum_nokgi")
+                                 .transform.missing.replace_na()
+                                 .transform.bool.gte(500)
+                                 .transform.temporal.time_since()
+                                 .transform.temporal.decay(24)
+                                 .transform.missing.replace_na()
+                                 )
+             
+                  .with_column(Column("vdem_v2x_libdem", from_table="vdem_v12_cy",
+                                      from_column="vdem_v12_v2x_libdem")
+                               .transform.missing.fill()
+                               .transform.temporal.tlag(12)
+                               .transform.missing.fill()
+                               )
+
+                   .with_column(Column("vdem_v2x_civlib", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_civlib")
+                               .transform.missing.fill()
+                               .transform.temporal.tlag(12)
+                               .transform.missing.fill()
+                               )
+
+                  .with_column(Column("vdem_v2x_clphy", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clphy")
+                               .transform.missing.fill()
+                               .transform.temporal.tlag(12)
+                               .transform.missing.fill()
+                               )
+
+                  .with_column(Column("vdem_v2x_cspart", from_table="vdem_v12_cy",
+                                      from_column="vdem_v12_v2x_cspart")
+                               .transform.missing.fill()
+                               .transform.temporal.tlag(12)
+                               .transform.missing.fill()
+                               )
+
+                  .with_column(Column("vdem_v2x_rule", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_rule")
+                               .transform.missing.fill()
+                               .transform.temporal.tlag(12)
+                               .transform.missing.fill()
+                               )
+
+                 .with_column(Column("wdi_ny_gdp_pcap_kd", from_table="wdi_cy",
+                                     from_column="wdi_ny_gdp_pcap_kd")
+                              .transform.missing.fill()
+                              .transform.temporal.tlag(12)
+                              .transform.missing.fill()
+                              )
+
+                 .with_column(Column("wdi_sp_dyn_le00_in", from_table="wdi_cy",
+                                     from_column="wdi_sp_dyn_le00_in")
+                              .transform.missing.fill()
+                              .transform.temporal.tlag(12)
+                              .transform.missing.fill()
+                              )
+                 
+                 .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
+                                     from_column="wdi_sm_pop_refg_or")
+                              .transform.missing.fill()
+                              .transform.temporal.tlag(12)
+                              .transform.missing.fill()
+                              )
+
+                 .with_column(Column("wdi_sm_pop_netm", from_table="wdi_cy", from_column="wdi_sm_pop_netm")
+                              .transform.missing.fill()
+                              .transform.temporal.tlag(12)
+                              .transform.missing.fill()
+                              )
+
+                 .with_column(Column("wdi_sm_pop_totl_zs", from_table="wdi_cy",
+                                     from_column="wdi_sm_pop_totl_zs")
+                              .transform.missing.fill()
+                              .transform.temporal.tlag(12)
+                              .transform.missing.fill()
+                              )
+                 
+                   .with_theme("fatalities")
+                   .describe("""Fatalities conflict history, cm level
+    
+                             Predicting ln(fatalities) using conflict predictors, with country-level features
+    
+                            """)
+                   )
+
+    data = qs_cm_pgm.publish().fetch()
+
+    report(data)
+        
 
     qslist = [
               qs_baseline,
@@ -1189,7 +2192,11 @@ def get_pgm_querysets():
               qs_broad,
               qs_conf_history,
               qs_treelag,
-              qs_sptime_dist
+              qs_sptime_dist,
+              qs_acled,
+              qs_protest_dynamic,
+              qs_protest_full,
+              qs_cm_pgm,
               ]
 
     return qslist
