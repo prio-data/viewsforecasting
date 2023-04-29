@@ -1,0 +1,1 @@
+The following branch is used for creation of actual fatality images for the fatalities 002 paper. In order to simplify the method of doing it, the existing monthly run tools are adapted. Please do not merge with the main branch, as the changes here break the normal monthly run. The following branch can remain as an archive to ensure code to reproduce the maps is not lost. 
