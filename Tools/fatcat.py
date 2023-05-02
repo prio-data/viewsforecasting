@@ -10,6 +10,7 @@ from ingester3.ViewsMonth import ViewsMonth
 from ingester3.Country import Country
 import math
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 def get_fatalities(level: str, dev_id: str, EndOfHistory: int) -> pd.DataFrame:
     """
@@ -345,7 +346,7 @@ def plot_pastfuture(df, country_id):
     df = df.copy()
     df = df.reset_index(drop=False)
     df = df.loc[df['step'] >= -36]
-    df['fatilities_log1p'] = np.log1p(df['fatalities'])
+    df['fatalities_log1p'] = np.log1p(df['fatalities'])
     
     # Filter the DataFrame to include only the specified country
     country_df = df[df['country_id'] == country_id]
@@ -353,31 +354,131 @@ def plot_pastfuture(df, country_id):
     # Get the country name from the 'country' column
     country_name = country_df['country'].iloc[0]
 
-    plt.style.use('ggplot')
+    fig, ax = plt.subplots(figsize=(18, 3))
 
-    # Create the plot with a different color for each range
-    fig, ax = plt.subplots(figsize=(14, 4))
+    ax.plot(country_df.loc[country_df['step'] <= 0, 'step'], country_df.loc[country_df['step'] <= 0, 'fatalities'], color='darkorange', label='Actuals')
+    ax.plot(country_df.loc[country_df['step'] >= 0, 'step'], country_df.loc[country_df['step'] >= 0, 'fatalities'], color='cornflowerblue', label='Predictions')
 
-    ax.plot(country_df.loc[country_df['step'] <= 0, 'step'], country_df.loc[country_df['step'] <= 0, 'fatilities_log1p'], color='darkorange', label='Actuals')
-    ax.plot(country_df.loc[country_df['step'] >= 0, 'step'], country_df.loc[country_df['step'] >= 0, 'fatilities_log1p'], color='cornflowerblue', label='Predictions')
-
-    # Add a red vertical dashed line at step 0
     ax.axvline(x=0, color='lightcoral', linestyle='--')
 
-    # Set axis labels and legend with the country name
-    ax.set_title(f'Number of Reported and Predicted Fatalities for {country_name}')
-    ax.set_xlabel('Step')
-    ax.set_ylabel('Fatalities')
+    ax.xaxis.grid(True, which="both", color="#cccccc", alpha=0.3, lw=0.9)
+    ax.yaxis.grid(True, which="both", color="#cccccc", alpha=0.3, lw=0.9)
+
+    ax.text(0, 1.13, f'Number of Reported and Predicted Fatalities for {country_name}', weight="bold", size=20, transform=ax.transAxes)    
+    ax.set_xlabel('Months from present', fontsize=15)
+    ax.set_ylabel('Fatalities (log+1)', fontsize=15)
 
     ax.set_xlim(-36, 36)
-    ax.set_xticks([-36, -27, -18, -9, -3, -6, 0, 3, 6, 9, 18, 27, 36])
+    ax.set_xticks([-36, -30, -33, -27,-24, -21, -18, -15, -12, -9, -6, -3, 0, 3, 6, 9,12, 15, 18, 21,24, 27,30, 33, 36])
 
-    # Set the lower limit of the y-axis to 0
     ax.set_ylim(bottom=0)
-
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    
     ax.legend()
+    
+    for spine in ["top", "right", "bottom", "left"]:
+        ax.spines[spine].set_visible(False)
+
+    
+    plt.show()
+    
+def plot_pastfuture_log(df, country_id):
+    
+    df = df.copy()
+    df = df.reset_index(drop=False)
+    df = df.loc[df['step'] >= -36]
+    df['fatalities_log1p'] = np.log1p(df['fatalities'])
+    
+    # Filter the DataFrame to include only the specified country
+    country_df = df[df['country_id'] == country_id]
+
+    # Get the country name from the 'country' column
+    country_name = country_df['country'].iloc[0]
+    
+    fig, ax = plt.subplots(figsize=(14, 3))
+    plt.style.use("seaborn-whitegrid")  
+    # Plot the y-axis based on the condition
+    if country_df['fatalities'].max() > 1000:
+        ax.plot(country_df.loc[country_df['step'] <= 0, 'step'], country_df.loc[country_df['step'] <= 0, 'fatalities_log1p'], color='cornflowerblue', label='Reported Fatalities')
+        ax.plot(country_df.loc[country_df['step'] >= 0, 'step'], country_df.loc[country_df['step'] >= 0, 'fatalities_log1p'], color='darkorange', label='Predicted Fatalities')
+        ax.set_ylabel('Fatalities', fontsize=15)
+        
+        # Set a custom formatter for the y-axis labels
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda x, pos: f'{np.round(np.expm1(x), 0):,.0f}'))
+    else:
+        ax.plot(country_df.loc[country_df['step'] <= 0, 'step'], country_df.loc[country_df['step'] <= 0, 'fatalities'], color='cornflowerblue', label='Actuals')
+        ax.plot(country_df.loc[country_df['step'] >= 0, 'step'], country_df.loc[country_df['step'] >= 0, 'fatalities'], color='darkorange', label='Predictions')
+    ax.set_ylabel('Fatalities', fontsize=15)
+
+    ax.axvline(x=0, color='lightcoral', linestyle='--')
+
+    ax.xaxis.grid(True, which="both", color="#cccccc", alpha=0.3, lw=0.9)
+    ax.yaxis.grid(True, which="both", color="#cccccc", alpha=0.3, lw=0.9)
+
+    ax.text(0, 1.13, f'Number of reported and predicted fatalities for {country_name}', weight="bold", size=20, transform=ax.transAxes)    
+    ax.set_xlabel('Months from present', fontsize=15)
+
+    ax.set_xlim(-36, 36)
+    ax.set_xticks([-36, -30, -33, -27,-24, -21, -18, -15, -12, -9, -6, -3, 0, 3, 6, 9,12, 15, 18, 21,24, 27,30, 33, 36])
+
+    ax.set_ylim(bottom=0)
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    
+    ax.legend()
+    
+    for spine in ["top", "right", "bottom", "left"]:
+        ax.spines[spine].set_visible(False)
+
     plt.show()
 
 
+def plot_fatcat(df, country_id):
+    df = df.copy()
+    df = df.reset_index(drop=False)
+    df = df[df['country_id'] == country_id]
+
+    country_name = df['country'].iloc[0]
+
+    fig, ax = plt.subplots(figsize=(14, 3))
+    ax2 = ax.twinx()
+    
+    ax.plot(df.loc[df['step'] <= 0, 'step'], df.loc[df['step'] <= 0, 'fatcat'], color='cornflowerblue', label='Past')
+    ax.plot(df.loc[df['step'] >= 0, 'step'], df.loc[df['step'] >= 0, 'fatcat'], color='darkorange', label='Future')
+
+    ax2.plot(df['step'], df['fatalities'], color='forestgreen', label='Fatalities', alpha=0.2, lw=0.9)
+    
+    ax.axvline(x=0, color='lightcoral', linestyle='--')
+
+
+    ax.xaxis.grid(True, which="both", color="#cccccc", alpha=0.3, lw=0.9)
+    ax.yaxis.grid(True, which="both", color="#cccccc", alpha=0.3, lw=0.9)
+
+    ax.text(.3, 1.08, f'Fatality Category for {country_name}', weight="bold", size=20, transform=ax.transAxes)    
+    ax.set_xlabel('Months from present', fontsize=15)
+    ax.set_ylabel('Fatalities Category', fontsize=15)
+    ax2.set_ylabel('Number of Fatalities', fontsize=15)
+    
+    ax.set_ylim(-5, 5)
+    ax.set_xlim(-36, 36)
+    ax.set_xticks([-36, -30, -33, -27,-24, -21, -18, -15, -12, -9, -6, -3, 0, 3, 6, 9,12, 15, 18, 21,24, 27,30, 33, 36])
+
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    
+    lines, labels = ax.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(lines + lines2, labels + labels2, loc='best')
+    
+    for spine in ["top", "right", "bottom", "left"]:
+        ax.spines[spine].set_visible(False)
+    
+    plt.show()
+
+def vid2date(i):
+    year=str(ViewsMonth(i).year)
+    month=str(ViewsMonth(i).month)
+    return year+'/'+monthb
 
 
