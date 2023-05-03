@@ -185,6 +185,10 @@ def FetchData(run_id, EndOfPCAData):
             'df': wdi['result']
         }
         Datasets.append(Data)
+        
+    elif run_id == 'escwa001':
+        Datasets.append(FetchTable((Queryset("qs_cm_cflong_global", "country_month")),'cflong'))
+
 
     else:
         raise Exception(f"run_id {run_id} not recognised")
@@ -227,66 +231,15 @@ def fetch_cm_data_from_model_def(qslist, EndOfPCAData):
                          'wdi_sp_pop_totl']
 
     sources = []
-
-    name = 'all_features'
-    af = {
-        'name': name,
-        'dataset': get_df_from_datasets_by_name(Datasets,name),
-        'n_comp': 20
-         }
-
-    sources.append(af)
-
-    name = 'topics'
-    topics = {
+    
+    for name in ['cflong']:
+        src = {
             'name': name,
-            'dataset': get_df_from_datasets_by_name(Datasets, name),
-            'n_comp': 10
-        }
-    sources.append(topics)
+            'dataset': get_df_from_datasets_by_name(Datasets,name),
+            'n_comp': 20
+             }
+        sources.append(src)
 
-    name = 'vdem'
-    vdem = {
-            'name': name,
-            'dataset': get_df_from_datasets_by_name(Datasets, name),
-            'n_comp': 15
-        }
-    sources.append(vdem)
-
-    name = 'wdi'
-    wdi = {
-            'name': name,
-            'dataset': get_df_from_datasets_by_name(Datasets, name),
-            'n_comp': 15
-        }
-    sources.append(wdi)
-
-    for source in sources:
-        source = PCA(source, Standard_features,EndOfPCAData)
-
-    Data = {
-            'Name': 'pca_all',
-            'df': af['result']
-        }
-    Datasets.append(Data)
-
-    Data = {
-            'Name': 'pca_topics',
-            'df': topics['result']
-        }
-    Datasets.append(Data)
-
-    Data = {
-            'Name': 'pca_vdem',
-            'df': vdem['result']
-        }
-    Datasets.append(Data)
-
-    Data = {
-            'Name': 'pca_wdi',
-            'df': wdi['result']
-        }
-    Datasets.append(Data)
 
     return Datasets
 

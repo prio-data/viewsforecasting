@@ -1,5 +1,5 @@
 # # Specifying querysets for use in Predicting Fatalities project
-# Fatalities002 version
+# escwa001 version
 # ## cm level
 # 
 
@@ -24,6 +24,329 @@ from stepshift import views
 
 
 def get_cm_querysets():
+    
+    qs_cm_cflong_global  = (Queryset("escwa001_cflong", "country_month")
+                   # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                   # timelag 0 of target variable
+                   .with_column(Column("ged_sb_dummy_t0", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                   # further timelags of target variable
+                   # sb
+                   .with_column(Column("ged_sb_dummy_t1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_sb_dummy_t2", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(2)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_sb_dummy_t3", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_sb_dummy_t3", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_sb_dummy_t4", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(4)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_sb_dummy_t5", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(5)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_sb_dummy_t6", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(6)
+                                .transform.missing.fill()
+                                )
+                            
+                   # os
+                   .with_column(Column("ged_os_dummy_t0", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t2", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(2)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t3", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t3", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t4", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(4)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t5", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(5)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_os_dummy_t6", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(6)
+                                .transform.missing.fill()
+                                )
+                   # ns
+                   .with_column(Column("ged_ns_dummy_t0", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t2", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(2)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t3", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t3", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(1)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t4", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(4)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t5", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(5)
+                                .transform.missing.fill()
+                                )
+                   .with_column(Column("ged_ns_dummy_t6", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(6)
+                                .transform.missing.fill()
+                                )
+                   # Decay functions
+                   # sb
+                   .with_column(Column("decay_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_sb_5", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_sb_25", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_sb_100", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(100)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_sb_500", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   # os
+                   
+                   .with_column(Column("decay_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_os_5", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_os_25", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_os_100", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(100)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )         
+                            
+                   # ns
+                   .with_column(Column("decay_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_ns_5", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_ns_25", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("decay_ged_ns_100", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(100)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                            
+                   # Spatial lag decay functions
+                            # sb
+                   .with_column(Column("splag_1_decay_ged_sb_25", from_table="ged2_cm",
+                                       from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+
+                   .with_column(Column("splag_1_decay_ged_sb_500", from_table="ged2_cm",
+                                       from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+                   # os
+                   .with_column(Column("splag_1_decay_ged_os_25", from_table="ged2_cm",
+                                       from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("splag_1_decay_ged_os_500", from_table="ged2_cm",
+                                       from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+                   # ns
+                   .with_column(Column("splag_1_decay_ged_ns_25", from_table="ged2_cm",
+                                       from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+                   .with_column(Column("splag_1_decay_ged_ns_500", from_table="ged2_cm",
+                                       from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+                
+                   .with_theme("views-escwa")
+                   .describe("""Views-escwa conflict history, cm level
+    
+    
+                             """)
+                   )
+
+    data = qs_cm_cflong_global.publish().fetch()
+
+
+
+
+
+
 
     qs_baseline = (Queryset("fatalities002_baseline", "country_month")
 
@@ -3395,19 +3718,7 @@ def get_cm_querysets():
     # Collecting combined queryset objects in a list
 
     qslist = [
-              qs_baseline,
-              qs_topics,
-              qs_aquastat,
-              qs_conflict,
-              qs_conflict_long,
-              qs_vdem_short,
-              qs_wdi_short,
-              qs_all_features,
-              qs_joint_narrow,
-              qs_joint_broad,
-              qs_faostat,
-              qs_faoprices,
-              qs_imfweo
+              qs_cm_cflong_global,
               ]
 
     return qslist
