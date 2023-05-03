@@ -105,34 +105,38 @@ def predictions_pgm_maps_cont():
                 title_run = f'{prediction_title_name} in {str(vid2date(month_id))}, {var_name_run}'
                 textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                 savefile = f'{predictions_pgm_folder}{dev_id}_cm_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
+                
+                try:
+                    masked=Mapper2(
+                        width=width_global,
+                        height=height_global,
+                        frame_on=True,
+                        title=title_run,
+                        bbox=bbox_run
+                    ).add_mask(
+                        gdf = data_run,
+                        map_dictionary = dictionary_run,
+                        cmap = cmap_run,
+                        transparency = 1,
+                        masking_location = masking_run,
+                        column=var_run,
+                        background = background2,
+                        edgecolor="black",
+                        linewidth=0.5
+                    ).add_views_textbox(
+                        text=textbox,
+                        textsize=textbox_font_size)
 
+                    ax = masked.ax
 
-                masked=Mapper2(
-                    width=width_global,
-                    height=height_global,
-                    frame_on=True,
-                    title=title_run,
-                    bbox=bbox_run
-                ).add_mask(
-                    gdf = data_run,
-                    map_dictionary = dictionary_run,
-                    cmap = cmap_run,
-                    transparency = 1,
-                    masking_location = masking_run,
-                    column=var_run,
-                    background = background2,
-                    edgecolor="black",
-                    linewidth=0.5
-                ).add_views_textbox(
-                    text=textbox,
-                    textsize=textbox_font_size)
+                    masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
+                    plt.savefig(savefile, dpi = pgm_dpi_global)
 
-                ax = masked.ax
-
-                masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
-                plt.savefig(savefile, dpi = pgm_dpi_global)
-
-                plt.close()
+                    plt.close()
+                
+                except:
+                    print(f"{user}, sorry {region_name} not available in pgm yet")
+                    plt.close()
     print(f'{user}, pgm prediction cont maps completed')
     
     
@@ -196,34 +200,39 @@ def predictions_pgm_maps_dich():
                 title_run = f'{prediction_title_name} in {str(vid2date(month_id))}, {var_name_run}'
                 textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                 savefile = f'{predictions_pgm_folder}{dev_id}_cm_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
+                
+                try:
+                    masked=Mapper2(
+                        width=width_global,
+                        height=height_global,
+                        frame_on=True,
+                        title=title_run,
+                        bbox=bbox_run
+                    ).add_mask(
+                        gdf = data_run,
+                        map_dictionary = dictionary_run,
+                        cmap = cmap_run,
+                        transparency = 1,
+                        masking_location = masking_run,
+                        column=var_run,
+                        background = background2,
+                        edgecolor="black",
+                        linewidth=0.5
+                    ).add_views_textbox(
+                        text=textbox,
+                        textsize=textbox_font_size)
 
+                    ax = masked.ax
 
-                masked=Mapper2(
-                    width=width_global,
-                    height=height_global,
-                    frame_on=True,
-                    title=title_run,
-                    bbox=bbox_run
-                ).add_mask(
-                    gdf = data_run,
-                    map_dictionary = dictionary_run,
-                    cmap = cmap_run,
-                    transparency = 1,
-                    masking_location = masking_run,
-                    column=var_run,
-                    background = background2,
-                    edgecolor="black",
-                    linewidth=0.5
-                ).add_views_textbox(
-                    text=textbox,
-                    textsize=textbox_font_size)
+                    masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
+                    plt.savefig(savefile, dpi = pgm_dpi_global)
 
-                ax = masked.ax
-
-                masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
-                plt.savefig(savefile, dpi = pgm_dpi_global)
-
-                plt.close()
+                    plt.close()
+                
+                except:
+                    print(f"{user}, sorry {region_name} not available in pgm yet")
+                    plt.close()
+                    
     print(f'{user}, pgm prediction dich maps completed')
     
     
@@ -298,33 +307,38 @@ def predictions_pgm_maps_cont_change1():
                 title_run = f'Change of prediction from {human_name}, date {str(vid2date(month_id_temp))}, {var_name_run}'
                 textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                 savefile = f'{cm_predictions_change_maps_folder}ChangeMaps_{dev_id}_cm_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
+                
+                try:
+                    masked=Mapper2(
+                        width=width_global,
+                        height=height_global,
+                        frame_on=True,
+                        title=title_run,
+                        bbox=bbox_run
+                    ).add_mask(
+                        gdf = data_run,
+                        map_dictionary = dictionary_run,
+                        cmap = cmap_run,
+                        transparency = 1,
+                        masking_location = masking_run,
+                        column=var_run,
+                        background = background2,
+                        edgecolor="black",
+                        linewidth=0.5
+                    ).add_views_textbox(
+                        text=textbox,
+                        textsize=textbox_font_size)
 
-                masked=Mapper2(
-                    width=width_global,
-                    height=height_global,
-                    frame_on=True,
-                    title=title_run,
-                    bbox=bbox_run
-                ).add_mask(
-                    gdf = data_run,
-                    map_dictionary = dictionary_run,
-                    cmap = cmap_run,
-                    transparency = 1,
-                    masking_location = masking_run,
-                    column=var_run,
-                    background = background2,
-                    edgecolor="black",
-                    linewidth=0.5
-                ).add_views_textbox(
-                    text=textbox,
-                    textsize=textbox_font_size)
+                    ax = masked.ax
 
-                ax = masked.ax
+                    masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
+                    plt.savefig(savefile, dpi = pgm_dpi_global)
 
-                masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
-                plt.savefig(savefile, dpi = pgm_dpi_global)
-
-                plt.close()
+                    plt.close()
+                
+                except:
+                    print(f"{user}, sorry {region_name} not available in pgm yet")
+                    plt.close()
 
     print(f'{user}, pgm prediction change maps from actuals completed')
     
@@ -396,33 +410,38 @@ def predictions_pgm_maps_cont_change2():
                         title_run = f'Change of prediction from {pred_old} model {months_back} months back at same {method_merge} on {str(vid2date(month_id_temp))}, {var_name_run}'
                         textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_matched_by_{method_merge}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                         savefile = f'{cm_predictions_change_maps_folder}ChangeMaps_{dev_id}_cm_vs_{pred_old}_variable_{var_run_savefile}_matched_by_{method_merge}_{region_name}_{cmap_run}_step{step}.png'
+                        
+                        try:
+                            masked=Mapper2(
+                                width=width_global,
+                                height=height_global,
+                                frame_on=True,
+                                title=title_run,
+                                bbox=bbox_run
+                            ).add_mask(
+                                gdf = data_run,
+                                map_dictionary = dictionary_run,
+                                cmap = cmap_run,
+                                transparency = 1,
+                                masking_location = masking_run,
+                                column=var_run,
+                                background = background2,
+                                edgecolor="black",
+                                linewidth=0.5
+                            ).add_views_textbox(
+                                text=textbox,
+                                textsize=textbox_font_size)
 
-                        masked=Mapper2(
-                            width=width_global,
-                            height=height_global,
-                            frame_on=True,
-                            title=title_run,
-                            bbox=bbox_run
-                        ).add_mask(
-                            gdf = data_run,
-                            map_dictionary = dictionary_run,
-                            cmap = cmap_run,
-                            transparency = 1,
-                            masking_location = masking_run,
-                            column=var_run,
-                            background = background2,
-                            edgecolor="black",
-                            linewidth=0.5
-                        ).add_views_textbox(
-                            text=textbox,
-                            textsize=textbox_font_size)
+                            ax = masked.ax
 
-                        ax = masked.ax
+                            masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
+                            plt.savefig(savefile, dpi = pgm_dpi_global)
 
-                        masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
-                        plt.savefig(savefile, dpi = pgm_dpi_global)
-
-                        plt.close()
+                            plt.close()
+                        
+                        except:
+                            print(f"{user}, sorry {region_name} not available in pgm yet")
+                            plt.close()
 
 
     print(f'{user}, pgm prediction maps from previous prediction completed')
@@ -495,33 +514,40 @@ def predictions_pgm_maps_dich_change():
                         title_run = f'Change of prediction from {pred_old} model {months_back} months back at same {method_merge} on {str(vid2date(month_id_temp))}, {var_name_run}'
                         textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_matched_by_{method_merge}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                         savefile = f'{cm_predictions_change_maps_folder}ChangeMaps_{dev_id}_cm_vs_{pred_old}_variable_{var_run_savefile}_matched_by_{method_merge}_{region_name}_{cmap_run}_step{step}.png'
+                        
+                        try:
+                            masked=Mapper2(
+                                width=width_global,
+                                height=height_global,
+                                frame_on=True,
+                                title=title_run,
+                                bbox=bbox_run
+                            ).add_mask(
+                                gdf = data_run,
+                                map_dictionary = dictionary_run,
+                                cmap = cmap_run,
+                                transparency = 1,
+                                masking_location = masking_run,
+                                column=var_run,
+                                background = background2,
+                                edgecolor="black",
+                                linewidth=0.5
+                            ).add_views_textbox(
+                                text=textbox,
+                                textsize=textbox_font_size)
 
-                        masked=Mapper2(
-                            width=width_global,
-                            height=height_global,
-                            frame_on=True,
-                            title=title_run,
-                            bbox=bbox_run
-                        ).add_mask(
-                            gdf = data_run,
-                            map_dictionary = dictionary_run,
-                            cmap = cmap_run,
-                            transparency = 1,
-                            masking_location = masking_run,
-                            column=var_run,
-                            background = background2,
-                            edgecolor="black",
-                            linewidth=0.5
-                        ).add_views_textbox(
-                            text=textbox,
-                            textsize=textbox_font_size)
+                            ax = masked.ax
 
-                        ax = masked.ax
+                            masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
+                            plt.savefig(savefile, dpi = pgm_dpi_global)
 
-                        masked_with_borders = gdf_c.plot(ax=ax, edgecolor = 'black', linewidth = 2.0, facecolor = 'None')
-                        plt.savefig(savefile, dpi = pgm_dpi_global)
-
-                        plt.close()
+                            plt.close()
+                        
+                        
+                        
+                        except:
+                            print(f"{user}, sorry {region_name} not available in pgm yet")
+                            plt.close()
 
 
     print(f'{user}, pgm prediction dichotomous maps from previous prediction completed')
