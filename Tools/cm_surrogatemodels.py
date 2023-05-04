@@ -65,8 +65,8 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             ['pop_s_' + str(step),'wdi_sp_pop_totl'],
             ['imr_s_' + str(step),'wdi_sp_dyn_imrt_in'],
             ['nb_conflict_s_' + str(step),'splag_1_decay_ged_sb_5'],
-#            ['ste10_conflict_s_' + str(step),'ste_theta10'],
-#            ['ste10stock_conflict_s_' + str(step),'ste_theta10_stock'], 
+            ['ste6_conflict_s_' + str(step),'topic_ste_theta6'],
+            ['ste6stock_conflict_s_' + str(step),'topic_ste_theta6_stock'], 
             ['water_efficiency_s_' + str(step),'general_efficiency_t48'],
         ]
         for col in colnames:
@@ -172,6 +172,19 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
 #            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
 #            'rotation':         30
 #        },
+            
+        {
+            'Name':      'Topics military conflict',
+            'Shortname': 'ste_theta6',
+            'Longdescription':  'long description in here',
+            'Columns':    ['topic_ste_theta6','topic_ste_theta6_stock'],
+            'Data':      Ensemble_df[[f'ste6_conflict_s_{step}',f'ste6stock_conflict_s_{step}']],
+            'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
+            'Predictors': ['Share of conflict in the news','Stock of conflict in the news'],
+            'scale_value':  [0, 0.25, 0.5, 0.75, 1], 
+            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
+            'rotation':         30
+        },
 
         {
             'Name':      'Water services efficiency',
