@@ -44,6 +44,18 @@ def DefineEnsembleModels(level):
             'long_description':  '''...'''
         }
         ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_vdem',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'vdem001',
+            'queryset':         'escwa001_vdem',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Varieties of democracy model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
 
     elif level == 'pgm':
 

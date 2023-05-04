@@ -187,7 +187,8 @@ def FetchData(run_id, EndOfPCAData):
         Datasets.append(Data)
         
     elif run_id == 'escwa001':
-        Datasets.append(FetchTable((Queryset("qs_cm_cflong_global", "country_month")),'cflong'))
+        Datasets.append(FetchTable((Queryset("qs_cm_cflong", "country_month")),'cflong'))
+        Datasets.append(FetchTable((Queryset("qs_cm_vdem", "country_month")),'vdem'))
 
 
     else:

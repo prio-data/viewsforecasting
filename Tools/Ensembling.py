@@ -62,11 +62,11 @@ def gam_calibrated(y_true_calpart,y_pred_calpart,y_pred_test,n_splines):
 # Retrieving the predictions for calibration and test partitions
 # The ModelList contains the predictions organized by model
 
-def RetrieveStoredPredictions(ModelList, steps, EndOfHistory, dev_id, level, get_future):
+def RetrieveStoredPredictions(ModelList, steps, EndOfHistory, dev_id, level, get_future, depvar='ln_ged_sb_dep'):
     ''' This function retrieves the predictions stored in ViEWS prediction storage for all models in the list passed to it.
     It assumes that each element in the list is a dictionary that contains a model['modelname'] '''
     i=0
-    stepcols = ['ln_ged_sb_dep']
+    stepcols = [depvar]
     for step in steps:
         stepcols.append('step_pred_' + str(step))
     for model in ModelList:

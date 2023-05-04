@@ -25,7 +25,7 @@ from stepshift import views
 
 def get_cm_querysets():
     
-    qs_cm_cflong_global  = (Queryset("escwa001_cflong", "country_month")
+    qs_cm_cflong  = (Queryset("escwa001_cflong", "country_month")
                    # target variable
                    .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                 .transform.bool.gte(25)
@@ -340,10 +340,384 @@ def get_cm_querysets():
                              """)
                    )
 
-    data = qs_cm_cflong_global.publish().fetch()
+    data = qs_cm_cflong.publish().fetch()
 
 
 
+
+    # With vdem and wdi, shortened version
+    # log variables
+    qs_vdem_escwa = (Queryset("escwa001_vdem", "country_month")
+                   # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                   # timelag 0 of target variable
+                   .with_column(Column("ged_sb_dummy_t0", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+
+                          # Features from vdem
+                          .with_column(Column("vdem_v2x_delibdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_delibdem")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_egaldem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_egaldem")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_libdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_libdem")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_libdem_48", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_libdem")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(60)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_partip", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_partip")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_partipdem", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_partipdem")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_accountability", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_accountability")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                           .with_column(Column("vdem_v2x_civlib", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_civlib")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_clphy", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clphy")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_cspart", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_cspart")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_divparctrl")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_edcomp_thick", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_edcomp_thick")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_egal", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_egal")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_execorr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_execorr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_frassoc_thick", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_frassoc_thick")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_gencs", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_gencs")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_gender", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_gender")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_genpp", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_genpp")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_horacc", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_horacc")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_neopat", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_neopat")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_pubcorr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_pubcorr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_rule", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_rule")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_veracc", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_veracc")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_ex_military")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_ex_party")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_freexp", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_freexp")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xcl_acjst", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_acjst")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_dmove")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_prpty")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v12_cy", from_column="vdem_v12_v2xcl_rol")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xcl_slave", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_slave")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xdd_dd", from_table="vdem_v12_cy", from_column="vdem_v12_v2xdd_dd")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xdl_delib", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xdl_delib")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqdr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqprotec")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xel_frefair", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xel_frefair")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xel_regelec", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xel_regelec")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xme_altinf", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xme_altinf")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xnp_client", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xnp_client")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xnp_regcorr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xpe_exlecon", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlecon")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlpol")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlgeo")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlgender")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xpe_exlsocgr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xps_party", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xps_party")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xcs_ccsi", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcs_ccsi")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xnp_pres", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xnp_pres")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2xeg_eqaccess", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqaccess")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2x_diagacc")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                          .with_theme("escwa")
+                          .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from vdem
+     
+                                    """)
+                          )
+
+    data = qs_vdem_escwa.publish().fetch()
+
+    print(f"escwa001_vdem "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
 
 
 
@@ -3718,7 +4092,8 @@ def get_cm_querysets():
     # Collecting combined queryset objects in a list
 
     qslist = [
-              qs_cm_cflong_global,
+              qs_cm_cflong,
+              qs_vdem_escwa,
               ]
 
     return qslist
