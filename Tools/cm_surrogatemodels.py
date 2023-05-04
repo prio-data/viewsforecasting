@@ -160,22 +160,10 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             'scale_value':  log_scale_value, 
             'scale_naming': log_scale_naming,
             'rotation':         30
-        },
-#        {
-#            'Name':      'Topics: conflict and conflict stock',
-#            'Shortname': 'Topic10',
-#            'Columns':    ['ste_theta10','ste_theta10_stock'],
-#            'Data':      Ensemble_df[[f'ste10_conflict_s_{step}',f'ste10stock_conflict_s_{step}']],
-#            'GAM':       LinearGAM(s(0,n_splines=5) + s(1,n_splines=5)),
-#            'Predictors': ['Share of conflict in news','Share of conflict in news, stock'],
-#            'scale_value':  [0, 0.25, 0.5, 0.75, 1], 
-#            'scale_naming': [0, 0.25, 0.5, 0.75, 1],
-#            'rotation':         30
-#        },
-            
+        },    
         {
-            'Name':      'Topics military conflict',
-            'Shortname': 'ste_theta6',
+            'Name':      'Topics: military conflict',
+            'Shortname': 'Tconflict',
             'Longdescription':  'long description in here',
             'Columns':    ['topic_ste_theta6','topic_ste_theta6_stock'],
             'Data':      Ensemble_df[[f'ste6_conflict_s_{step}',f'ste6stock_conflict_s_{step}']],
@@ -185,7 +173,6 @@ def TrainSurrogateModels(data_df, Ensemble_df, EndOfHistory, SurrogateModelSteps
             'scale_naming': [0, 0.25, 0.5, 0.75, 1],
             'rotation':         30
         },
-
         {
             'Name':      'Water services efficiency',
             'Shortname': 'Water',
