@@ -56,6 +56,78 @@ def DefineEnsembleModels(level):
             'long_description':  '''...'''
         }
         ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_wdi',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'wdi001',
+            'queryset':         'escwa001_wdi',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'World development index model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_aquastat',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'aquastat001',
+            'queryset':         'escwa001_aquastat',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Aqua Stat model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_food',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'food001',
+            'queryset':         'escwa001_food',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Food security model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_imfweo',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'imfweo001',
+            'queryset':         'escwa001_imfweo',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'IMF WEO model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_faostat',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'faostat001',
+            'queryset':         'escwa001_faostat',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Faostat model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
+           model = {
+            'modelname':        'escwa001_escwabroad',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'escwabroad001',
+            'queryset':         'escwa001_escwabroad',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Broad escwa model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
 
     elif level == 'pgm':
 

@@ -185,10 +185,22 @@ def FetchData(run_id, EndOfPCAData):
             'df': wdi['result']
         }
         Datasets.append(Data)
+
+##################################################################################################################################
+### From here Chandler needs to add the models as he goes
+### simply follow the examples from below. 
+### Match the queryset calls and append them
+##################################################################################################################################
         
     elif run_id == 'escwa001':
         Datasets.append(FetchTable((Queryset("qs_cm_cflong", "country_month")),'cflong'))
-        Datasets.append(FetchTable((Queryset("qs_cm_vdem", "country_month")),'vdem'))
+        Datasets.append(FetchTable((Queryset("qs_vdem_escwa", "country_month")),'vdem'))
+        Datasets.append(FetchTable((Queryset("qs_wdi_escwa", "country_month")),'wdi'))
+        Datasets.append(FetchTable((Queryset("qs_aquastat_escwa", "country_month")),'aquastat'))
+        Datasets.append(FetchTable((Queryset("qs_food_escwa", "country_month")),'food'))
+        Datasets.append(FetchTable((Queryset("qs_imfweo_escwa", "country_month")),'imfweo'))
+        Datasets.append(FetchTable((Queryset("qs_faostat_escwa", "country_month")),'faostat'))
+        Datasets.append(FetchTable((Queryset("qs_escwa_escwabroad", "country_month")),'escwabroad'))
 
 
     else:

@@ -353,12 +353,6 @@ def get_cm_querysets():
                                 .transform.bool.gte(25)
                                 .transform.missing.fill()
                                 )
-                   # timelag 0 of target variable
-                   .with_column(Column("ged_sb_dummy_t0", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
-                                .transform.bool.gte(25)
-                                .transform.missing.fill()
-                                )
-
                           # Features from vdem
                           .with_column(Column("vdem_v2x_delibdem", from_table="vdem_v12_cy",
                                               from_column="vdem_v12_v2x_delibdem")
@@ -719,6 +713,1433 @@ def get_cm_querysets():
           f"({len(np.unique(data.index.get_level_values(1)))} units)"
           )
 
+    
+#################################################################################################################################
+#################################################################################################################################  ### CHANDLER'S TASKS 
+### Add the new models here!
+### Delete these comments after
+### The model below needs to become 'escwa-ized'
+### The 'target variable' needs to be this way for all the escwa variables. Copy it on top of all the models
+### The queryset naming (the top parts) need to have similar naming conventions to the ones above
+### the 'data = qs_name_escwa.publish().fetch() and the print statement need to be at the bottom
+#################################################################################################################################
+#################################################################################################################################
+
+    qs_wdi_escwa = (Queryset("escwa001_wdi", "country_month")
+                    # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                         # Features from WDI
+                         .with_column(Column("wdi_ag_lnd_frst_k2_t12", from_table="wdi_cy",
+                                             from_column="wdi_ag_lnd_frst_k2")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                         .with_column(Column("wdi_ag_lnd_totl_k2_t12", from_table="wdi_cy",
+                                             from_column="wdi_ag_lnd_totl_k2")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_ag_lnd_totl_ru_k2_t12", from_table="wdi_cy",
+                                             from_column="wdi_ag_lnd_totl_ru_k2")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                        
+                        .with_column(Column("wdi_ag_srf_totl_k2_t12", from_table="wdi_cy",
+                                             from_column="wdi_ag_srf_totl_k2")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_dt_oda_odat_pc_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_dt_oda_odat_pc_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_en_pop_slum_ur_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_en_pop_slum_ur_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_ic_bus_ease_xq", from_table="wdi_cy",
+                                             from_column="wdi_ic_bus_ease_xq")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_nv_agr_totl_cn_t12", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_cn")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_nv_agr_totl_kd_t12", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_nv_agr_totl_kn_t12", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_kn")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_ny_adj_dfor_cd_t12", from_table="wdi_cy",
+                                             from_column="wdi_ny_adj_dfor_cd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_ny_gdp_mktp_kd_t12", from_table="wdi_cy",
+                                             from_column="wdi_ny_gdp_mktp_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_ny_gdp_pcap_kd_t12", from_table="wdi_cy",
+                                             from_column="wdi_ny_gdp_pcap_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                        
+                        .with_column(Column("wdi_ny_gnp_mktp_pp_kd_t12", from_table="wdi_cy",
+                                             from_column="wdi_ny_gnp_mktp_pp_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                        
+                        .with_column(Column("wdi_se_adt_1524_lt_fe_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_se_adt_1524_lt_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_adt_1524_lt_ma_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_se_adt_1524_lt_ma_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_adt_1524_lt_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_se_adt_1524_lt_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_enr_prim_fm_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_se_enr_prim_fm_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_enr_prsc_fm_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_se_enr_prsc_fm_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_prm_nenr_t12", from_table="wdi_cy",
+                                             from_column="wdi_se_prm_nenr")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_prm_tenr_ma_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_se_prm_tenr_ma")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_sec_cuat_lo_fe_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_se_sec_cuat_lo_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_se_sec_nenr_t12", from_table="wdi_cy",
+                                             from_column="wdi_se_sec_nenr")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sg_gen_parl_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_sg_gen_parl_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sh_dyn_mort_fe_t12", from_table="wdi_cy",
+                                             from_column="wdi_sh_dyn_mort_fe")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sh_h2o_basw_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sh_h2o_basw_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sh_sta_maln_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sh_sta_maln_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sh_sta_stnt_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sh_sta_stnt_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                        
+                        .with_column(Column("wdi_sh_sta_wash_p5_t12", from_table="wdi_cy",
+                                             from_column="wdi_sh_sta_wash_p5")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_si_pov_gini_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_si_pov_gini")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sl_tlf_totl_fe_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_tlf_totl_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sl_uem_advn_fe_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_advn_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sl_uem_advn_ma_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_advn_ma_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sl_uem_advn_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_advn_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sl_uem_neet_fe_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_neet_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sl_uem_neet_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_neet_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sm_pop_netm_t12", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_netm")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sm_pop_refg_t12", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_refg")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                       .with_column(Column("wdi_sm_pop_refg_or_t12", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_refg_or")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sm_pop_totl_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_totl_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_dyn_imrt_fe_in_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_dyn_imrt_fe_in")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_dyn_imrt_in_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_dyn_imrt_in")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_dyn_le00_in_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_dyn_le00_in")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_dyn_tfrt_in_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_dyn_tfrt_in")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_hou_fema_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_sp_hou_fema_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_0014_fe_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_0014_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_0014_ma_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_0014_ma_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_1564_fe_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_1564_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_1564_ma_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_1564_ma_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                        
+                        .with_column(Column("wdi_sp_pop_65up_fe_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_65up_fe_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_65up_ma_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_65up_ma_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_dpnd_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_dpnd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_grow_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_grow")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_pop_totl_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_totl")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_urb_grow_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_sp_urb_grow")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                    
+                        .with_column(Column("wdi_sp_urb_totl_in_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_urb_totl_in_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+          
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from wdi
+    
+                                   """)
+
+                         )
+
+    data = qs_wdi_escwa.publish().fetch()
+
+    print(f"escwa001_wdi "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+    
+#################################################################################################################################
+#################################################################################################################################
+
+    qs_aquastat_escwa = (Queryset("escwa001_aquastat", "country_month")
+                    # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                         # Features from AquaStat
+                         .with_column(Column("agr_withdrawal_pct_t48", from_table="fao_aqua_cy",
+                                             from_column="agr_withdrawal_pct")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("dam_cap_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="dam_cap_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("groundwater_export_t48", from_table="fao_aqua_cy",
+                                             from_column="groundwater_export")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("fresh_withdrawal_pct_t48", from_table="fao_aqua_cy",
+                                             from_column="fresh_withdrawal_pct")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                    
+                         .with_column(Column("ind_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="ind_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("irr_agr_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="irr_agr_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("services_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="services_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("general_efficiency_t48", from_table="fao_aqua_cy",
+                                             from_column="general_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("water_stress_t48", from_table="fao_aqua_cy",
+                                             from_column="water_stress")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("renewable_internal_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="renewable_internal_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("renewable_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="renewable_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                    
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from aquastat
+    
+                                   """)
+
+                         )
+
+    data = qs_aquastat_escwa.publish().fetch()
+
+    print(f"escwa001_aquastat "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+
+#################################################################################################################################
+#################################################################################################################################
+#################################################################################################################################
+### cm_food_global
+
+    qs_food_escwa = (Queryset("escwa001_food", "country_month")
+                    # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                         # Features from cm_wfpfood_usd_global
+                         .with_column(Column("wfpmp_mp_price", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         # lagged versions
+                         .with_column(Column("wfpmp_mp_price_t12", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price_t12", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price_t12", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price_t12", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price_t12", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                         # delta versions
+                         .with_column(Column("wfpmp_mp_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         # Features from cm_faofood_usd_global
+                         .with_column(Column("fao_mp_price", from_table="faostat_pp_cm", from_column="mp_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_wheat_price", from_table="faostat_pp_cm", from_column="wheat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_sugar_price", from_table="faostat_pp_cm", from_column="sugar_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_milk_price", from_table="faostat_pp_cm", from_column="milk_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_meat_price", from_table="faostat_pp_cm", from_column="meat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         # lagged versions
+                         .with_column(Column("fao_mp_price_t12", from_table="faostat_pp_cm", from_column="mp_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("fao_wheat_price_t12", from_table="faostat_pp_cm", from_column="wheat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("fao_sugar_price_t12", from_table="faostat_pp_cm", from_column="sugar_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("fao_milk_price_t12", from_table="faostat_pp_cm", from_column="milk_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("fao_meat_price_t12", from_table="faostat_pp_cm", from_column="meat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                         # delta 12 versions
+                         .with_column(Column("fao_mp_price_delta12", from_table="faostat_pp_cm", from_column="mp_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_wheat_price_delta12", from_table="faostat_pp_cm", from_column="wheat_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_sugar_price_delta12", from_table="faostat_pp_cm", from_column="sugar_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_milk_price_delta12", from_table="faostat_pp_cm", from_column="milk_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("fao_meat_price_delta12", from_table="faostat_pp_cm", from_column="meat_price")
+                                      .transform.temporal.delta(12)
+                                      .transform.missing.replace_na(0)
+                                      )
+                                          
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from food
+    
+                                   """)
+                         )
+
+    data = qs_food_escwa.publish().fetch()
+
+    print(f"escwa001_food "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+
+#################################################################################################################################
+#################################################################################################################################
+#################################################################################################################################
+
+    qs_imfweo_escwa = (Queryset("escwa001_imfweo", "country_month")
+                    # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                         # Features from cm_imfweo_global
+                         .with_column(Column("imfweo_ngdp_rpch_tcurrent", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tcurrent")
+                                   .transform.missing.replace_na(0)
+                                   )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tmin1", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tmin1")
+                                   .transform.missing.replace_na(0)
+                                   )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tplus1", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tplus1")
+                                   .transform.missing.replace_na(0)
+                                   )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tplus2", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tplus2")
+                                   .transform.missing.replace_na(0)
+                                   )
+                    
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from imfweo
+    
+                                   """)
+                         )
+
+    data = qs_imfweo_escwa.publish().fetch()
+
+    print(f"escwa001_imfweo "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+
+#################################################################################################################################
+#################################################################################################################################
+#################################################################################################################################
+
+    qs_faostat_escwa = (Queryset("escwa001_faostat", "country_month")
+                    # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                         # Features from cm_faostat_global
+                         .with_column(Column("consumer_prices_food_indices", from_table="faostat_cpi_cm",
+                                           from_column="consumer_prices_food_indices")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("consumer_prices_general_indices", from_table="faostat_cpi_cm",
+                                           from_column="consumer_prices_general_indices")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("food_price_inflation", from_table="faostat_cpi_cm",
+                                           from_column="food_price_inflation")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+                        
+                         .with_column(Column("avg_adequate_diet", from_table="faostat_fsec_cy",
+                                           from_column="avg_adequate_diet")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("avg_animalprotein_pcap_day", from_table="faostat_fsec_cy",
+                                           from_column="avg_animalprotein_pcap_day")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("avg_fprod_value", from_table="faostat_fsec_cy",
+                                           from_column="avg_fprod_value")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("avg_protein_pcap_day", from_table="faostat_fsec_cy",
+                                           from_column="avg_protein_pcap_day")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("gdp_pc_ppp", from_table="faostat_fsec_cy", from_column="gdp_pc_ppp")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("kcal_pcap_day", from_table="faostat_fsec_cy", from_column="kcal_pcap_day")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+                        
+                         .with_column(Column("kcal_pcap_day_cerotu", from_table="faostat_fsec_cy",
+                                           from_column="kcal_pcap_day_cerotu")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+                        
+                         .with_column(Column("pcap_fprod_var", from_table="faostat_fsec_cy", from_column="pcap_fprod_var")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+                        
+                         .with_column(Column("pcap_fsupply_var", from_table="faostat_fsec_cy",
+                                           from_column="pcap_fsupply_var")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_arable_land", from_table="faostat_fsec_cy",
+                                           from_column="pct_arable_land")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_cereal_import", from_table="faostat_fsec_cy",
+                                           from_column="pct_cereal_import")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_fimport_merch", from_table="faostat_fsec_cy",
+                                           from_column="pct_fimport_merch")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_modsevere_finsecurity", from_table="faostat_fsec_cy",
+                                           from_column="pct_modsevere_finsecurity")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_pop_basicdrink", from_table="faostat_fsec_cy",
+                                           from_column="pct_pop_basicdrink")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_pop_basicsani", from_table="faostat_fsec_cy",
+                                           from_column="pct_pop_basicsani")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_pop_safedrink", from_table="faostat_fsec_cy",
+                                           from_column="pct_pop_safedrink")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_pop_safesani", from_table="faostat_fsec_cy",
+                                           from_column="pct_pop_safesani")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_severe_finsecurity", from_table="faostat_fsec_cy",
+                                           from_column="pct_severe_finsecurity")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_und5_overweight", from_table="faostat_fsec_cy",
+                                           from_column="pct_und5_overweight")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_und5_stunted", from_table="faostat_fsec_cy",
+                                           from_column="pct_und5_stunted")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_und5_wasting", from_table="faostat_fsec_cy",
+                                           from_column="pct_und5_wasting")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pct_undernourished", from_table="faostat_fsec_cy",
+                                           from_column="pct_undernourished")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pol_stability", from_table="faostat_fsec_cy", from_column="pol_stability")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pop_modsevere_finsecurity", from_table="faostat_fsec_cy",
+                                           from_column="pop_modsevere_finsecurity")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pop_severe_finsecurity", from_table="faostat_fsec_cy",
+                                           from_column="pop_severe_finsecurity")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("pop_undernourished", from_table="faostat_fsec_cy",
+                                           from_column="pop_undernourished")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("prev_adult_obesity", from_table="faostat_fsec_cy",
+                                           from_column="prev_adult_obesity")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("prev_infant_bfeed", from_table="faostat_fsec_cy",
+                                           from_column="prev_infant_bfeed")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("prev_lowbweight", from_table="faostat_fsec_cy",
+                                           from_column="prev_lowbweight")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("prev_repr_anemia", from_table="faostat_fsec_cy",
+                                           from_column="prev_repr_anemia")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+
+                         .with_column(Column("rail_density", from_table="faostat_fsec_cy", from_column="rail_density")
+                                    .transform.missing.fill()
+                                    .transform.temporal.tlag(12)
+                                    .transform.missing.fill()
+                                    )
+                    
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from faostat
+    
+                                   """)
+                         )
+
+    data = qs_faostat_escwa.publish().fetch()
+
+    print(f"escwa001_faostat "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+#################################################################################################################################
+#################################################################################################################################
+#################################################################################################################################
+
+
+    qs_escwa_escwabroad = (Queryset("escwa001_escwabroad", "country_month")
+                    # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.bool.gte(25)
+                                .transform.missing.fill()
+                                )
+                      
+                        # Decay functions time since ged dummy
+                        # sb
+                         .with_column(Column("decay_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+
+                       # ns
+                         .with_column(Column("decay_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+
+                       # os
+                         .with_column(Column("decay_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(1)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                     # Decay functions time since 100 ged
+                     # sb
+                         .with_column(Column("decay_ged_sb_100", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(100)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                     # ns
+                         .with_column(Column("decay_ged_ns_100", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(100)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                    # os
+                         .with_column(Column("decay_ged_os_100", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(100)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                    # Decay functions time since 500 ged
+                    # sb
+                         .with_column(Column("decay_ged_sb_500", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                    # ns
+                         .with_column(Column("decay_ged_ns_500", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                    # os
+                         .with_column(Column("decay_ged_os_500", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(500)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                    # Features from cm_wfpfood_usd_global
+                         .with_column(Column("wfpmp_mp_price", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         # lagged versions
+                         .with_column(Column("wfpmp_mp_price_t12", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price_t12", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price_t12", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price_t12", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price_t12", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                      # Features from cm_imfweo_global
+                         .with_column(Column("imfweo_ngdp_rpch_tcurrent", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tcurrent")
+                                   .transform.missing.replace_na(0)
+                                   )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tmin1", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tmin1")
+                                   .transform.missing.replace_na(0)
+                                   )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tplus1", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tplus1")
+                                   .transform.missing.replace_na(0)
+                                   )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tplus2", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tplus2")
+                                   .transform.missing.replace_na(0)
+                                   )
+                      # Features from AquaStat
+                         .with_column(Column("agr_withdrawal_pct_t48", from_table="fao_aqua_cy",
+                                             from_column="agr_withdrawal_pct")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("dam_cap_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="dam_cap_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("groundwater_export_t48", from_table="fao_aqua_cy",
+                                             from_column="groundwater_export")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("fresh_withdrawal_pct_t48", from_table="fao_aqua_cy",
+                                             from_column="fresh_withdrawal_pct")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                    
+                         .with_column(Column("ind_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="ind_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("irr_agr_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="irr_agr_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("services_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="services_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("general_efficiency_t48", from_table="fao_aqua_cy",
+                                             from_column="general_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("water_stress_t48", from_table="fao_aqua_cy",
+                                             from_column="water_stress")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("renewable_internal_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="renewable_internal_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("renewable_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="renewable_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                      # Features from vdem
+                         .with_column(Column("vdem_v2x_clphy", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clphy")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_dmove")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+                         .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v12_cy", from_column="vdem_v12_v2xcl_rol")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_civlib", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_civlib")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xel_regelec", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xel_regelec")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xcl_acjst", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_acjst")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_gencl", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_gencl")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqdr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_egal", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_egal")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_clpriv", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clpri”)
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )   
+                      # Features from wdi
+                                      
+                         .with_column(Column("wdi_sm_pop_refg_t12", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_refg")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                  
+                                      
+                         .with_column(Column("wdi_sp_pop_totl_t12", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_totl")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )  
+                                      
+                         .with_column(Column("wdi_sm_pop_netm_t12", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_netm")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )   
+                                      
+                         .with_column(Column("wdi_sl_uem_advn_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_advn_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                        
+                         .with_column(Column("wdi_nv_agr_totl_kn_t12", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_kn")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+ 
+                         .with_column(Column("wdi_sp_hou_fema_zs_t12", from_table="wdi_health_cy",
+                                             from_column="wdi_sp_hou_fema_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                                      
+                         .with_column(Column("wdi_ag_lnd_totl_ru_k2_t12", from_table="wdi_cy",
+                                             from_column="wdi_ag_lnd_totl_ru_k2")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                                      
+                         .with_column(Column("wdi_nv_agr_totl_kd_t12", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                                      
+                         .with_column(Column("wdi_nv_agr_totl_cn_t12", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_cn")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                                      
+                         .with_column(Column("wdi_sh_sta_maln_zs_t12", from_table="wdi_cy",
+                                             from_column="wdi_sh_sta_maln_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                                      
+                         .with_column(Column("wdi_ny_gdp_pcap_kd_t12", from_table="wdi_cy",
+                                             from_column="wdi_ny_gdp_pcap_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                    
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from imfweo
+    
+                                   """)
+                         )
+
+    data = qs_escwa_escwabroad.publish().fetch()
+
+    print(f"escwa001_escwabroad "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+
+#################################################################################################################################
+#################################################################################################################################
 
 
 
@@ -787,6 +2208,11 @@ def get_cm_querysets():
           f"and {max(data.index.get_level_values(0))}. "
           f"({len(np.unique(data.index.get_level_values(1)))} units)"
           )
+    
+
+
+    
+    
 
     ###################################################################################################################
     # Mueller & Rauh topic model features
@@ -4091,9 +5517,15 @@ def get_cm_querysets():
     ###################################################################################################################
     # Collecting combined queryset objects in a list
 
+## add the names as I go here! 
+
     qslist = [
               qs_cm_cflong,
               qs_vdem_escwa,
+              qs_wdi_escwa,
+              qs_aquastat_escwa,
+              qs_food_escwa,
+              qs_imfweo_escwa,
               ]
 
     return qslist
