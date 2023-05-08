@@ -726,11 +726,12 @@ def get_cm_querysets():
 #################################################################################################################################
 
     qs_wdi_escwa = (Queryset("escwa001_wdi", "country_month")
-                    # target variable
-                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                  # target variable
+                  .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                 .transform.bool.gte(25)
                                 .transform.missing.fill()
                                 )
+
                          # Features from WDI
                          .with_column(Column("wdi_ag_lnd_frst_k2", from_table="wdi_cy",
                                              from_column="wdi_ag_lnd_frst_k2")
@@ -991,13 +992,6 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sm_pop_refg", from_table="wdi_cy",
-                                             from_column="wdi_sm_pop_refg")
-                                      .transform.missing.fill()
-                                      .transform.temporal.tlag(12)
-                                      .transform.missing.fill()
-                                      )
-                    
                        .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_refg_or")
                                       .transform.missing.fill()
@@ -1124,13 +1118,12 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
           
-                         .with_theme("escwa")
-                         .describe("""Predicting >25, cm level
+                        .with_theme("escwa")
+                        .describe("""Predicting >25, cm level
     
                                     Queryset with cy features from wdi
     
                                    """)
-
                          )
 
     data = qs_wdi_escwa.publish().fetch()
@@ -1141,6 +1134,7 @@ def get_cm_querysets():
           f"and {max(data.index.get_level_values(0))}. "
           f"({len(np.unique(data.index.get_level_values(1)))} units)"
           )
+
     
 #################################################################################################################################
 #################################################################################################################################
@@ -2109,8 +2103,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        )
 
-                         .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy",
-                                              from_column="vdem_v12_v2xeg_eqdr")
+                         .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy", from_column="vdem_v12_v2xeg_eqdr")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
@@ -2122,20 +2115,20 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        )
 
-                         .with_column(Column("vdem_v2x_clpriv", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clpri”)
+                         .with_column(Column("vdem_v2x_clpriv", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clpriv")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )   
                       # Features from wdi
-                                      
-                         .with_column(Column("wdi_sm_pop_refg", from_table="wdi_cy",
-                                             from_column="wdi_sm_pop_refg")
+                      
+                        .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_refg_or")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
-                                      )                  
-                                      
+                                      )
+                      
                          .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_totl")
                                       .transform.missing.fill()
@@ -2610,20 +2603,20 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        )
 
-                         .with_column(Column("vdem_v2x_clpriv", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clpri”)
+                         .with_column(Column("vdem_v2x_clpriv", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clpriv")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
                                        )   
                       # Features from wdi
-                                      
-                         .with_column(Column("wdi_sm_pop_refg", from_table="wdi_cy",
-                                             from_column="wdi_sm_pop_refg")
+                      
+                         .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_refg_or")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
-                                      )                  
-                                      
+                                      )
+              
                          .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_totl")
                                       .transform.missing.fill()
@@ -6101,7 +6094,8 @@ def get_cm_querysets():
               qs_food_escwa,
               qs_imfweo_escwa,
               qs_faostat_escwa,
-              qs_broad,
+              qs_escwa_broad,
+              qs_escwa_onset,
               ]
 
     return qslist

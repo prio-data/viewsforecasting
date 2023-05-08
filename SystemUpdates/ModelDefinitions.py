@@ -116,7 +116,7 @@ def DefineEnsembleModels(level):
             'long_description':  '''...'''
         }
         ModelList.append(model)
-           model = {
+        model = {
             'modelname':        'escwa001_broad',
             'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
             'depvar':           'ged_sb_dep',
