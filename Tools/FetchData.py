@@ -200,7 +200,8 @@ def FetchData(run_id, EndOfPCAData):
         Datasets.append(FetchTable((Queryset("qs_food_escwa", "country_month")),'food'))
         Datasets.append(FetchTable((Queryset("qs_imfweo_escwa", "country_month")),'imfweo'))
         Datasets.append(FetchTable((Queryset("qs_faostat_escwa", "country_month")),'faostat'))
-        Datasets.append(FetchTable((Queryset("qs_escwa_escwabroad", "country_month")),'escwabroad'))
+        Datasets.append(FetchTable((Queryset("qs_escwa_broad", "country_month")),'broad'))
+        Datasets.append(FetchTable((Queryset("qs_escwa_onset", "country_month")),'onset'))
 
 
     else:

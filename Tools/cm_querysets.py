@@ -732,42 +732,42 @@ def get_cm_querysets():
                                 .transform.missing.fill()
                                 )
                          # Features from WDI
-                         .with_column(Column("wdi_ag_lnd_frst_k2_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_ag_lnd_frst_k2", from_table="wdi_cy",
                                              from_column="wdi_ag_lnd_frst_k2")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                         .with_column(Column("wdi_ag_lnd_totl_k2_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_ag_lnd_totl_k2", from_table="wdi_cy",
                                              from_column="wdi_ag_lnd_totl_k2")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_ag_lnd_totl_ru_k2_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_ag_lnd_totl_ru_k2", from_table="wdi_cy",
                                              from_column="wdi_ag_lnd_totl_ru_k2")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                         
-                        .with_column(Column("wdi_ag_srf_totl_k2_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_ag_srf_totl_k2", from_table="wdi_cy",
                                              from_column="wdi_ag_srf_totl_k2")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_dt_oda_odat_pc_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_dt_oda_odat_pc_zs", from_table="wdi_cy",
                                              from_column="wdi_dt_oda_odat_pc_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_en_pop_slum_ur_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_en_pop_slum_ur_zs", from_table="wdi_health_cy",
                                              from_column="wdi_en_pop_slum_ur_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
@@ -781,343 +781,343 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_nv_agr_totl_cn_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_nv_agr_totl_cn", from_table="wdi_cy",
                                              from_column="wdi_nv_agr_totl_cn")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_nv_agr_totl_kd_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_nv_agr_totl_kd", from_table="wdi_cy",
                                              from_column="wdi_nv_agr_totl_kd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_nv_agr_totl_kn_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_nv_agr_totl_kn", from_table="wdi_cy",
                                              from_column="wdi_nv_agr_totl_kn")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_ny_adj_dfor_cd_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_ny_adj_dfor_cd", from_table="wdi_cy",
                                              from_column="wdi_ny_adj_dfor_cd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_ny_gdp_mktp_kd_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
                                              from_column="wdi_ny_gdp_mktp_kd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_ny_gdp_pcap_kd_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_ny_gdp_pcap_kd", from_table="wdi_cy",
                                              from_column="wdi_ny_gdp_pcap_kd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                         
-                        .with_column(Column("wdi_ny_gnp_mktp_pp_kd_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_ny_gnp_mktp_pp_kd", from_table="wdi_cy",
                                              from_column="wdi_ny_gnp_mktp_pp_kd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                         
-                        .with_column(Column("wdi_se_adt_1524_lt_fe_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_se_adt_1524_lt_fe_zs", from_table="wdi_health_cy",
                                              from_column="wdi_se_adt_1524_lt_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_adt_1524_lt_ma_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_se_adt_1524_lt_ma_zs", from_table="wdi_health_cy",
                                              from_column="wdi_se_adt_1524_lt_ma_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_adt_1524_lt_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_se_adt_1524_lt_zs", from_table="wdi_health_cy",
                                              from_column="wdi_se_adt_1524_lt_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_enr_prim_fm_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_se_enr_prim_fm_zs", from_table="wdi_cy",
                                              from_column="wdi_se_enr_prim_fm_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_enr_prsc_fm_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_se_enr_prsc_fm_zs", from_table="wdi_cy",
                                              from_column="wdi_se_enr_prsc_fm_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_prm_nenr_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_se_prm_nenr", from_table="wdi_cy",
                                              from_column="wdi_se_prm_nenr")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_prm_tenr_ma_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_se_prm_tenr_ma", from_table="wdi_health_cy",
                                              from_column="wdi_se_prm_tenr_ma")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_sec_cuat_lo_fe_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_se_sec_cuat_lo_fe_zs", from_table="wdi_health_cy",
                                              from_column="wdi_se_sec_cuat_lo_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_se_sec_nenr_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_se_sec_nenr", from_table="wdi_cy",
                                              from_column="wdi_se_sec_nenr")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sg_gen_parl_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_sg_gen_parl_zs", from_table="wdi_health_cy",
                                              from_column="wdi_sg_gen_parl_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sh_dyn_mort_fe_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sh_dyn_mort_fe", from_table="wdi_cy",
                                              from_column="wdi_sh_dyn_mort_fe")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sh_h2o_basw_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sh_h2o_basw_zs", from_table="wdi_cy",
                                              from_column="wdi_sh_h2o_basw_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sh_sta_maln_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
                                              from_column="wdi_sh_sta_maln_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sh_sta_stnt_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sh_sta_stnt_zs", from_table="wdi_cy",
                                              from_column="wdi_sh_sta_stnt_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                         
-                        .with_column(Column("wdi_sh_sta_wash_p5_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sh_sta_wash_p5", from_table="wdi_cy",
                                              from_column="wdi_sh_sta_wash_p5")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_si_pov_gini_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_si_pov_gini", from_table="wdi_health_cy",
                                              from_column="wdi_si_pov_gini")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sl_tlf_totl_fe_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sl_tlf_totl_fe_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_tlf_totl_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sl_uem_advn_fe_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sl_uem_advn_fe_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_uem_advn_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sl_uem_advn_ma_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sl_uem_advn_ma_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_uem_advn_ma_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sl_uem_advn_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sl_uem_advn_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_uem_advn_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sl_uem_neet_fe_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sl_uem_neet_fe_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_uem_neet_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sl_uem_neet_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sl_uem_neet_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_uem_neet_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sm_pop_netm_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sm_pop_netm", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_netm")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sm_pop_refg_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sm_pop_refg", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_refg")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                       .with_column(Column("wdi_sm_pop_refg_or_t12", from_table="wdi_cy",
+                       .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_refg_or")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sm_pop_totl_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sm_pop_totl_zs", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_totl_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_dyn_imrt_fe_in_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_dyn_imrt_fe_in", from_table="wdi_cy",
                                              from_column="wdi_sp_dyn_imrt_fe_in")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_dyn_imrt_in_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_dyn_imrt_in", from_table="wdi_cy",
                                              from_column="wdi_sp_dyn_imrt_in")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_dyn_le00_in_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_dyn_le00_in", from_table="wdi_cy",
                                              from_column="wdi_sp_dyn_le00_in")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_dyn_tfrt_in_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_dyn_tfrt_in", from_table="wdi_cy",
                                              from_column="wdi_sp_dyn_tfrt_in")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_hou_fema_zs_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_sp_hou_fema_zs", from_table="wdi_health_cy",
                                              from_column="wdi_sp_hou_fema_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_0014_fe_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_0014_fe_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_0014_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_0014_ma_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_0014_ma_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_0014_ma_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_1564_fe_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_1564_fe_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_1564_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_1564_ma_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_1564_ma_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_1564_ma_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                         
-                        .with_column(Column("wdi_sp_pop_65up_fe_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_65up_fe_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_65up_fe_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_65up_ma_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_65up_ma_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_65up_ma_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_dpnd_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_dpnd", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_dpnd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_grow_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_grow", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_grow")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_pop_totl_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_totl")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_urb_grow_t12", from_table="wdi_health_cy",
+                        .with_column(Column("wdi_sp_urb_grow", from_table="wdi_health_cy",
                                              from_column="wdi_sp_urb_grow")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                     
-                        .with_column(Column("wdi_sp_urb_totl_in_zs_t12", from_table="wdi_cy",
+                        .with_column(Column("wdi_sp_urb_totl_in_zs", from_table="wdi_cy",
                                              from_column="wdi_sp_urb_totl_in_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
@@ -1311,27 +1311,27 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
                          # delta versions
-                         .with_column(Column("wfpmp_mp_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                         .with_column(Column("delta_wfpmp_mp_price", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("wfpmp_wheat_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                         .with_column(Column("delta_wfpmp_wheat_price", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("wfpmp_sugar_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                         .with_column(Column("delta_wfpmp_sugar_price", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("wfpmp_milk_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                         .with_column(Column("delta_wfpmp_milk_price", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("wfpmp_meat_price_delta12", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                         .with_column(Column("delta_wfpmp_meat_price", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
@@ -1388,27 +1388,27 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       )
                          # delta 12 versions
-                         .with_column(Column("fao_mp_price_delta12", from_table="faostat_pp_cm", from_column="mp_price")
+                         .with_column(Column("delta_fao_mp_price", from_table="faostat_pp_cm", from_column="mp_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("fao_wheat_price_delta12", from_table="faostat_pp_cm", from_column="wheat_price")
+                         .with_column(Column("delta_fao_wheat_price", from_table="faostat_pp_cm", from_column="wheat_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("fao_sugar_price_delta12", from_table="faostat_pp_cm", from_column="sugar_price")
+                         .with_column(Column("delta_fao_sugar_price", from_table="faostat_pp_cm", from_column="sugar_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("fao_milk_price_delta12", from_table="faostat_pp_cm", from_column="milk_price")
+                         .with_column(Column("delta_fao_milk_price", from_table="faostat_pp_cm", from_column="milk_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
                      
-                         .with_column(Column("fao_meat_price_delta12", from_table="faostat_pp_cm", from_column="meat_price")
+                         .with_column(Column("delta_fao_meat_price", from_table="faostat_pp_cm", from_column="meat_price")
                                       .transform.temporal.delta(12)
                                       .transform.missing.replace_na(0)
                                       )
@@ -1746,7 +1746,7 @@ def get_cm_querysets():
 #################################################################################################################################
 
 
-    qs_escwa_escwabroad = (Queryset("escwa001_escwabroad", "country_month")
+    qs_escwa_broad = (Queryset("escwa001_broad", "country_month")
                     # target variable
                    .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                 .transform.bool.gte(25)
@@ -1754,82 +1754,168 @@ def get_cm_querysets():
                                 )
                       
                         # Decay functions time since ged dummy
-                        # sb
-                         .with_column(Column("decay_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(1)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-
-                       # ns
-                         .with_column(Column("decay_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(1)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-
-                       # os
-                         .with_column(Column("decay_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(1)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-                     # Decay functions time since 100 ged
-                     # sb
+                         .with_column(Column("decay_12_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_12_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_12_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
                          .with_column(Column("decay_ged_sb_100", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(100)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-                     # ns
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
                          .with_column(Column("decay_ged_ns_100", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(100)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-                    # os
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
                          .with_column(Column("decay_ged_os_100", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(100)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-                    # Decay functions time since 500 ged
-                    # sb
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
                          .with_column(Column("decay_ged_sb_500", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(500)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-                    # ns
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
                          .with_column(Column("decay_ged_ns_500", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(500)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
-                    # os
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
                          .with_column(Column("decay_ged_os_500", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
-                                .transform.missing.replace_na()
-                                .transform.bool.gte(500)
-                                .transform.temporal.time_since()
-                                .transform.temporal.decay(24)
-                                .transform.missing.replace_na()
-                                )
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_sb_100", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_ns_100", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_os_100", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_sb_500", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_ns_500", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_os_500", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("splag_1_decay_ged_sb_100", from_table="ged2_cm",
+                                           from_column="ged_sb_best_sum_nokgi")
+                                    .transform.missing.replace_na()
+                                    .transform.bool.gte(100)
+                                    .transform.temporal.time_since()
+                                    .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
+                                    )
+                      
+                         .with_column(Column("splag_1_decay_ged_ns_100", from_table="ged2_cm",
+                                           from_column="ged_ns_best_sum_nokgi")
+                                    .transform.missing.replace_na()
+                                    .transform.bool.gte(100)
+                                    .transform.temporal.time_since()
+                                    .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
+                                    )
+                      
+                         .with_column(Column("splag_1_decay_ged_os_100", from_table="ged2_cm",
+                                           from_column="ged_os_best_sum_nokgi")
+                                    .transform.missing.replace_na()
+                                    .transform.bool.gte(100)
+                                    .transform.temporal.time_since()
+                                    .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
+                                    )
+                      
                     # Features from cm_wfpfood_usd_global
                          .with_column(Column("wfpmp_mp_price", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
                                       .transform.missing.replace_na(0)
@@ -1884,23 +1970,23 @@ def get_cm_querysets():
                       # Features from cm_imfweo_global
                          .with_column(Column("imfweo_ngdp_rpch_tcurrent", from_table="imfweo_cm",
                                           from_column="ngdp_rpch_tcurrent")
-                                   .transform.missing.replace_na(0)
-                                   )
+                                      .transform.missing.replace_na(0)
+                                      )
 
                          .with_column(Column("imfweo_ngdp_rpch_tmin1", from_table="imfweo_cm",
                                           from_column="ngdp_rpch_tmin1")
-                                   .transform.missing.replace_na(0)
-                                   )
+                                      .transform.missing.replace_na(0)
+                                      )
 
                          .with_column(Column("imfweo_ngdp_rpch_tplus1", from_table="imfweo_cm",
                                           from_column="ngdp_rpch_tplus1")
-                                   .transform.missing.replace_na(0)
-                                   )
+                                      .transform.missing.replace_na(0)
+                                      )
 
                          .with_column(Column("imfweo_ngdp_rpch_tplus2", from_table="imfweo_cm",
                                           from_column="ngdp_rpch_tplus2")
-                                   .transform.missing.replace_na(0)
-                                   )
+                                      .transform.missing.replace_na(0)
+                                      )
                       # Features from AquaStat
                          .with_column(Column("agr_withdrawal_pct_t48", from_table="fao_aqua_cy",
                                              from_column="agr_withdrawal_pct")
@@ -2043,77 +2129,77 @@ def get_cm_querysets():
                                        )   
                       # Features from wdi
                                       
-                         .with_column(Column("wdi_sm_pop_refg_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_sm_pop_refg", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_refg")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )                  
                                       
-                         .with_column(Column("wdi_sp_pop_totl_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy",
                                              from_column="wdi_sp_pop_totl")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )  
                                       
-                         .with_column(Column("wdi_sm_pop_netm_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_sm_pop_netm", from_table="wdi_cy",
                                              from_column="wdi_sm_pop_netm")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )   
                                       
-                         .with_column(Column("wdi_sl_uem_advn_zs_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_sl_uem_advn_zs", from_table="wdi_cy",
                                              from_column="wdi_sl_uem_advn_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )                                      
                         
-                         .with_column(Column("wdi_nv_agr_totl_kn_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_nv_agr_totl_kn", from_table="wdi_cy",
                                              from_column="wdi_nv_agr_totl_kn")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
  
-                         .with_column(Column("wdi_sp_hou_fema_zs_t12", from_table="wdi_health_cy",
+                         .with_column(Column("wdi_sp_hou_fema_zs", from_table="wdi_health_cy",
                                              from_column="wdi_sp_hou_fema_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                                       
-                         .with_column(Column("wdi_ag_lnd_totl_ru_k2_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_ag_lnd_totl_ru_k2", from_table="wdi_cy",
                                              from_column="wdi_ag_lnd_totl_ru_k2")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                                       
-                         .with_column(Column("wdi_nv_agr_totl_kd_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_nv_agr_totl_kd", from_table="wdi_cy",
                                              from_column="wdi_nv_agr_totl_kd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )                                      
                                       
-                         .with_column(Column("wdi_nv_agr_totl_cn_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_nv_agr_totl_cn", from_table="wdi_cy",
                                              from_column="wdi_nv_agr_totl_cn")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )                                      
                                       
-                         .with_column(Column("wdi_sh_sta_maln_zs_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
                                              from_column="wdi_sh_sta_maln_zs")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
                                       )
                                       
-                         .with_column(Column("wdi_ny_gdp_pcap_kd_t12", from_table="wdi_cy",
+                         .with_column(Column("wdi_ny_gdp_pcap_kd", from_table="wdi_cy",
                                              from_column="wdi_ny_gdp_pcap_kd")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
@@ -2128,9 +2214,497 @@ def get_cm_querysets():
                                    """)
                          )
 
-    data = qs_escwa_escwabroad.publish().fetch()
+    data = qs_escwa_broad.publish().fetch()
 
-    print(f"escwa001_escwabroad "
+    print(f"escwa001_broad "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+
+#################################################################################################################################
+#################################################################################################################################
+                      
+                      #################################################################################################################################
+#################################################################################################################################
+#################################################################################################################################
+
+
+    qs_escwa_onset = (Queryset("escwa001_onset", "country_month")
+                    # NEED TO UPDATE THE TARGET VARIBALE
+                   .with_column(Column("ged_sb_onset24", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(25)
+                                .transform.temporal.onset(24)
+                                .transform.missing.replace_na()
+                                )
+                      
+                        # Decay functions time since ged dummy
+                         .with_column(Column("decay_12_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_12_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_12_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_ged_sb_100", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_ged_ns_100", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_ged_os_100", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_ged_sb_500", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_ged_ns_500", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("decay_ged_os_500", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.temporal.decay(12)
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_sb_1", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_ns_1", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_os_1", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(1)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_sb_100", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_ns_100", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_os_100", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(100)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_sb_500", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_ns_500", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("ts_ged_os_500", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                      .transform.missing.replace_na()
+                                      .transform.bool.gte(500)
+                                      .transform.temporal.time_since()
+                                      .transform.missing.replace_na()
+                                      )
+                      
+                         .with_column(Column("splag_1_decay_ged_sb_100", from_table="ged2_cm",
+                                           from_column="ged_sb_best_sum_nokgi")
+                                    .transform.missing.replace_na()
+                                    .transform.bool.gte(100)
+                                    .transform.temporal.time_since()
+                                    .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
+                                    )
+                      
+                         .with_column(Column("splag_1_decay_ged_ns_100", from_table="ged2_cm",
+                                           from_column="ged_ns_best_sum_nokgi")
+                                    .transform.missing.replace_na()
+                                    .transform.bool.gte(100)
+                                    .transform.temporal.time_since()
+                                    .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
+                                    )
+                      
+                         .with_column(Column("splag_1_decay_ged_os_100", from_table="ged2_cm",
+                                           from_column="ged_os_best_sum_nokgi")
+                                    .transform.missing.replace_na()
+                                    .transform.bool.gte(100)
+                                    .transform.temporal.time_since()
+                                    .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
+                                    )
+                      
+                    # Features from cm_wfpfood_usd_global
+                         .with_column(Column("wfpmp_mp_price", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.missing.replace_na(0)
+                                      )
+                     
+                         # lagged versions
+                         .with_column(Column("wfpmp_mp_price_t12", from_table="wfpmp_cm", from_column="wfpmp_mp_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_wheat_price_t12", from_table="wfpmp_cm", from_column="wfpmp_wheat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_sugar_price_t12", from_table="wfpmp_cm", from_column="wfpmp_sugar_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_milk_price_t12", from_table="wfpmp_cm", from_column="wfpmp_milk_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                     
+                         .with_column(Column("wfpmp_meat_price_t12", from_table="wfpmp_cm", from_column="wfpmp_meat_price")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                      # Features from cm_imfweo_global
+                         .with_column(Column("imfweo_ngdp_rpch_tcurrent", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tcurrent")
+                                      .transform.missing.replace_na(0)
+                                      )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tmin1", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tmin1")
+                                      .transform.missing.replace_na(0)
+                                      )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tplus1", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tplus1")
+                                      .transform.missing.replace_na(0)
+                                      )
+
+                         .with_column(Column("imfweo_ngdp_rpch_tplus2", from_table="imfweo_cm",
+                                          from_column="ngdp_rpch_tplus2")
+                                      .transform.missing.replace_na(0)
+                                      )
+                      # Features from AquaStat
+                         .with_column(Column("agr_withdrawal_pct_t48", from_table="fao_aqua_cy",
+                                             from_column="agr_withdrawal_pct")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("dam_cap_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="dam_cap_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("groundwater_export_t48", from_table="fao_aqua_cy",
+                                             from_column="groundwater_export")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("fresh_withdrawal_pct_t48", from_table="fao_aqua_cy",
+                                             from_column="fresh_withdrawal_pct")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                    
+                         .with_column(Column("ind_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="ind_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("irr_agr_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="irr_agr_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("services_efficiency_48", from_table="fao_aqua_cy",
+                                             from_column="services_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("general_efficiency_t48", from_table="fao_aqua_cy",
+                                             from_column="general_efficiency")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("water_stress_t48", from_table="fao_aqua_cy",
+                                             from_column="water_stress")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("renewable_internal_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="renewable_internal_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                         
+                         .with_column(Column("renewable_pcap_t48", from_table="fao_aqua_cy",
+                                             from_column="renewable_pcap")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(48)
+                                      .transform.missing.fill()
+                                      )
+                      # Features from vdem
+                         .with_column(Column("vdem_v2x_clphy", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clphy")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_dmove")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+                         .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v12_cy", from_column="vdem_v12_v2xcl_rol")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_civlib", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_civlib")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xel_regelec", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xel_regelec")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xcl_acjst", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xcl_acjst")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_gencl", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_gencl")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v12_cy",
+                                              from_column="vdem_v12_v2xeg_eqdr")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_egal", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_egal")
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )
+
+                         .with_column(Column("vdem_v2x_clpriv", from_table="vdem_v12_cy", from_column="vdem_v12_v2x_clpri”)
+                                       .transform.missing.fill()
+                                       .transform.temporal.tlag(12)
+                                       .transform.missing.fill()
+                                       )   
+                      # Features from wdi
+                                      
+                         .with_column(Column("wdi_sm_pop_refg", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_refg")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                  
+                                      
+                         .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy",
+                                             from_column="wdi_sp_pop_totl")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )  
+                                      
+                         .with_column(Column("wdi_sm_pop_netm", from_table="wdi_cy",
+                                             from_column="wdi_sm_pop_netm")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )   
+                                      
+                         .with_column(Column("wdi_sl_uem_advn_zs", from_table="wdi_cy",
+                                             from_column="wdi_sl_uem_advn_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                        
+                         .with_column(Column("wdi_nv_agr_totl_kn", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_kn")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+ 
+                         .with_column(Column("wdi_sp_hou_fema_zs", from_table="wdi_health_cy",
+                                             from_column="wdi_sp_hou_fema_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                                      
+                         .with_column(Column("wdi_ag_lnd_totl_ru_k2", from_table="wdi_cy",
+                                             from_column="wdi_ag_lnd_totl_ru_k2")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                                      
+                         .with_column(Column("wdi_nv_agr_totl_kd", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                                      
+                         .with_column(Column("wdi_nv_agr_totl_cn", from_table="wdi_cy",
+                                             from_column="wdi_nv_agr_totl_cn")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                                      
+                         .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
+                                             from_column="wdi_sh_sta_maln_zs")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )
+                                      
+                         .with_column(Column("wdi_ny_gdp_pcap_kd", from_table="wdi_cy",
+                                             from_column="wdi_ny_gdp_pcap_kd")
+                                      .transform.missing.fill()
+                                      .transform.temporal.tlag(12)
+                                      .transform.missing.fill()
+                                      )                                      
+                    
+                         .with_theme("escwa")
+                         .describe("""Predicting >25, cm level
+    
+                                    Queryset with cy features from imfweo
+    
+                                   """)
+                         )
+
+    data = qs_escwa_onset.publish().fetch()
+
+    print(f"escwa001_onset "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -5526,6 +6100,8 @@ def get_cm_querysets():
               qs_aquastat_escwa,
               qs_food_escwa,
               qs_imfweo_escwa,
+              qs_faostat_escwa,
+              qs_broad,
               ]
 
     return qslist

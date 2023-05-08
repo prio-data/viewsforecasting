@@ -117,14 +117,26 @@ def DefineEnsembleModels(level):
         }
         ModelList.append(model)
            model = {
-            'modelname':        'escwa001_escwabroad',
+            'modelname':        'escwa001_broad',
             'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
             'depvar':           'ged_sb_dep',
             'data_train':       'escwabroad001',
-            'queryset':         'escwa001_escwabroad',
+            'queryset':         'escwa001_broad',
             'preprocessing':    'float_it',
             'level':            'cm',
             'description':      'Broad escwa model',
+            'long_description':  '''...'''
+        }
+        ModelList.append(model)
+        model = {
+            'modelname':        'escwa001_onset',
+            'algorithm':         RandomForestClassifier(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_onset24',
+            'data_train':       'escwaonset001',
+            'queryset':         'escwa001_onset',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Broad escwa onset model',
             'long_description':  '''...'''
         }
         ModelList.append(model)
