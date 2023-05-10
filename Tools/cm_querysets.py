@@ -715,14 +715,7 @@ def get_cm_querysets():
 
     
 #################################################################################################################################
-#################################################################################################################################  ### CHANDLER'S TASKS 
-### Add the new models here!
-### Delete these comments after
-### The model below needs to become 'escwa-ized'
-### The 'target variable' needs to be this way for all the escwa variables. Copy it on top of all the models
-### The queryset naming (the top parts) need to have similar naming conventions to the ones above
-### the 'data = qs_name_escwa.publish().fetch() and the print statement need to be at the bottom
-#################################################################################################################################
+################################################################################################################################# 
 #################################################################################################################################
 
     qs_wdi_escwa = (Queryset("escwa001_wdi", "country_month")

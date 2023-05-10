@@ -333,6 +333,108 @@ def DefineEnsembleModels(level):
 
         }
         ModelList.append(model)
+        
+#################################
+
+        model = {
+            'modelname': 'escwa001_pgm_drought',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_drought',
+            'data_train': 'escwa_drought',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        model = {
+            'modelname': 'escwa001_pgm_vulnerability',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_vulnerability',
+            'data_train': 'escwa_vulnerability',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        model = {
+            'modelname': 'escwa001_pgm_drought_vulnerability',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_drought_vulnerability',
+            'data_train': 'escwa_droughtvuln',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        model = {
+            'modelname': 'escwa001_pgm_extremes',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_extremes',
+            'data_train': 'escwa_extremes',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        model = {
+            'modelname': 'escwa001_pgm_spacetime',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_spacetime',
+            'data_train': 'escwa_spacetime',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        model = {
+            'modelname': 'escwa001_pgm_naturalsocial',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_naturalsocial',
+            'data_train': 'escwa_natsocial',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        model = {
+            'modelname': 'escwa001_pgm_combined',
+            'algorithm': lgbm_regressor,
+            'depvar': "ln_ged_sb_dep",
+            'queryset': 'escwa001_pgm_combined',
+            'data_train': 'escwa_combined',
+            'level':            'pgm',
+            'preprocessing': 'float_it',
+            'description':      '',
+            'long_description':      ''''''
+
+        }
+        ModelList.append(model)
+        
+        
     else:
         raise Exception(f"Unrecognised level {level}: allowed values are cm or pgm")
 

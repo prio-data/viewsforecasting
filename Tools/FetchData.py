@@ -270,8 +270,20 @@ def FetchData_pgm(run_id):
         Datasets.append(FetchTable((Queryset("paola_fatalities_conflict_history", "priogrid_month")),'paola_conf_hist'))
         Datasets.append(FetchTable((Queryset("jim_pgm_conflict_treelag_d_1_d_2", "priogrid_month")),'conf_treelag'))
         Datasets.append(FetchTable((Queryset("jim_pgm_conflict_target_sptime_dist_nu1_10_001", "priogrid_month")),'conf_sptime_dist'))
+        
+    elif run_id == 'escwa001':
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_drought", "priogrid_month")),'drought'))
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_vulnerability", "priogrid_month")),'vulnerability'))
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_drought_vulnerability", "priogrid_month")),'droughtvuln'))
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_extremes", "priogrid_month")),'extremes'))
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_spacetime", "priogrid_month")),'spacetime'))
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_naturalsocial", "priogrid_month")),'natsocial'))
+        Datasets.append(FetchTable((Queryset("escwa001_pgm_combined", "priogrid_month")),'combined'))
 
-        return(Datasets)
+    else:
+        raise Exception(f"run_id {run_id} not recognised")
+        
+    return(Datasets)
 
 
 def fetch_pgm_data_from_model_def(qslist):
