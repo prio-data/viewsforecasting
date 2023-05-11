@@ -2298,72 +2298,8 @@ def get_pgm_querysets():
 
     data = qs_drought_escwa.publish().fetch()
     
-    print(f"escwa001_pgm_drought "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
-    
-#################################################################################################################################    
-    # ESCWA vulnerability
-    qs_vulnerability_escwa = (Queryset("escwa001_pgm_vulnerability", "priogrid_month")
-
-                        # target variable
-                        .with_column(Column("ln_ged_sb_dep", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
-                                     .transform.missing.replace_na()
-                                     .transform.ops.ln()
-                                     )
-
-                        # timelag 0 of target variable
-                        .with_column(Column("ln_ged_sb", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
-                                     .transform.missing.replace_na()
-                                     .transform.ops.ln()
-                                     )
-
-                        .with_column(Column("decay_ged_sb_1", from_table="ged2_pgm",
-                                            from_column="ged_sb_best_sum_nokgi")
-                                     .transform.missing.replace_na()
-                                     .transform.bool.gte(1)
-                                     .transform.temporal.time_since()
-                                     .transform.temporal.decay(12)
-                                     .transform.missing.replace_na()
-                                     )
-                              
-                        .with_column(Column("splag_1_1_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
-                                     .transform.missing.replace_na()
-                                     .transform.bool.gte(1)
-                                     .transform.temporal.time_since()
-                                     .transform.temporal.decay(24)
-                                     .transform.spatial.lag(1, 1, 0, 0)
-                                     .transform.missing.replace_na()
-                       
-                        .with_column(Column("greq_1_excluded", from_table="priogrid_year", from_column="excluded")
-                                     .transform.bool.gte(1)
-                                     .transform.missing.fill()
-                                     )
-                        
-                        .with_column(Column("pgd_nlights_calib_mean", from_table="priogrid_year",from_column="nlights_calib_mean")
-                                     .transform.missing.replace_na(0)
-                                     )         
-
-                        .with_theme("escwa")
-                        .describe("""Fatalities, escwa vulnerability, pgm level
-    
-                                  Predicting number of fatalities with features from the escwa vulnerability themes
-                                  
-                                  """)
-                        )
-
-    data = qs_vulnerability_escwa.publish().fetch()
-    
-    print(f"escwa001_pgm_vulnerability "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
-                              
+    report(data)
+                             
  ############################################################################################################################
                               
  # ESCWA drought vulnerability
@@ -2535,28 +2471,19 @@ def get_pgm_querysets():
                                      .transform.missing.replace_na(0)
                                      )
 
+
                         .with_theme("escwa")
                         .describe("""Fatalities, escwa drought and vulnerability, pgm level
     
-                                  Predicting number of fatalities with features from the escwa drought and 
-                                  vulnerability themes
+                                  Predicting number of fatalities with features from the escwa drought and  vulnerability themes
                                   
                                   """)
                         )
 
     data = qs_drought_vulnerability_escwa.publish().fetch()
     
-    print(f"escwa001_pgm_drought_vulnerability "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
-    
-#################################################################################################################################
-################################################################################################################################# 
-################################################################################################################################
-#############################################################################################################################    
+    report(data)                                     
+       
     # ESCWA Climate Extremes
     qs_climate_extremes_escwa = (Queryset("escwa001_pgm_extremes", "priogrid_month")
 
@@ -2792,12 +2719,7 @@ def get_pgm_querysets():
 
     data = qs_climate_extremes_escwa.publish().fetch()
     
-    print(f"escwa001_pgm_extremes "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
+    report(data)
                               
  ################################################################################################################################    
     # ESCWA space-time model
@@ -2867,11 +2789,10 @@ def get_pgm_querysets():
                                           from_column="ged_ns_best_sum_nokgi")
                                    .transform.missing.replace_na()
                                    .transform.spatial.sptime_dist(return_values, n_nearest, 0.01, power)
-                                   )
-                      )         
+                                   )         
 
-                        .with_theme("escwa")
-                        .describe("""Fatalities, escwa spacetime, pgm level
+                      .with_theme("escwa")
+                      .describe("""Fatalities, escwa spacetime, pgm level
     
                                   Predicting number of fatalities with features from the escwa spacetime themes
                                   
@@ -2880,12 +2801,7 @@ def get_pgm_querysets():
 
     data = qs_spacetime_escwa.publish().fetch()
     
-    print(f"escwa001_pgm_spacetime "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
+    report(data)
                               
                      
  ################################################################################################################################    
@@ -3056,12 +2972,7 @@ def get_pgm_querysets():
 
     data = qs_naturalsocial_escwa.publish().fetch()
     
-    print(f"escwa001_pgm_naturalsocial "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
+    report(data)
                               
  ############################################################################################################################      
 # ESCWA drought
@@ -3324,12 +3235,59 @@ def get_pgm_querysets():
 
     data = qs_combined_escwa.publish().fetch()
     
-    print(f"escwa001_pgm_combined "
-          f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
-          f"and {max(data.index.get_level_values(0))}. "
-          f"({len(np.unique(data.index.get_level_values(1)))} units)"
-          )
+    report(data)
+
+#    
+    # ESCWA vulnerability
+    qs_vulnerability_escwa = (Queryset("escwa001_pgm_vulnerability", "priogrid_month")
+
+                 # target variable
+                 .with_column(Column("ln_ged_sb_dep", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                              .transform.missing.replace_na()
+                              .transform.ops.ln()
+                              )
+
+                        # timelag 0 of target variable
+                 .with_column(Column("ln_ged_sb", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                              .transform.missing.replace_na()
+                              .transform.ops.ln()
+                              )
+
+                 .with_column(Column("decay_ged_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                              .transform.missing.replace_na()
+                              .transform.bool.gte(1)
+                              .transform.temporal.time_since()
+                              .transform.temporal.decay(12)
+                              .transform.missing.replace_na()
+                              )
+                              
+                 .with_column(Column("splag_1_1_sb_1", from_table="ged2_pgm", from_column="ged_sb_best_sum_nokgi")
+                              .transform.missing.replace_na()
+                              .transform.bool.gte(1)
+                              .transform.temporal.time_since()
+                              .transform.temporal.decay(24)
+                              .transform.spatial.lag(1, 1, 0, 0)
+                              .transform.missing.replace_na()
+                             )
+                       
+                 .with_column(Column("greq_1_excluded", from_table="priogrid_year", from_column="excluded")
+                              .transform.bool.gte(1)
+                              .transform.missing.fill()
+                              )
+                        
+                 .with_column(Column("pgd_nlights_calib_mean",from_table="priogrid_year",from_column="nlights_calib_mean")
+                              .transform.missing.replace_na(0)
+                              )         
+
+                 .with_theme("escwa")
+                 .describe("""Fatalities, escwa vulnerability, pgm level
+                                  Predicting number of fatalities with features from the escwa vulnerability themes
+                                  """)
+                 )
+
+    data = qs_vulnerability_escwa.publish().fetch()
+    
+    report(data)
 
 #############################################################################################################################
     
