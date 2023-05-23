@@ -23,7 +23,7 @@ top_countries = give_me_top_countries()
 
 #these are the loops, if you want to ammend them please change the loops below by adding specific country_ids
 if more_countries == 'true':
-    geo_coverage_loop = ['globe', 'ame', 'africa', *top_countries, country]
+    geo_coverage_loop = ['globe', 'ame', 'africa', *top_countries, *country]
     line_chart_region = ['globe', 'ame', 'africa', country]
     bar_chart_region = {'ame', 'africa', tuple(top_countries), country}
     pie_chart_region = {'globe', 'ame', 'africa', tuple(top_countries), country}

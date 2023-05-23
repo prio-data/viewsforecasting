@@ -85,32 +85,37 @@ def features_pgm_maps():
                 title_run = f'{features_ged_title_name} in {str(vid2date(step))}, {var_name_run}'
                 textbox = f'Name: features,\n{var_run}_at_{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                 savefile = f'{features_pgm_folder}GED_pgm_{var_run_savefile}_{region_name}_{cmap_run}_month{step}.png'
+                
+                try:
+                    masked=Mapper2(
+                        width=width_global,
+                        height=height_global,
+                        frame_on=True,
+                        title=title_run,
+                        bbox=bbox_run
+                    ).add_mask(
+                        gdf = data_run,
+                        map_dictionary = dictionary_run,
+                        cmap = cmap_run,
+                        transparency = 1,
+                        masking_location = masking_run,
+                        column=var_run,
+                        background = background2,
+                        edgecolor="black",
+                        linewidth=0.5
+                    ).add_views_textbox(
+                        text=textbox,
+                        textsize=textbox_font_size)
 
-                masked=Mapper2(
-                    width=width_global,
-                    height=height_global,
-                    frame_on=True,
-                    title=title_run,
-                    bbox=bbox_run
-                ).add_mask(
-                    gdf = data_run,
-                    map_dictionary = dictionary_run,
-                    cmap = cmap_run,
-                    transparency = 1,
-                    masking_location = masking_run,
-                    column=var_run,
-                    background = background2,
-                    edgecolor="black",
-                    linewidth=0.5
-                ).add_views_textbox(
-                    text=textbox,
-                    textsize=textbox_font_size)
+                    ax = masked.ax
+                    masked_with_borders=gdf_c.plot(ax=ax,edgecolor='black',linewidth=2.0,facecolor='None')
 
-                ax = masked.ax
-                masked_with_borders=gdf_c.plot(ax=ax,edgecolor='black',linewidth=2.0,facecolor='None')
-
-                plt.savefig(savefile, dpi = pgm_dpi_global)
-                plt.close()
+                    plt.savefig(savefile, dpi = pgm_dpi_global)
+                    plt.close()
+                
+                except:
+                    print(f"{user}, sorry {region_name} not available in pgm yet")
+                    plt.close()
     print(f'{user}, pgm maps for ged completed')
     
     
@@ -172,30 +177,35 @@ def features_pgm_change_maps():
                         title_run = f'{features_change_title_name} in {str(vid2date(step))}, {var_name_run}'
                         textbox = f'Name: features,\n{var_run}_at_{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
                         savefile = f'{features_change_pgm_folder}ChangeMaps_GED_pgm{variable}_{region_name}_{cmap_run}_month{step}.png'
+                        
+                        try:
+                            masked=Mapper2(
+                                width=width_global,
+                                height=height_global,
+                                frame_on=True,
+                                title=title_run,
+                                bbox=bbox_run
+                            ).add_mask(
+                                gdf = data_run,
+                                map_dictionary = dictionary_run,
+                                cmap = cmap_run,
+                                transparency = 1,
+                                masking_location = masking_run,
+                                column=var_run,
+                                background = background2,
+                                edgecolor="black",
+                                linewidth=0.5
+                            ).add_views_textbox(
+                                text=textbox,
+                                textsize=textbox_font_size)
 
-                        masked=Mapper2(
-                            width=width_global,
-                            height=height_global,
-                            frame_on=True,
-                            title=title_run,
-                            bbox=bbox_run
-                        ).add_mask(
-                            gdf = data_run,
-                            map_dictionary = dictionary_run,
-                            cmap = cmap_run,
-                            transparency = 1,
-                            masking_location = masking_run,
-                            column=var_run,
-                            background = background2,
-                            edgecolor="black",
-                            linewidth=0.5
-                        ).add_views_textbox(
-                            text=textbox,
-                            textsize=textbox_font_size)
+                            ax = masked.ax
+                            masked_with_borders=gdf_c.plot(ax=ax,edgecolor='black',linewidth=2.0,facecolor='None')
 
-                        ax = masked.ax
-                        masked_with_borders=gdf_c.plot(ax=ax,edgecolor='black',linewidth=2.0,facecolor='None')
-
-                        plt.savefig(savefile, dpi = pgm_dpi_global)
-                        plt.close()
+                            plt.savefig(savefile, dpi = pgm_dpi_global)
+                            plt.close()
+                        
+                        except:
+                            print(f"{user}, sorry {region_name} not available in pgm yet")
+                            plt.close()
     print(f'{user}, pgm  change maps for ged completed')
