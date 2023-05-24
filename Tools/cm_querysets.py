@@ -1,5 +1,5 @@
 # # Specifying querysets for use in Predicting Fatalities project
-# Fatalities002 version
+# Fatalities003 version
 # ## cm level
 # 
 
@@ -26,7 +26,7 @@ import views_dataviz
 
 def get_cm_querysets():
 
-    qs_baseline = (Queryset("fatalities002_baseline", "country_month")
+    qs_baseline = (Queryset("fatalities003_baseline", "country_month")
 
                    # target variable
                    .with_column(Column("ln_ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
@@ -72,6 +72,7 @@ def get_cm_querysets():
                                 .transform.missing.fill()
                                 .transform.temporal.tlag(12)
                                 .transform.missing.fill()
+                                .transform.missing.replace_na()
                                 )
 
                    .with_theme("fatalities")
@@ -84,7 +85,75 @@ def get_cm_querysets():
 
     data = qs_baseline.publish().fetch()
 
-    print(f"fatalities002_baseline; "
+    print(f"fatalities003_baseline; "
+          f"A dataset with {len(data.columns)} columns, with "
+          f"data between t {min(data.index.get_level_values(0))} "
+          f"and {max(data.index.get_level_values(0))}. "
+          f"({len(np.unique(data.index.get_level_values(1)))} units)"
+          )
+
+    ###################################################################################################################
+    
+    
+    qs_baseline_nonlog = (Queryset("fatalities003_baseline_nonlog", "country_month")
+
+                   # target variable
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.fill()
+                                )
+
+                   # timelag 0 of target variable
+                   .with_column(Column("ln_ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.ops.ln()
+                                .transform.missing.fill()
+                                )
+                   # Decay functions
+                   # sb
+                   .with_column(Column("decay_ged_sb_5", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   # os
+                   .with_column(Column("decay_ged_os_5", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.missing.replace_na()
+                                )
+                   # Spatial lag decay
+                   .with_column(Column("splag_1_decay_ged_sb_5", from_table="ged2_cm",
+                                       from_column="ged_sb_best_sum_nokgi")
+                                .transform.missing.replace_na()
+                                .transform.bool.gte(5)
+                                .transform.temporal.time_since()
+                                .transform.temporal.decay(24)
+                                .transform.spatial.countrylag(1, 1, 0, 0)
+                                .transform.missing.replace_na()
+                                )
+
+                   # From WDI
+                   .with_column(Column("wdi_sp_pop_totl", from_table="wdi_cy", from_column="wdi_sp_pop_totl")
+                                .transform.missing.fill()
+                                .transform.temporal.tlag(12)
+                                .transform.missing.fill()
+                                .transform.missing.replace_na()
+                                )
+
+                   .with_theme("fatalities")
+                   .describe("""Fatalities conflict history, cm level
+    
+                   Predicting nonlog fatalities using conflict predictors, ultrashort
+    
+                             """)
+                   )
+
+    data =  qs_baseline_nonlog.publish().fetch()
+
+    print(f"fatalities003_baseline_nonlog; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -95,7 +164,7 @@ def get_cm_querysets():
     # Mueller & Rauh topic model features
     # tlag 1 variables
 
-    qs_topics_stub = (Queryset("fatalities002_topics_stub", "country_month")
+    qs_topics_stub = (Queryset("fatalities003_topics_stub", "country_month")
 
                       # Topic 0, religious tensions: original, tlag1, 12 month moving average on tlag1
                       .with_column(Column('topic0_religion_t1', from_table='topic_cm', from_column='topic_religion')
@@ -103,6 +172,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic0_religion_t13', from_table='topic_cm', from_column='topic_religion')
@@ -110,6 +180,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic0_religion_t1_stock', from_table='topic_cm',
@@ -120,6 +191,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
                       .with_column(Column('splag_topic1_religion_t1_stock', from_table='topic_cm',
                                           from_column='topic_religion')
@@ -139,6 +211,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic1_politics_t13', from_table='topic_cm', from_column='topic_politics')
@@ -146,6 +219,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic1_politics_t1_stock', from_table='topic_cm',
@@ -156,6 +230,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic2_politics_t1_stock', from_table='topic_cm',
@@ -176,6 +251,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic2_sanctions_t13', from_table='topic_cm', from_column='topic_sanctions')
@@ -183,6 +259,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic2_sanctions_t1_stock', from_table='topic_cm',
@@ -193,6 +270,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic2_sanctions_t1_stock', from_table='topic_cm',
@@ -213,6 +291,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic3_life_t13', from_table='topic_cm', from_column='topic_life')
@@ -220,6 +299,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
                       .with_column(Column('topic3_life_t1_stock', from_table='topic_cm', from_column='topic_life')
                                    .transform.missing.fill()
@@ -228,6 +308,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic3_life_t1_stock', from_table='topic_cm', from_column='topic_life')
@@ -247,6 +328,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic4_energy_t13', from_table='topic_cm', from_column='topic_energy')
@@ -254,6 +336,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic4_energy_t1_stock', from_table='topic_cm', from_column='topic_energy')
@@ -263,6 +346,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic4_energy_t1_stock', from_table='topic_cm',
@@ -283,6 +367,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic5_media_t13', from_table='topic_cm', from_column='topic_media')
@@ -290,6 +375,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic5_media_t1_stock', from_table='topic_cm', from_column='topic_media')
@@ -299,6 +385,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic5_media_t1_stock', from_table='topic_cm',
@@ -319,6 +406,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic6_economics_t13', from_table='topic_cm', from_column='topic_economics')
@@ -326,6 +414,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic6_economics_t1_stock', from_table='topic_cm',
@@ -336,6 +425,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic6_economics_t1_stock', from_table='topic_cm',
@@ -356,6 +446,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic7_health_t13', from_table='topic_cm', from_column='topic_health')
@@ -363,6 +454,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic7_health_t1_stock', from_table='topic_cm', from_column='topic_health')
@@ -372,6 +464,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic7_health_t1_stock', from_table='topic_cm',
@@ -392,6 +485,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic8_china_t13', from_table='topic_cm', from_column='topic_china')
@@ -399,6 +493,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic8_china_t1_stock', from_table='topic_cm', from_column='topic_china')
@@ -408,6 +503,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic8_china_t1_stock', from_table='topic_cm',
@@ -428,6 +524,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic9_foreign_t13', from_table='topic_cm', from_column='topic_foreign')
@@ -435,6 +532,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic9_foreign_t1_stock', from_table='topic_cm',
@@ -445,6 +543,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic9_foreign_t1_stock', from_table='topic_cm',
@@ -465,6 +564,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic10_conflict_t2', from_table='topic_cm', from_column='topic_conflict')
@@ -472,6 +572,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(2)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic10_conflict_t3', from_table='topic_cm', from_column='topic_conflict')
@@ -479,6 +580,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(3)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic10_conflict_t13', from_table='topic_cm', from_column='topic_conflict')
@@ -486,6 +588,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic10_conflict_t1_stock', from_table='topic_cm',
@@ -496,6 +599,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic10_conflict_t1_stock', from_table='topic_cm',
@@ -516,6 +620,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic11_diplomacy_t13', from_table='topic_cm', from_column='topic_diplomacy')
@@ -523,6 +628,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic11_diplomacy_t1_stock', from_table='topic_cm',
@@ -533,6 +639,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic11_diplomacy_t1_stock', from_table='topic_cm',
@@ -553,6 +660,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic12_power_t13', from_table='topic_cm', from_column='topic_power')
@@ -560,6 +668,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic12_power_t1_stock', from_table='topic_cm', from_column='topic_power')
@@ -569,6 +678,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic12_power_t1_stock', from_table='topic_cm',
@@ -589,6 +699,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic13_sports_t13', from_table='topic_cm', from_column='topic_sports')
@@ -596,6 +707,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic13_sports_t1_stock', from_table='topic_cm', from_column='topic_sports')
@@ -605,6 +717,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic13_sports_t1_stock', from_table='topic_cm',
@@ -625,6 +738,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(1)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic14_judiciary_t13', from_table='topic_cm', from_column='topic_judiciary')
@@ -632,6 +746,7 @@ def get_cm_querysets():
                                    .transform.missing.replace_na()
                                    .transform.temporal.tlag(13)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('topic14_judiciary_t1_stock', from_table='topic_cm',
@@ -642,6 +757,7 @@ def get_cm_querysets():
                                    .transform.missing.fill()
                                    .transform.temporal.moving_average(12)
                                    .transform.missing.fill()
+                                   .transform.missing.replace_na()
                                    )
 
                       .with_column(Column('splag_topic14_judiciary_t1_stock', from_table='topic_cm',
@@ -665,7 +781,7 @@ def get_cm_querysets():
 
     data = qs_topics_stub.publish().fetch()
 
-    print(f"fatalities002_topics_stub; "
+    print(f"fatalities003_topics_stub; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -673,7 +789,7 @@ def get_cm_querysets():
           )
 
     ###################################################################################################################
-    qs_aquastat_stub = (Queryset("fatalities002_aquastat_stub", "country_month")
+    qs_aquastat_stub = (Queryset("fatalities003_aquastat_stub", "country_month")
 
                         # Agricultural water withdrawal as % of total renewable water resources [%]
                         .with_column(Column('agr_withdrawal_pct_t48', from_table='fao_aqua_cy',
@@ -682,6 +798,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # Dam capacity per capita [m3/inhab]
@@ -690,6 +807,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # Groundwater: leaving the country to other countries (total) [10^9 m3/year]
@@ -699,6 +817,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # MDG 7.5. Freshwater withdrawal as % of total renewable water resources [%]
@@ -708,6 +827,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # SDG 6.4.1. Industrial Water Use Efficiency [US$/m3]
@@ -717,6 +837,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # SDG 6.4.1. Irrigated Agriculture Water Use Efficiency [US$/m3]
@@ -726,6 +847,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # SDG 6.4.1. Services Water Use Efficiency [US$/m3]
@@ -735,6 +857,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # SDG 6.4.1. Water Use Efficiency [US$/m3]
@@ -744,6 +867,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # SDG 6.4.2. Water Stress [%]
@@ -752,6 +876,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # Total internal renewable water resources per capita [m3/inhab/yr]
@@ -761,6 +886,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         # Total annual renewable water resources per capita [m3/inhab/year]
@@ -770,6 +896,7 @@ def get_cm_querysets():
                                      .transform.missing.replace_na()
                                      .transform.temporal.tlag(48)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         .with_theme("fatalities")
@@ -782,7 +909,7 @@ def get_cm_querysets():
 
     data = qs_aquastat_stub.publish().fetch()
 
-    print(f"fatalities002_aquastat_stub; "
+    print(f"fatalities003_aquastat_stub; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -795,7 +922,7 @@ def get_cm_querysets():
 
     # log variables
 
-    qs_conflict_stub = (Queryset("fatalities002_cm_conflict_history_stub", "country_month")
+    qs_conflict_stub = (Queryset("fatalities003_cm_conflict_history_stub", "country_month")
 
                         # Lags
                         .with_column(Column("ln_ged_sb_tlag_1", from_table="ged2_cm",
@@ -917,16 +1044,19 @@ def get_cm_querysets():
                         .with_column(Column("ln_acled_sb", from_table="acled2_cm", from_column="acled_sb_fat")
                                      .transform.ops.ln()
                                      .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                      )
 
                         .with_column(Column("ln_acled_sb_count", from_table="acled2_cm", from_column="acled_sb_count")
                                      .transform.ops.ln()
                                      .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                      )
 
                         .with_column(Column("ln_acled_os", from_table="acled2_cm", from_column="acled_os_fat")
                                      .transform.ops.ln()
                                      .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                      )
 
                         # time-lagged by 0-2 independent variables
@@ -998,7 +1128,7 @@ def get_cm_querysets():
 
     data = qs_conflict_stub.publish().fetch()
 
-    print(f"fatalities002_cm_conflict_history_stub; "
+    print(f"fatalities003_cm_conflict_history_stub; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -1009,7 +1139,7 @@ def get_cm_querysets():
 
     # ## Long conflict history model
     # log variables
-    qs_conflict_ext = (Queryset("fatalities002_cm_conflict_history_ext", "country_month")
+    qs_conflict_ext = (Queryset("fatalities003_cm_conflict_history_ext", "country_month")
 
                        # Moving sums
                        .with_column(Column("ln_ged_sb_tsum_12", from_table="ged2_cm",
@@ -1264,7 +1394,7 @@ def get_cm_querysets():
 
     data = qs_conflict_ext.publish().fetch()
 
-    print(f"fatalities002_cm_conflict_history_ext; "
+    print(f"fatalities003_cm_conflict_history_ext; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t = {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -1279,7 +1409,7 @@ def get_cm_querysets():
 
     # With vdem and wdi, shortened version
     # log variables
-    qs_vdem_short_stub = (Queryset("fatalities002_vdem_short_stub", "country_month")
+    qs_vdem_short_stub = (Queryset("fatalities003_vdem_short_stub", "country_month")
 
                           # Features from vdem
                           .with_column(Column("vdem_v2x_delibdem", from_table="vdem_v11_cy",
@@ -1287,6 +1417,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_egaldem", from_table="vdem_v11_cy",
@@ -1294,6 +1425,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_libdem", from_table="vdem_v11_cy",
@@ -1301,6 +1433,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_libdem_48", from_table="vdem_v11_cy",
@@ -1308,6 +1441,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(60)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_partip", from_table="vdem_v11_cy",
@@ -1315,6 +1449,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_partipdem", from_table="vdem_v11_cy",
@@ -1322,6 +1457,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_accountability", from_table="vdem_v11_cy",
@@ -1329,6 +1465,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           # .with_column(Column("vdem_v2x_civlib", from_table="vdem_v11_cy",
@@ -1342,6 +1479,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_cspart", from_table="vdem_v11_cy",
@@ -1349,6 +1487,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v11_cy",
@@ -1356,6 +1495,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_edcomp_thick", from_table="vdem_v11_cy",
@@ -1363,12 +1503,14 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_egal", from_table="vdem_v11_cy", from_column="vdem_v2x_egal")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_execorr", from_table="vdem_v11_cy",
@@ -1376,6 +1518,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_frassoc_thick", from_table="vdem_v11_cy",
@@ -1383,12 +1526,14 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_gencs", from_table="vdem_v11_cy", from_column="vdem_v2x_gencs")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_gender", from_table="vdem_v11_cy",
@@ -1396,12 +1541,14 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_genpp", from_table="vdem_v11_cy", from_column="vdem_v2x_genpp")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_horacc", from_table="vdem_v11_cy",
@@ -1409,6 +1556,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_neopat", from_table="vdem_v11_cy",
@@ -1416,6 +1564,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_pubcorr", from_table="vdem_v11_cy",
@@ -1423,12 +1572,14 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_rule", from_table="vdem_v11_cy", from_column="vdem_v2x_rule")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_veracc", from_table="vdem_v11_cy",
@@ -1436,6 +1587,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v11_cy",
@@ -1443,6 +1595,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v11_cy",
@@ -1450,6 +1603,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_freexp", from_table="vdem_v11_cy",
@@ -1457,6 +1611,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xcl_acjst", from_table="vdem_v11_cy",
@@ -1464,6 +1619,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v11_cy",
@@ -1471,6 +1627,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v11_cy",
@@ -1478,12 +1635,14 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v11_cy", from_column="vdem_v2xcl_rol")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xcl_slave", from_table="vdem_v11_cy",
@@ -1491,12 +1650,14 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xdd_dd", from_table="vdem_v11_cy", from_column="vdem_v2xdd_dd")
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xdl_delib", from_table="vdem_v11_cy",
@@ -1504,6 +1665,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v11_cy",
@@ -1511,6 +1673,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v11_cy",
@@ -1518,6 +1681,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xel_frefair", from_table="vdem_v11_cy",
@@ -1525,6 +1689,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xel_regelec", from_table="vdem_v11_cy",
@@ -1532,6 +1697,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xme_altinf", from_table="vdem_v11_cy",
@@ -1539,6 +1705,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xnp_client", from_table="vdem_v11_cy",
@@ -1546,6 +1713,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v11_cy",
@@ -1553,6 +1721,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xpe_exlecon", from_table="vdem_v11_cy",
@@ -1560,6 +1729,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v11_cy",
@@ -1567,6 +1737,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v11_cy",
@@ -1574,6 +1745,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v11_cy",
@@ -1581,6 +1753,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
@@ -1588,6 +1761,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xps_party", from_table="vdem_v11_cy",
@@ -1595,6 +1769,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xcs_ccsi", from_table="vdem_v11_cy",
@@ -1602,6 +1777,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xnp_pres", from_table="vdem_v11_cy",
@@ -1609,6 +1785,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2xeg_eqaccess", from_table="vdem_v11_cy",
@@ -1616,6 +1793,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v11_cy",
@@ -1623,6 +1801,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           # Spatial lags
@@ -1672,6 +1851,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("wdi_sp_dyn_imrt_in", from_table="wdi_cy",
@@ -1679,6 +1859,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_column(Column("wdi_se_enr_prim_fm_zs", from_table="wdi_cy",
@@ -1686,6 +1867,7 @@ def get_cm_querysets():
                                        .transform.missing.fill()
                                        .transform.temporal.tlag(12)
                                        .transform.missing.fill()
+                                       .transform.missing.replace_na()
                                        )
 
                           .with_theme("fatalities")
@@ -1698,7 +1880,7 @@ def get_cm_querysets():
 
     data = qs_vdem_short_stub.publish().fetch()
 
-    print(f"fatalities002_vdem_short_stub; "
+    print(f"fatalities003_vdem_short_stub; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -1711,7 +1893,7 @@ def get_cm_querysets():
 
     # With wdi, short version
     # log variables
-    qs_wdi_short_stub = (Queryset("fatalities002_wdi_short_stub", "country_month")
+    qs_wdi_short_stub = (Queryset("fatalities003_wdi_short_stub", "country_month")
 
                          # Features from WDI
                          .with_column(Column("wdi_ag_lnd_frst_k2", from_table="wdi_cy",
@@ -1719,6 +1901,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_dt_oda_odat_pc_zs", from_table="wdi_cy",
@@ -1726,6 +1909,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_ms_mil_xpnd_gd_zs", from_table="wdi_cy",
@@ -1733,6 +1917,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_ms_mil_xpnd_zs", from_table="wdi_cy",
@@ -1740,6 +1925,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_nv_agr_totl_kd", from_table="wdi_cy",
@@ -1747,6 +1933,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_nv_agr_totl_kn", from_table="wdi_cy",
@@ -1754,6 +1941,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
@@ -1761,6 +1949,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_se_enr_prim_fm_zs", from_table="wdi_cy",
@@ -1768,6 +1957,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_se_enr_prsc_fm_zs", from_table="wdi_cy",
@@ -1775,6 +1965,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
@@ -1782,6 +1973,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sh_sta_stnt_zs", from_table="wdi_cy",
@@ -1789,6 +1981,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sl_tlf_totl_fe_zs", from_table="wdi_cy",
@@ -1796,6 +1989,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
@@ -1803,12 +1997,14 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sm_pop_netm", from_table="wdi_cy", from_column="wdi_sm_pop_netm")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sm_pop_totl_zs", from_table="wdi_cy",
@@ -1816,6 +2012,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          # .with_column(Column("wdi_sp_dyn_tfrt_in", from_table="wdi_cy",
@@ -1830,6 +2027,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sh_dyn_mort_fe", from_table="wdi_cy",
@@ -1837,6 +2035,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sp_pop_0014_fe_zs", from_table="wdi_cy",
@@ -1844,6 +2043,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sp_pop_1564_fe_zs", from_table="wdi_cy",
@@ -1851,6 +2051,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sp_pop_65up_fe_zs", from_table="wdi_cy",
@@ -1858,12 +2059,14 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sp_pop_grow", from_table="wdi_cy", from_column="wdi_sp_pop_grow")
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          .with_column(Column("wdi_sp_urb_totl_in_zs", from_table="wdi_cy",
@@ -1871,6 +2074,7 @@ def get_cm_querysets():
                                       .transform.missing.fill()
                                       .transform.temporal.tlag(12)
                                       .transform.missing.fill()
+                                      .transform.missing.replace_na()
                                       )
 
                          # Spatial lags
@@ -1917,7 +2121,7 @@ def get_cm_querysets():
 
     data = qs_wdi_short_stub.publish().fetch()
 
-    print(f"fatalities002_wdi_short_stub; "
+    print(f"fatalities003_wdi_short_stub; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -1929,7 +2133,7 @@ def get_cm_querysets():
     # # Model with about 40 features
     # Model with 40 or so most important predictors from several models
 
-    qs_joint_narrow = (Queryset("fatalities002_joint_narrow", "country_month")
+    qs_joint_narrow = (Queryset("fatalities003_joint_narrow", "country_month")
 
                        # target variable
                        .with_column(Column("ln_ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
@@ -2116,18 +2320,21 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_nv_agr_totl_kn", from_table="wdi_cy", from_column="wdi_nv_agr_totl_kn")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy", from_column="wdi_sh_sta_maln_zs")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_sl_tlf_totl_fe_zs", from_table="wdi_cy",
@@ -2135,18 +2342,21 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy", from_column="wdi_sm_pop_refg_or")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_sp_dyn_imrt_in", from_table="wdi_cy", from_column="wdi_sp_dyn_imrt_in")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_sp_pop_0014_fe_zs", from_table="wdi_cy",
@@ -2154,12 +2364,14 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("wdi_sp_pop_grow", from_table="wdi_cy", from_column="wdi_sp_pop_grow")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        # Spatial lags [hh20]
@@ -2192,18 +2404,21 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("vdem_v2xcl_rol", from_table="vdem_v11_cy", from_column="vdem_v2xcl_rol")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v11_cy", from_column="vdem_v2xeg_eqdr")
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v11_cy",
@@ -2211,6 +2426,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
@@ -2218,6 +2434,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("splag_vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
@@ -2246,7 +2463,7 @@ def get_cm_querysets():
 
     data = qs_joint_narrow.publish().fetch()
 
-    print(f"fatalities002_joint_narrow; "
+    print(f"fatalities003_joint_narrow; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -2259,7 +2476,7 @@ def get_cm_querysets():
 
     # Model with most important predictors from several models, long version
 
-    qs_joint_broad_stub = (Queryset("fatalities002_joint_broad_stub", "country_month")
+    qs_joint_broad_stub = (Queryset("fatalities003_joint_broad_stub", "country_month")
 
                            .with_column(Column("ln_ged_sb_tlag_1", from_table="ged2_cm",
                                                from_column="ged_sb_best_sum_nokgi")
@@ -2390,17 +2607,20 @@ def get_cm_querysets():
                            .with_column(Column("ln_acled_sb", from_table="acled2_cm", from_column="acled_sb_fat")
                                         .transform.ops.ln()
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_acled_sb_count", from_table="acled2_cm",
                                                from_column="acled_sb_count")
                                         .transform.ops.ln()
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_acled_os", from_table="acled2_cm", from_column="acled_os_fat")
                                         .transform.ops.ln()
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # time-lagged by 0-2 independent variables
@@ -2814,6 +3034,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sm_pop_refg_or", from_table="wdi_cy",
@@ -2821,6 +3042,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_dt_oda_odat_pc_zs", from_table="wdi_cy",
@@ -2828,6 +3050,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_ms_mil_xpnd_gd_zs", from_table="wdi_cy",
@@ -2835,6 +3058,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sl_tlf_totl_fe_zs", from_table="wdi_cy",
@@ -2842,6 +3066,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_nv_agr_totl_kn", from_table="wdi_cy",
@@ -2849,12 +3074,14 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sp_pop_grow", from_table="wdi_cy", from_column="wdi_sp_pop_grow")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_se_enr_prim_fm_zs", from_table="wdi_cy",
@@ -2862,6 +3089,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sp_urb_totl_in_zs", from_table="wdi_cy",
@@ -2869,6 +3097,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sh_sta_maln_zs", from_table="wdi_cy",
@@ -2876,6 +3105,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sp_dyn_imrt_fe_in", from_table="wdi_cy",
@@ -2883,6 +3113,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_ny_gdp_mktp_kd", from_table="wdi_cy",
@@ -2890,6 +3121,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("wdi_sh_sta_stnt_zs", from_table="wdi_cy",
@@ -2897,6 +3129,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Spatial lags
@@ -2938,6 +3171,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xnp_client", from_table="vdem_v11_cy",
@@ -2945,6 +3179,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_veracc", from_table="vdem_v11_cy",
@@ -2952,6 +3187,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_divparctrl", from_table="vdem_v11_cy",
@@ -2959,6 +3195,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xpe_exlpol", from_table="vdem_v11_cy",
@@ -2966,6 +3203,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_diagacc", from_table="vdem_v11_cy",
@@ -2973,6 +3211,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xpe_exlgeo", from_table="vdem_v11_cy",
@@ -2980,6 +3219,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xpe_exlgender", from_table="vdem_v11_cy",
@@ -2987,6 +3227,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xpe_exlsocgr", from_table="vdem_v11_cy",
@@ -2994,6 +3235,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_ex_party", from_table="vdem_v11_cy",
@@ -3001,6 +3243,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_genpp", from_table="vdem_v11_cy",
@@ -3008,6 +3251,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xeg_eqdr", from_table="vdem_v11_cy",
@@ -3015,6 +3259,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xcl_prpty", from_table="vdem_v11_cy",
@@ -3022,6 +3267,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xeg_eqprotec", from_table="vdem_v11_cy",
@@ -3029,6 +3275,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_ex_military", from_table="vdem_v11_cy",
@@ -3036,6 +3283,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xcl_dmove", from_table="vdem_v11_cy",
@@ -3043,12 +3291,14 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_clphy", from_table="vdem_v11_cy", from_column="vdem_v2x_clphy")
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2x_hosabort", from_table="vdem_v11_cy",
@@ -3056,6 +3306,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("vdem_v2xnp_regcorr", from_table="vdem_v11_cy",
@@ -3063,6 +3314,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Spatial lags
@@ -3117,14 +3369,14 @@ def get_cm_querysets():
 
     data = qs_joint_broad_stub.publish().fetch()
 
-    print(f"fatalities002_joint_broad_stub; "
+    print(f"fatalities003_joint_broad_stub; "
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
           f"({len(np.unique(data.index.get_level_values(1)))} units)"
           )
 
-    qs_faostat_stub = (Queryset("fatalities002_faostat_stub", "country_month")
+    qs_faostat_stub = (Queryset("fatalities003_faostat_stub", "country_month")
 
                        .with_column(Column("gleditsch_ward", from_table="country", from_column="gwcode")
                                     .transform.missing.fill()
@@ -3376,7 +3628,7 @@ def get_cm_querysets():
 
     data = qs_faostat_stub.publish().fetch()
 
-    print(f"fatalities002_faostat_stub;"
+    print(f"fatalities003_faostat_stub;"
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -3385,7 +3637,7 @@ def get_cm_querysets():
 
     # FAO prices
 
-    qs_faoprices_stub = (Queryset("fatalities002_faoprices_stub", "country_month")
+    qs_faoprices_stub = (Queryset("fatalities003_faoprices_stub", "country_month")
 
                          .with_column(Column("gleditsch_ward", from_table="country", from_column="gwcode")
                                       .transform.missing.fill()
@@ -3453,7 +3705,7 @@ def get_cm_querysets():
 
     data = qs_faoprices_stub.publish().fetch()
 
-    print(f"fatalities002_faoprices_stub;"
+    print(f"fatalities003_faoprices_stub;"
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -3462,7 +3714,7 @@ def get_cm_querysets():
 
     # IMF WEO
 
-    qs_imfweo_stub = (Queryset("fatalities002_imfweo_stub", "country_month")
+    qs_imfweo_stub = (Queryset("fatalities003_imfweo_stub", "country_month")
 
                       .with_column(Column("gleditsch_ward", from_table="country", from_column="gwcode")
                                    .transform.missing.fill()
@@ -3499,7 +3751,7 @@ def get_cm_querysets():
 
     data = qs_imfweo_stub.publish().fetch()
 
-    print(f"fatalities002_imfweo_stub;"
+    print(f"fatalities003_imfweo_stub;"
           f"A dataset with {len(data.columns)} columns, with "
           f"data between t {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
@@ -3511,8 +3763,8 @@ def get_cm_querysets():
     # Combined querysets
     # Topics model and baseline
 
-    qs_topics = (Queryset("fatalities002_topics", "country_month")
-                 .with_theme("fatalities002")
+    qs_topics = (Queryset("fatalities003_topics", "country_month")
+                 .with_theme("fatalities003")
                  .describe("""Predicting ln(fatalities), cm level
     
                            Queryset with baseline and Mueller & Rauh topic model features
@@ -3527,8 +3779,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # Aquastat model and baseline
 
-    qs_aquastat = (Queryset("fatalities002_aquastat", "country_month")
-                   .with_theme("fatalities002")
+    qs_aquastat = (Queryset("fatalities003_aquastat", "country_month")
+                   .with_theme("fatalities003")
                    .describe("""Predicting ln(fatalities), cm level
     
                              Queryset with baseline and aquastat features
@@ -3543,8 +3795,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # Conflict history model and baseline
 
-    qs_conflict = (Queryset("fatalities002_conflict_history", "country_month")
-                   .with_theme("fatalities002")
+    qs_conflict = (Queryset("fatalities003_conflict_history", "country_month")
+                   .with_theme("fatalities003")
                    .describe("""Predicting ln(fatalities), cm level
     
                              Queryset with baseline and first set of conflict history features
@@ -3552,15 +3804,35 @@ def get_cm_querysets():
                              """)
                    )
 
+    
     qs_conflict.operations = qs_baseline.operations[0:] + qs_conflict_stub.operations[0:]
 
     data = qs_conflict.publish().fetch()
+    
+    ###################################################################################################################
+    # Conflict history model and baseline, nonlog formulation
+
+    qs_conflict_nonlog = (Queryset("fatalities003_conflict_history_nonlog", "country_month")
+                   .with_theme("fatalities003")
+                   .describe("""Predicting nonlog fatalities, cm level
+    
+                             Queryset with baseline and first set of conflict history features
+    
+                             """)
+                   )
+
+    
+    qs_conflict_nonlog.operations = qs_baseline_nonlog.operations[0:] + qs_conflict_stub.operations[0:]
+
+    data = qs_conflict_nonlog.publish().fetch()
+
+
 
     ###################################################################################################################
     # Conflict history model, extension, and baseline
 
-    qs_conflict_long = (Queryset("fatalities002_conflict_history_long", "country_month")
-                        .with_theme("fatalities002")
+    qs_conflict_long = (Queryset("fatalities003_conflict_history_long", "country_month")
+                        .with_theme("fatalities003")
                         .describe("""Predicting ln(fatalities), cm level
     
                                   Queryset with baseline, first set and extended set of conflict history features
@@ -3575,8 +3847,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # Vdem short model and baseline
 
-    qs_vdem_short = (Queryset("fatalities002_vdem_short", "country_month")
-                     .with_theme("fatalities002")
+    qs_vdem_short = (Queryset("fatalities003_vdem_short", "country_month")
+                     .with_theme("fatalities003")
                      .describe("""Predicting ln(fatalities), cm level
     
                               Queryset with baseline and short list of vdem features
@@ -3591,8 +3863,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # WDI short model and baseline
 
-    qs_wdi_short = (Queryset("fatalities002_wdi_short", "country_month")
-                    .with_theme("fatalities002")
+    qs_wdi_short = (Queryset("fatalities003_wdi_short", "country_month")
+                    .with_theme("fatalities003")
                     .describe("""Predicting ln(fatalities), cm level
     
                               Queryset with baseline and short list of wdi features
@@ -3607,8 +3879,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # joint broad model and baseline
 
-    qs_joint_broad = (Queryset("fatalities002_joint_broad", "country_month")
-                      .with_theme("fatalities002")
+    qs_joint_broad = (Queryset("fatalities003_joint_broad", "country_month")
+                      .with_theme("fatalities003")
                       .describe("""Predicting ln(fatalities), cm level
     
                                 Queryset with baseline and broad list of features from all sources
@@ -3619,12 +3891,31 @@ def get_cm_querysets():
     qs_joint_broad.operations = qs_baseline.operations[0:] + qs_joint_broad_stub.operations[0:]
 
     data = qs_joint_broad.publish().fetch()
+     
+
+
+    ###################################################################################################################
+    # joint broad model and baseline
+
+    qs_joint_broad_nonlog = (Queryset("fatalities003_joint_broad_nonlog", "country_month")
+                      .with_theme("fatalities003")
+                      .describe("""Predicting nonlog fatalities, cm level
+    
+                                Queryset with baseline and broad list of features from all sources
+    
+                                """)
+                      )
+
+    qs_joint_broad_nonlog.operations = qs_baseline_nonlog.operations[0:] + qs_joint_broad_stub.operations[0:]
+
+    data = qs_joint_broad_nonlog.publish().fetch()
+     
 
     ###################################################################################################################
     # faostat model and baseline
 
-    qs_faostat = (Queryset("fatalities002_faostat", "country_month")
-                  .with_theme("fatalities002")
+    qs_faostat = (Queryset("fatalities003_faostat", "country_month")
+                  .with_theme("fatalities003")
                   .describe("""Predicting ln(fatalities), cm level
 
                             Queryset with baseline and faostat features
@@ -3639,8 +3930,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # faoprices model and baseline
 
-    qs_faoprices = (Queryset("fatalities002_faoprices", "country_month")
-                    .with_theme("fatalities002")
+    qs_faoprices = (Queryset("fatalities003_faoprices", "country_month")
+                    .with_theme("fatalities003")
                     .describe("""Predicting ln(fatalities), cm level
 
                               Queryset with baseline and faoprices features
@@ -3655,8 +3946,8 @@ def get_cm_querysets():
     ##################################################################################################################
     # imfweo model and baseline
 
-    qs_imfweo = (Queryset("fatalities002_imfweo", "country_month")
-                 .with_theme("fatalities002")
+    qs_imfweo = (Queryset("fatalities003_imfweo", "country_month")
+                 .with_theme("fatalities003")
                  .describe("""Predicting ln(fatalities), cm level
 
                            Queryset with baseline and imfweo features
@@ -3672,8 +3963,8 @@ def get_cm_querysets():
     ###################################################################################################################
     # All features model
 
-    qs_all_features = (Queryset("fatalities002_all_features", "country_month")
-                       .with_theme("fatalities002")
+    qs_all_features = (Queryset("fatalities003_all_features", "country_month")
+                       .with_theme("fatalities003")
                        .describe("""Predicting ln(fatalities), cm level
     
                                  Queryset with baseline and short list of wdi features
@@ -3698,12 +3989,14 @@ def get_cm_querysets():
               qs_topics,
               qs_aquastat,
               qs_conflict,
+              qs_conflict_nonlog,
               qs_conflict_long,
               qs_vdem_short,
               qs_wdi_short,
               qs_all_features,
               qs_joint_narrow,
               qs_joint_broad,
+              qs_joint_broad_nonlog,
               qs_faostat,
               qs_faoprices,
               qs_imfweo

@@ -128,6 +128,23 @@ def FetchData(run_id):
         Datasets.append(FetchTable((Queryset("fatalities002_faoprices", "country_month")),'faoprices'))
         Datasets.append(FetchTable((Queryset("fatalities002_imfweo", "country_month")),'imfweo'))
 
+    elif run_id == 'Fatalities003':
+        Datasets.append(FetchTable((Queryset("fatalities003_baseline", "country_month")),'baseline002'))
+        Datasets.append(FetchTable((Queryset("fatalities003_conflict_history_long", "country_month")),'conflictlong_ln'))
+        Datasets.append(FetchTable((Queryset("fatalities003_conflict_history", "country_month")),'conflict_ln'))
+        Datasets.append(FetchTable((Queryset("fatalities003_conflict_history_nonlog", "country_month")),'conflict_nonlog'))
+        Datasets.append(FetchTable((Queryset("fatalities003_wdi_short", "country_month")),'wdi_short'))
+        Datasets.append(FetchTable((Queryset("fatalities003_vdem_short", "country_month")),'vdem_short'))
+        Datasets.append(FetchTable((Queryset("fatalities003_topics", "country_month")),'topics_002'))
+        Datasets.append(FetchTable((Queryset("fatalities003_joint_broad", "country_month")),'joint_broad'))
+        Datasets.append(FetchTable((Queryset("fatalities003_joint_broad_nonlog", "country_month")),'joint_broad_nonlog'))
+        Datasets.append(FetchTable((Queryset("fatalities003_joint_narrow", "country_month")),'joint_narrow'))
+        Datasets.append(FetchTable((Queryset("fatalities003_all_features", "country_month")),'all_features'))
+        Datasets.append(FetchTable((Queryset("fatalities003_aquastat", "country_month")),'aquastat'))
+        Datasets.append(FetchTable((Queryset("fatalities003_faostat", "country_month")),'faostat'))
+        Datasets.append(FetchTable((Queryset("fatalities003_faoprices", "country_month")),'faoprices'))
+        Datasets.append(FetchTable((Queryset("fatalities003_imfweo", "country_month")),'imfweo'))
+
         # PCA
         Standard_features = ['ln_ged_sb_dep','ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5', 'wdi_sp_pop_totl']
 
