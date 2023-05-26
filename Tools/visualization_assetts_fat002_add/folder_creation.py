@@ -1,7 +1,7 @@
 from Tools.visualization_assetts_fat002_add.config2 import *
 
-Monthly_updates = Mydropbox + 'DataReleases/MonthlyUpdates/master_visualization_output_folder/'
-label_version = f'fat002_paper'
+Monthly_updates = Mydropbox + 'DataReleases/SystemUpdates/'
+label_version = folder_name_label
 master_folder = Monthly_updates + label_version
 
 #new folderpath
