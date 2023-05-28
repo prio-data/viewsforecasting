@@ -29,14 +29,12 @@ def get_cm_querysets():
     qs_baseline = (Queryset("fatalities003_baseline", "country_month")
 
                    # target variable
-                   .with_column(Column("ln_ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
-                                .transform.ops.ln()
+                   .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                 .transform.missing.fill()
                                 )
 
                    # timelag 0 of target variable
-                   .with_column(Column("ln_ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
-                                .transform.ops.ln()
+                   .with_column(Column("ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                 .transform.missing.fill()
                                 )
                    # Decay functions
@@ -78,7 +76,7 @@ def get_cm_querysets():
                    .with_theme("fatalities")
                    .describe("""Fatalities conflict history, cm level
     
-                   Predicting ln(fatalities) using conflict predictors, ultrashort
+                   Predicting fatalities using conflict predictors, ultrashort
     
                              """)
                    )
@@ -907,7 +905,7 @@ def get_cm_querysets():
                                   """)
                         )
 
-    data = qs_aquastat_stub.publish().fetch()
+    #data = qs_aquastat_stub.publish().fetch()
 
     print(f"fatalities003_aquastat_stub; "
           f"A dataset with {len(data.columns)} columns, with "
@@ -925,59 +923,52 @@ def get_cm_querysets():
     qs_conflict_stub = (Queryset("fatalities003_cm_conflict_history_stub", "country_month")
 
                         # Lags
-                        .with_column(Column("ln_ged_sb_tlag_1", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tlag_1", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
-                                     .transform.ops.ln()
-                                     .transform.missing.fill()
                                      .transform.temporal.tlag(1)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
-                        .with_column(Column("ln_ged_sb_tlag_2", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tlag_2", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
-                                     .transform.ops.ln()
-                                     .transform.missing.fill()
                                      .transform.temporal.tlag(2)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
-                        .with_column(Column("ln_ged_sb_tlag_3", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tlag_3", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
-                                     .transform.ops.ln()
-                                     .transform.missing.fill()
                                      .transform.temporal.tlag(3)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
-                        .with_column(Column("ln_ged_sb_tlag_4", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tlag_4", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
-                                     .transform.ops.ln()
-                                     .transform.missing.fill()
                                      .transform.temporal.tlag(4)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
-                        .with_column(Column("ln_ged_sb_tlag_5", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tlag_5", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
-                                     .transform.ops.ln()
-                                     .transform.missing.fill()
                                      .transform.temporal.tlag(5)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
-                        .with_column(Column("ln_ged_sb_tlag_6", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tlag_6", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
-                                     .transform.ops.ln()
-                                     .transform.missing.fill()
                                      .transform.temporal.tlag(6)
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
                         # Moving sums
-                        .with_column(Column("ln_ged_sb_tsum_24", from_table="ged2_cm",
+                        .with_column(Column("ged_sb_tsum_24", from_table="ged2_cm",
                                             from_column="ged_sb_best_sum_nokgi")
                                      .transform.missing.replace_na()
                                      .transform.temporal.moving_sum(24)
-                                     .transform.ops.ln()
                                      .transform.missing.replace_na()
                                      )
 
@@ -1034,11 +1025,13 @@ def get_cm_querysets():
                         .with_column(Column("ln_ged_ns", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
                                      .transform.ops.ln()
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         .with_column(Column("ln_ged_os", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
                                      .transform.ops.ln()
                                      .transform.missing.fill()
+                                     .transform.missing.replace_na()
                                      )
 
                         .with_column(Column("ln_acled_sb", from_table="acled2_cm", from_column="acled_sb_fat")
@@ -1066,6 +1059,7 @@ def get_cm_querysets():
                                      .transform.missing.fill()
                                      .transform.temporal.tlag(1)
                                      .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                      )
 
                         # 12-month decay dummy of independent variables
@@ -1162,21 +1156,25 @@ def get_cm_querysets():
                        .with_column(Column("splag_1_ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                     .transform.missing.replace_na()
                                     .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("splag_2_ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                     .transform.missing.replace_na()
                                     .transform.spatial.countrylag(1, 2, 0, 0)
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("splag_1_ged_os", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
                                     .transform.missing.replace_na()
                                     .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("splag_1_ged_ns", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
                                     .transform.missing.replace_na()
                                     .transform.spatial.countrylag(1, 1, 0, 0)
+                                    .transform.missing.replace_na()
                                     )
                        # Decay functions
                        # sb
@@ -1290,31 +1288,37 @@ def get_cm_querysets():
                        .with_column(Column("ln_acled_prx_count", from_table="acled2_cm", from_column="acled_prx_count")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_pr_count", from_table="acled2_cm", from_column="acled_pr_count")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_prx_fat", from_table="acled2_cm", from_column="acled_prx_fat")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_sb_gov", from_table="acled2_cm", from_column="acled_bat_gov_fat")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_sb_reb", from_table="acled2_cm", from_column="acled_bat_reb_fat")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_ns", from_table="acled2_cm", from_column="acled_ns_fat")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        # time-lagged by 0-2 independent variables
@@ -1324,6 +1328,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(1)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_ged_ns_tlag_2", from_table="ged2_cm",
@@ -1332,6 +1337,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(2)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_ged_os_tlag_2", from_table="ged2_cm",
@@ -1340,6 +1346,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(2)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_sb_tlag_1", from_table="acled2_cm", from_column="acled_sb_fat")
@@ -1347,6 +1354,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(1)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_sb_tlag_2", from_table="acled2_cm", from_column="acled_sb_fat")
@@ -1354,6 +1362,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(2)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_os_tlag_1", from_table="acled2_cm", from_column="acled_os_fat")
@@ -1361,6 +1370,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(1)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_os_tlag_2", from_table="acled2_cm", from_column="acled_os_fat")
@@ -1368,6 +1378,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(2)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_ns_tlag_1", from_table="acled2_cm", from_column="acled_ns_fat")
@@ -1375,6 +1386,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(1)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ln_acled_ns_tlag_2", from_table="acled2_cm", from_column="acled_os_fat")
@@ -1382,6 +1394,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(2)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_theme("fatalities")
@@ -2136,9 +2149,10 @@ def get_cm_querysets():
     qs_joint_narrow = (Queryset("fatalities003_joint_narrow", "country_month")
 
                        # target variable
-                       .with_column(Column("ln_ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                       .with_column(Column("ged_sb_dep", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("gleditsch_ward", from_table="country", from_column="gwcode")
@@ -2148,9 +2162,10 @@ def get_cm_querysets():
 
                        # Baseline features:
                        # lag of target variable
-                       .with_column(Column("ln_ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
+                       .with_column(Column("ged_sb", from_table="ged2_cm", from_column="ged_sb_best_sum_nokgi")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        # Decay functions
@@ -2186,23 +2201,26 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        # More conflict history [hh20]
-                       .with_column(Column("ln_ged_sb_tlag_1", from_table="ged2_cm",
+                       .with_column(Column("ged_sb_tlag_1", from_table="ged2_cm",
                                            from_column="ged_sb_best_sum_nokgi")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(1)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
-                       .with_column(Column("ln_ged_sb_tlag_2", from_table="ged2_cm",
+                       .with_column(Column("ged_sb_tlag_2", from_table="ged2_cm",
                                            from_column="ged_sb_best_sum_nokgi")
                                     .transform.ops.ln()
                                     .transform.missing.fill()
                                     .transform.temporal.tlag(2)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("decay_acled_os_5", from_table="acled2_cm", from_column="acled_os_fat")
@@ -2243,6 +2261,7 @@ def get_cm_querysets():
                                     .transform.missing.replace_na()
                                     .transform.temporal.tlag(1)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ste_theta3_stock", from_table='topic_cm', from_column='topic_life')
@@ -2252,6 +2271,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.moving_average(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ste_theta11_stock",  from_table='topic_cm', from_column='topic_diplomacy')
@@ -2261,6 +2281,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.moving_average(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ste_theta13_stock", from_table='topic_cm', from_column='topic_sports')
@@ -2270,6 +2291,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.moving_average(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        .with_column(Column("ste_theta14_stock", from_table='topic_cm', from_column='topic_judiciary')
@@ -2279,6 +2301,7 @@ def get_cm_querysets():
                                     .transform.missing.fill()
                                     .transform.temporal.moving_average(12)
                                     .transform.missing.fill()
+                                    .transform.missing.replace_na()
                                     )
 
                        # Spatial lags [hh20]
@@ -2465,7 +2488,7 @@ def get_cm_querysets():
 
     print(f"fatalities003_joint_narrow; "
           f"A dataset with {len(data.columns)} columns, with "
-          f"data between t {min(data.index.get_level_values(0))} "
+          f"data between t = {min(data.index.get_level_values(0))} "
           f"and {max(data.index.get_level_values(0))}. "
           f"({len(np.unique(data.index.get_level_values(1)))} units)"
           )
@@ -2484,6 +2507,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_ged_sb_tlag_2", from_table="ged2_cm",
@@ -2492,6 +2516,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(2)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_ged_sb_tlag_3", from_table="ged2_cm",
@@ -2500,6 +2525,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(3)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_ged_sb_tlag_4", from_table="ged2_cm",
@@ -2508,6 +2534,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(4)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_ged_sb_tlag_5", from_table="ged2_cm",
@@ -2516,6 +2543,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(5)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_ged_sb_tlag_6", from_table="ged2_cm",
@@ -2524,6 +2552,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(6)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Decay functions
@@ -2597,11 +2626,13 @@ def get_cm_querysets():
                            .with_column(Column("ln_ged_ns", from_table="ged2_cm", from_column="ged_ns_best_sum_nokgi")
                                         .transform.ops.ln()
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_ged_os", from_table="ged2_cm", from_column="ged_os_best_sum_nokgi")
                                         .transform.ops.ln()
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("ln_acled_sb", from_table="acled2_cm", from_column="acled_sb_fat")
@@ -2630,6 +2661,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column("decay_acled_sb_5", from_table="acled2_cm", from_column="acled_sb_fat")
@@ -2700,6 +2732,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic0_religion_t13', from_table='topic_cm',
@@ -2708,6 +2741,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(13)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 1, politics, original: tlag1, 12 month moving average on tlag1
@@ -2717,6 +2751,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic1_politics_t1_stock', from_table='topic_cm',
@@ -2727,6 +2762,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 2, diplomacy and sanctions: original, tlag1, 12 month moving average on tlag1
@@ -2736,6 +2772,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic2_sanctions_t1_stock', from_table='topic_cm',
@@ -2746,6 +2783,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 3, civilian life: original, tlag1, 12 month moving average on tlag1
@@ -2754,6 +2792,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic3_life_t1_stock', from_table='topic_cm', from_column='topic_life')
@@ -2763,6 +2802,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 4, energy and industry: original, tlag1, 12 month moving average on tlag1
@@ -2771,6 +2811,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic4_energy_t1_stock', from_table='topic_cm',
@@ -2781,6 +2822,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 5, media and reporting: original, tlag1, 12 month moving average on tlag1
@@ -2789,6 +2831,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic5_media_t1_stock', from_table='topic_cm',
@@ -2799,6 +2842,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 6, economics: original, tlag1, 12 month moving average on tlag1
@@ -2808,6 +2852,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic6_economics_t1_stock', from_table='topic_cm',
@@ -2818,6 +2863,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 7, health and emergencies: original, tlag1, 12 month moving average on tlag1
@@ -2826,6 +2872,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic7_health_t1_stock', from_table='topic_cm',
@@ -2836,6 +2883,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 8, chinese politics: original, tlag1, 12 month moving average on tlag1
@@ -2844,6 +2892,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic8_china_t1_stock', from_table='topic_cm',
@@ -2854,6 +2903,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 9, foreign policy: original, tlag1, 12 month moving average on tlag1
@@ -2862,6 +2912,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic9_foreign_t1_stock', from_table='topic_cm',
@@ -2872,6 +2923,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 10, armed conflict: original, tlag1, 12 month moving average on tlag1
@@ -2881,6 +2933,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic10_conflict_t1_stock', from_table='topic_cm',
@@ -2891,6 +2944,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 11, diplomacy: original, tlag1, 12 month moving average on tlag1
@@ -2900,6 +2954,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic11_diplomacy_t1_stock', from_table='topic_cm',
@@ -2910,6 +2965,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 12, power and negotiation: original, tlag1, 12 month moving average on tlag1
@@ -2918,6 +2974,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic12_power_t1_stock', from_table='topic_cm',
@@ -2928,6 +2985,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 13, sports: original, tlag1, 12 month moving average on tlag1
@@ -2936,6 +2994,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic13_sports_t1_stock', from_table='topic_cm',
@@ -2946,6 +3005,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Topic 14, judiciary and abuses: original, tlag1, 12 month moving average on tlag1
@@ -2955,6 +3015,7 @@ def get_cm_querysets():
                                         .transform.missing.replace_na()
                                         .transform.temporal.tlag(1)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            .with_column(Column('topic14_judiciary_t1_stock', from_table='topic_cm',
@@ -2965,6 +3026,7 @@ def get_cm_querysets():
                                         .transform.missing.fill()
                                         .transform.temporal.moving_average(12)
                                         .transform.missing.fill()
+                                        .transform.missing.replace_na()
                                         )
 
                            # Spatial lags
@@ -3626,7 +3688,7 @@ def get_cm_querysets():
 
                        )
 
-    data = qs_faostat_stub.publish().fetch()
+    #data = qs_faostat_stub.publish().fetch()
 
     print(f"fatalities003_faostat_stub;"
           f"A dataset with {len(data.columns)} columns, with "
@@ -3703,7 +3765,7 @@ def get_cm_querysets():
 
                          )
 
-    data = qs_faoprices_stub.publish().fetch()
+    #data = qs_faoprices_stub.publish().fetch()
 
     print(f"fatalities003_faoprices_stub;"
           f"A dataset with {len(data.columns)} columns, with "
@@ -3925,7 +3987,7 @@ def get_cm_querysets():
 
     qs_faostat.operations = qs_baseline.operations[0:] + qs_faostat_stub.operations[0:]
 
-    data = qs_faostat.publish().fetch()
+    #data = qs_faostat.publish().fetch()
 
     ###################################################################################################################
     # faoprices model and baseline
@@ -3941,7 +4003,7 @@ def get_cm_querysets():
 
     qs_faoprices.operations = qs_baseline.operations[0:] + qs_faoprices_stub.operations[0:]
 
-    data = qs_faoprices.publish().fetch()
+    #data = qs_faoprices.publish().fetch()
 
     ##################################################################################################################
     # imfweo model and baseline
@@ -3958,7 +4020,7 @@ def get_cm_querysets():
 
     qs_imfweo.operations = qs_baseline.operations[0:] + qs_imfweo_stub.operations[0:]
 
-    data = qs_imfweo.publish().fetch()
+    #data = qs_imfweo.publish().fetch()
 
     ###################################################################################################################
     # All features model
@@ -3987,7 +4049,7 @@ def get_cm_querysets():
     qslist = [
               qs_baseline,
               qs_topics,
-              qs_aquastat,
+#              qs_aquastat,
               qs_conflict,
               qs_conflict_nonlog,
               qs_conflict_long,
@@ -3997,8 +4059,8 @@ def get_cm_querysets():
               qs_joint_narrow,
               qs_joint_broad,
               qs_joint_broad_nonlog,
-              qs_faostat,
-              qs_faoprices,
+#              qs_faostat,
+#              qs_faoprices,
               qs_imfweo
               ]
 

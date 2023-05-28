@@ -145,9 +145,9 @@ def DefineEnsembleModels(level):
 #        ModelList.append(model)
         
         model = {
-            'modelname':        'fatalities002_baseline_rf',
+            'modelname':        'fatalities003_nl_baseline_rf',
             'algorithm':        XGBRFRegressor(n_estimators=300, n_jobs=nj),
-            'depvar':           'ln_ged_sb_dep',
+            'depvar':           'ged_sb_dep',
             'data_train':       'baseline003',
             'queryset':         'fatalities003_baseline',
             'preprocessing':    'float_it',
@@ -158,9 +158,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalities002_conflicthistory_rf',
+            'modelname':        'fatalities003_nl_conflicthistory_rf',
             'algorithm':        XGBRFRegressor(n_estimators=250, n_jobs=nj),
-            'depvar':           "ln_ged_sb_dep",
+            'depvar':           "ged_sb_dep",
             'data_train':       'conflict_ln',
             'queryset':         "fatalities003_conflict_history",
             'preprocessing':    'float_it',
@@ -173,9 +173,9 @@ def DefineEnsembleModels(level):
 
         # Model: GED logged dependent variable, logged conflict history variables, gradient boosting
         model = {
-            'modelname':        'fatalities003_conflicthistory_gbm',
+            'modelname':        'fatalities003_nl_conflicthistory_gbm',
             'algorithm':        GradientBoostingRegressor(n_estimators=200),
-            'depvar':           'ln_ged_sb_dep',
+            'depvar':           'ged_sb_dep',
             'data_train':       'conflict_ln',
             'queryset':         "fatalities003_conflict_history",
             'preprocessing':    'float_it',
@@ -186,9 +186,9 @@ def DefineEnsembleModels(level):
         #ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities003_conflicthistory_hurdle_lgb',
+            'modelname': 'fatalities003_nl_conflicthistory_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'conflict_ln',
             'queryset': "fatalities003_conflict_history",
             'preprocessing': 'float_it',
@@ -199,9 +199,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities003_conflicthistory_long_xgb',
+            'modelname': 'fatalities003_nl_conflicthistory_long_xgb',
             'algorithm': XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=nj),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'conflictlong_ln',
             'queryset': "fatalities003_conflict_history_long",
             'preprocessing': 'float_it',
@@ -214,20 +214,7 @@ def DefineEnsembleModels(level):
         
         
         model = {
-            'modelname':        'fatalities003_conflicthistory_nonlog_rf',
-            'algorithm':        XGBRFRegressor(n_estimators=250, n_jobs=nj),
-            'depvar':           "ged_sb_dep",
-            'data_train':       'conflict_nonlog',
-            'queryset':         "fatalities003_conflict_history_nonlog",
-            'preprocessing':    'float_it',
-            'level':            'cm',
-            'description':      'A collection of variables that together map the conflict history of a country, random forests regression model.' ,
-            'long_description': 'A collection of variables that together map the conflict history of a country. The features include lagged dependent variables for each conflict type as coded by the UCDP (state-based, one-sided, or non-state) for up to each of the preceding six months, decay functions of time since conflict caused 5, 100, and 500 deaths in a month, for each type of violence, whether ACLED (https://doi.org/10.1177/0022343310378914 recorded similar violence, and whether there was recent violence in any neighboring countries.'
-        }
-        ModelList.append(model)
-        
-        model = {
-            'modelname':        'fatalities003_conflicthistory_nonlog_hurdle_lgb',
+            'modelname':        'fatalities003_nl_conflicthistory_nonlog_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
             'depvar':           "ged_sb_dep",
             'data_train':       'conflict_nonlog',
@@ -237,12 +224,12 @@ def DefineEnsembleModels(level):
             'description':      'A collection of variables that together map the conflict history of a country, random forests regression model.' ,
             'long_description': 'A collection of variables that together map the conflict history of a country. The features include lagged dependent variables for each conflict type as coded by the UCDP (state-based, one-sided, or non-state) for up to each of the preceding six months, decay functions of time since conflict caused 5, 100, and 500 deaths in a month, for each type of violence, whether ACLED (https://doi.org/10.1177/0022343310378914 recorded similar violence, and whether there was recent violence in any neighboring countries.'
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities003_vdem_hurdle_xgb',
+            'modelname':  'fatalities003_nl_vdem_hurdle_xgb',
             'algorithm': HurdleRegression(clf_name='XGBClassifier', reg_name='XGBRegressor'),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'vdem_short',
             'queryset':  "fatalities003_vdem_short",
             'preprocessing': 'float_it',
@@ -253,9 +240,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities003_wdi_rf',
+            'modelname':  'fatalities003_nl_wdi_rf',
             'algorithm': XGBRFRegressor(n_estimators=300, n_jobs=nj),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'wdi_short',
             'queryset':  "fatalities003_wdi_short",
             'preprocessing': 'float_it',
@@ -266,9 +253,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities003_topics_rf',
+            'modelname':  'fatalities003_nl_topics_rf',
             'algorithm': XGBRFRegressor(n_estimators=250, n_jobs=nj),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'topics_003',
             'queryset':   "fatalities003_topics",
             'preprocessing': 'float_it',
@@ -279,9 +266,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities003_topics_xgb',
+            'modelname':  'fatalities003_nl_topics_xgb',
             'algorithm': XGBRegressor(n_estimators=80, learning_rate=0.05, n_jobs=nj),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'topics_003',
             'queryset':   "fatalities003_topics",
             'preprocessing': 'float_it',
@@ -291,9 +278,9 @@ def DefineEnsembleModels(level):
         }
         ModelList.append(model)
         model = {
-            'modelname':  'fatalities003_topics_hurdle_lgb',
+            'modelname':  'fatalities003_nl_topics_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'topics_003',
             'queryset':   "fatalities003_topics",
             'preprocessing': 'float_it',
@@ -304,9 +291,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities003_joint_broad_rf',
+            'modelname':  'fatalities003_nl_joint_broad_rf',
             'algorithm': XGBRFRegressor(n_estimators=250, n_jobs=nj),
-            'depvar':     "ln_ged_sb_dep",
+            'depvar':     "ged_sb_dep",
             'data_train':    'joint_broad',
             'queryset':   'fatalities003_joint_broad',
             'preprocessing': 'float_it',
@@ -317,9 +304,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities003_joint_broad_hurdle_rf',
+            'modelname': 'fatalities003_nl_joint_broad_hurdle_rf',
             'algorithm': HurdleRegression(clf_name='RFClassifier', reg_name='RFRegressor'),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'joint_broad',
             'queryset': 'fatalities003_joint_broad',
             'preprocessing': 'float_it',
@@ -330,22 +317,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
         
         model = {
-            'modelname': 'fatalities003_joint_broad_nonlog_hurdle_rf',
-            'algorithm': HurdleRegression(clf_name='RFClassifier', reg_name='RFRegressor'),
-            'depvar': "ged_sb_dep",
-            'data_train':    'joint_broad_nonlog',
-            'queryset': 'fatalities003_joint_broad_nonlog',
-            'preprocessing': 'float_it',
-            'level':            'cm',
-            'description':      '',
-            'long_description':      ''
-        }
-        ModelList.append(model)
-
-        model = {
             'modelname':  'fatalities003_joint_narrow_xgb',
             'algorithm':  XGBRFRegressor(n_estimators=250, n_jobs=nj),
-            'depvar':     "ln_ged_sb_dep",
+            'depvar':     "ged_sb_dep",
             'data_train':    'joint_narrow',
             'queryset':   'fatalities003_joint_narrow',
             'preprocessing': 'float_it',
@@ -356,9 +330,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities003_joint_narrow_hurdle_xgb',
+            'modelname': 'fatalities003_nl_joint_narrow_hurdle_xgb',
             'algorithm': HurdleRegression(clf_name='XGBClassifier', reg_name='XGBRegressor'),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'joint_narrow',
             'queryset': 'fatalities003_joint_narrow',
             'preprocessing': 'float_it',
@@ -369,9 +343,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities003_joint_narrow_hurdle_lgb',
+            'modelname': 'fatalities003_nl_joint_narrow_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
-            'depvar': "ln_ged_sb_dep",
+            'depvar': "ged_sb_dep",
             'data_train':    'joint_narrow',
             'queryset': 'fatalities003_joint_narrow',
             'preprocessing': 'float_it',
@@ -383,9 +357,9 @@ def DefineEnsembleModels(level):
 
         # PCA models: need to implement a PCA preprocessing function first.
         model = {
-            'modelname':      'fatalities003_all_pca3_xgb',
+            'modelname':      'fatalities003_nl_all_pca3_xgb',
             'algorithm':      XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=nj),
-            'depvar':         "ln_ged_sb_dep",
+            'depvar':         "ged_sb_dep",
             'data_train':     'all_features',
             'queryset':      'fatalities003_all_features',
             'preprocessing': 'pca_it',
@@ -396,9 +370,9 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':     'fatalities003_aquastat_rf',
+            'modelname':     'fatalities003_nl_aquastat_rf',
             'algorithm':     XGBRFRegressor(n_estimators=300, n_jobs=nj),
-            'depvar':        "ln_ged_sb_dep",
+            'depvar':        "ged_sb_dep",
             'data_train':    'aquastat',
             'queryset':      'fatalities003_aquastat',
             'preprocessing': 'float_it',
@@ -406,12 +380,12 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description':      ''
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
         model = {
-            'modelname':     'fatalities003_faostat_rf',
+            'modelname':     'fatalities003_nl_faostat_rf',
             'algorithm':     XGBRFRegressor(n_estimators=300, n_jobs=nj),
-            'depvar':        "ln_ged_sb_dep",
+            'depvar':        "ged_sb_dep",
             'data_train':    'faostat',
             'queryset':      'fatalities003_faostat',
             'preprocessing': 'float_it',
@@ -419,7 +393,7 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description':      ''
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
         model = {
             'modelname':        'fatalities003_faoprices_rf',
@@ -432,7 +406,7 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description': ''
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
         model = {
             'modelname':        'fatalities003_imfweo_rf',
@@ -445,7 +419,7 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description': ''
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
         model = {
             'modelname':        'fat_hh20_Markov_glm',
@@ -458,7 +432,7 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description': ''
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
         model = {
             'modelname':        'fat_hh20_Markov_rf',
@@ -471,7 +445,7 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description': ''
         }
-        ModelList.append(model)
+        #ModelList.append(model)
 
     elif level == 'pgm':
 

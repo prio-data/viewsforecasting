@@ -56,7 +56,7 @@ def FetchData(run_id):
         Datasets.append(FetchTable((Queryset("hh_all_features", "country_month")), 'all_features'))
 
         # PCA
-        Standard_features = ['ln_ged_sb_dep', 'ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
+        Standard_features = ['ged_sb_dep', 'ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
                              'wdi_sp_pop_totl']
 
         sources = []
@@ -146,7 +146,7 @@ def FetchData(run_id):
         Datasets.append(FetchTable((Queryset("fatalities003_imfweo", "country_month")),'imfweo'))
 
         # PCA
-        Standard_features = ['ln_ged_sb_dep','ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5', 'wdi_sp_pop_totl']
+        Standard_features = ['ged_sb_dep','ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5', 'wdi_sp_pop_totl']
 
         sources = []
         af = {
@@ -242,7 +242,7 @@ def fetch_cm_data_from_model_def(qslist):
         Datasets.append(FetchTable((Queryset(model_qs, "country_month")), qs_short_names[model_qs]))
 
     # PCA
-    Standard_features = ['ln_ged_sb_dep', 'ln_ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
+    Standard_features = ['ged_sb_dep', 'ged_sb', 'decay_ged_sb_5', 'decay_ged_os_5', 'splag_1_decay_ged_sb_5',
                          'wdi_sp_pop_totl']
 
     sources = []
