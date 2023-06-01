@@ -334,14 +334,12 @@ def DefineEnsembleModels(level):
         }
         ModelList.append(model)
         
-#################################
-
         model = {
             'modelname': 'escwa001_pgm_drought',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'escwa001_pgm_drought',
-            'data_train': 'escwa_drought',
+            'data_train': 'escwa1_drought',
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',
@@ -421,11 +419,11 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
         
         model = {
-            'modelname': 'escwa001_pgm_combined',
+            'modelname': 'escwa001_pgm_combo',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
-            'queryset': 'escwa001_pgm_combined',
-            'data_train': 'escwa_combined',
+            'queryset': 'escwa001_pgm_combo',
+            'data_train': 'escwa_combo',
             'level':            'pgm',
             'preprocessing': 'float_it',
             'description':      '',

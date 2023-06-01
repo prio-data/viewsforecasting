@@ -278,7 +278,6 @@ def FetchData_pgm(run_id):
         Datasets.append(FetchTable((Queryset("escwa001_pgm_extremes", "priogrid_month")),'extremes'))
         Datasets.append(FetchTable((Queryset("escwa001_pgm_spacetime", "priogrid_month")),'spacetime'))
         Datasets.append(FetchTable((Queryset("escwa001_pgm_naturalsocial", "priogrid_month")),'natsocial'))
-        Datasets.append(FetchTable((Queryset("escwa001_pgm_combined", "priogrid_month")),'combined'))
 
     else:
         raise Exception(f"run_id {run_id} not recognised")
