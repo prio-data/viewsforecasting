@@ -222,11 +222,11 @@ change_dictionary_pgm = change_dictionary_cm
 
 #change dictionary for dichotomous outcomes
 dich_values_change=np.array([-1.0, -0.8, -0.6, -0.4, -0.2, 0,0.2,0.4,0.6,0.8,1.0])
-dich_ticklabels_change=[str(tv) for tv in dich_values_change]
+dich_ticklabels_change=[f"{tv*100})%" for tv in dich_values_change]
 dichotomous_dictionary_change_cm = dict(zip(dich_ticklabels_change, dich_values_change))
 
 dich_values_change2 = np.array([-0.01, 0, 0.01])
-dich_ticklabels_change2 = [str(tv) for tv in dich_values_change2]
+dich_ticklabels_change2 = [f"{tv*100})%" for tv in dich_values_change2]
 dichotomous_dictionary_change_pgm = dict(zip(dich_ticklabels_change2, dich_values_change2))
 
 
