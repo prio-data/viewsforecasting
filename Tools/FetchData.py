@@ -6,14 +6,22 @@ from sklearn import decomposition
 from sklearn.decomposition import PCA
 import cm_querysets
 import pgm_querysets
+import cm_new_querysets
+import pgm_new_querysets
 import ModelDefinitions
 
 
-def ReturnQsList(level):
+def ReturnQsList(level,new_qs=False):
     if level == 'cm':
-        return cm_querysets.get_cm_querysets()
+        if new_qs:
+            return cm_new_querysets.get_cm_querysets()
+        else:
+            return cm_querysets.get_cm_querysets()
     elif level == 'pgm':
-        return pgm_querysets.get_pgm_querysets()
+        if new_qs:
+            return pgm_new_querysets.get_pgm_querysets()
+        else:
+            return pgm_querysets.get_pgm_querysets()
     else:
         raise Exception(f'unrecognised level {level}')
 

@@ -33,7 +33,7 @@ def DefineEnsembleModels(level):
         nj = 12
 
         model = {
-            'modelname':        'fatalities002_baseline_rf',
+            'modelname':        'onboard001_baseline_rf',
             'algorithm':        XGBRFRegressor(n_estimators=300, n_jobs=nj),
             'depvar':           'ln_ged_sb_dep',
             'data_train':       'baseline002',
@@ -46,7 +46,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalities002_conflicthistory_rf',
+            'modelname':        'onboard001_conflicthistory_rf',
             'algorithm':        XGBRFRegressor(n_estimators=250, n_jobs=nj),
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'conflict_ln',
@@ -60,7 +60,7 @@ def DefineEnsembleModels(level):
 
         # Model: GED logged dependent variable, logged conflict history variables, gradient boosting
         model = {
-            'modelname':        'fatalities002_conflicthistory_gbm',
+            'modelname':        'onboard001_conflicthistory_gbm',
             'algorithm':        GradientBoostingRegressor(n_estimators=200),
             'depvar':           'ln_ged_sb_dep',
             'data_train':       'conflict_ln',
@@ -73,7 +73,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_conflicthistory_hurdle_lgb',
+            'modelname': 'onboard001_conflicthistory_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'conflict_ln',
@@ -86,7 +86,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_conflicthistory_long_xgb',
+            'modelname': 'onboard001_conflicthistory_long_xgb',
             'algorithm': XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=nj),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'conflictlong_ln',
@@ -99,7 +99,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities002_vdem_hurdle_xgb',
+            'modelname':  'onboard001_vdem_hurdle_xgb',
             'algorithm': HurdleRegression(clf_name='XGBClassifier', reg_name='XGBRegressor'),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'vdem_short',
@@ -112,7 +112,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities002_wdi_rf',
+            'modelname':  'onboard001_wdi_rf',
             'algorithm': XGBRFRegressor(n_estimators=300, n_jobs=nj),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'wdi_short',
@@ -125,7 +125,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities002_topics_rf',
+            'modelname':  'onboard001_topics_rf',
             'algorithm': XGBRFRegressor(n_estimators=250, n_jobs=nj),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'topics_002',
@@ -138,7 +138,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities002_topics_xgb',
+            'modelname':  'onboard001_topics_xgb',
             'algorithm': XGBRegressor(n_estimators=80, learning_rate=0.05, n_jobs=nj),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'topics_002',
@@ -150,7 +150,7 @@ def DefineEnsembleModels(level):
         }
         ModelList.append(model)
         model = {
-            'modelname':  'fatalities002_topics_hurdle_lgb',
+            'modelname':  'onboard001_topics_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'topics_002',
@@ -163,7 +163,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities002_joint_broad_rf',
+            'modelname':  'onboard001_joint_broad_rf',
             'algorithm': XGBRFRegressor(n_estimators=250, n_jobs=nj),
             'depvar':     "ln_ged_sb_dep",
             'data_train':    'joint_broad',
@@ -176,7 +176,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_joint_broad_hurdle_rf',
+            'modelname': 'onboard001_joint_broad_hurdle_rf',
             'algorithm': HurdleRegression(clf_name='RFClassifier', reg_name='RFRegressor'),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'joint_broad',
@@ -189,7 +189,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':  'fatalities002_joint_narrow_xgb',
+            'modelname':  'onboard001_joint_narrow_xgb',
             'algorithm':  XGBRFRegressor(n_estimators=250, n_jobs=nj),
             'depvar':     "ln_ged_sb_dep",
             'data_train':    'joint_narrow',
@@ -202,7 +202,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_joint_narrow_hurdle_xgb',
+            'modelname': 'onboard001_joint_narrow_hurdle_xgb',
             'algorithm': HurdleRegression(clf_name='XGBClassifier', reg_name='XGBRegressor'),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'joint_narrow',
@@ -215,7 +215,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_joint_narrow_hurdle_lgb',
+            'modelname': 'onboard001_joint_narrow_hurdle_lgb',
             'algorithm': HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor'),
             'depvar': "ln_ged_sb_dep",
             'data_train':    'joint_narrow',
@@ -229,7 +229,7 @@ def DefineEnsembleModels(level):
 
         # PCA models: need to implement a PCA preprocessing function first.
         model = {
-            'modelname':      'fatalities002_all_pca3_xgb',
+            'modelname':      'onboard001_all_pca3_xgb',
             'algorithm':      XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=nj),
             'depvar':         "ln_ged_sb_dep",
             'data_train':     'all_features',
@@ -242,7 +242,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':     'fatalities002_aquastat_rf',
+            'modelname':     'onboard001_aquastat_rf',
             'algorithm':     XGBRFRegressor(n_estimators=300, n_jobs=nj),
             'depvar':        "ln_ged_sb_dep",
             'data_train':    'aquastat',
@@ -255,7 +255,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':     'fatalities002_faostat_rf',
+            'modelname':     'onboard001_faostat_rf',
             'algorithm':     XGBRFRegressor(n_estimators=300, n_jobs=nj),
             'depvar':        "ln_ged_sb_dep",
             'data_train':    'faostat',
@@ -268,7 +268,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalities002_faoprices_rf',
+            'modelname':        'onboard001_faoprices_rf',
             'algorithm':        XGBRFRegressor(n_estimators=300, n_jobs=nj),
             'depvar':           'ln_ged_sb_dep',
             'data_train':       'faoprices',
@@ -281,7 +281,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalities002_imfweo_rf',
+            'modelname':        'onboard001_imfweo_rf',
             'algorithm':        XGBRFRegressor(n_estimators=300, n_jobs=nj),
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'imfweo',
@@ -294,7 +294,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalities002_Markov_glm',
+            'modelname':        'onboard001_Markov_glm',
             'algorithm':        'rf',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',
@@ -307,7 +307,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname':        'fatalities002_Markov_rf',
+            'modelname':        'onboard001_Markov_rf',
             'algorithm':        'glm',
             'depvar':           "ln_ged_sb_dep",
             'data_train':       'joint_narrow',
@@ -344,7 +344,7 @@ def DefineEnsembleModels(level):
                                               clf_params=clf_lgbm_params, reg_params=reg_lgbm_params)
 
         model = {
-            'modelname': 'fatalities002_pgm_baseline_lgbm',
+            'modelname': 'onboard001_pgm_baseline_lgbm',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_baseline',
@@ -358,7 +358,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_conflictlong_lgbm',
+            'modelname': 'onboard001_pgm_conflictlong_lgbm',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_conflictlong',
@@ -372,7 +372,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_conflictlong_hurdle_lgbm',
+            'modelname': 'onboard001_pgm_conflictlong_hurdle_lgbm',
             'algorithm': hur_lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_conflictlong',
@@ -386,7 +386,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_escwa_drought_hurdle_lgbm',
+            'modelname': 'onboard001_pgm_escwa_drought_hurdle_lgbm',
             'algorithm': hur_lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_escwa_drought',
@@ -400,7 +400,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_escwa_drought_lgbm',
+            'modelname': 'onboard001_pgm_escwa_drought_lgbm',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_escwa_drought',
@@ -414,7 +414,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_natsoc_hurdle_lgbm',
+            'modelname': 'onboard001_pgm_natsoc_hurdle_lgbm',
             'algorithm': hur_lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_natsoc',
@@ -428,7 +428,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_natsoc_lgbm',
+            'modelname': 'onboard001_pgm_natsoc_lgbm',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_natsoc',
@@ -442,7 +442,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_broad_hurdle_lgbm',
+            'modelname': 'onboard001_pgm_broad_hurdle_lgbm',
             'algorithm': hur_lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_broad',
@@ -456,7 +456,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_broad_lgbm',
+            'modelname': 'onboard001_pgm_broad_lgbm',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_broad',
@@ -470,7 +470,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_conflict_history_xgb',
+            'modelname': 'onboard001_pgm_conflict_history_xgb',
             'algorithm': xgb_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_conflict_history',
@@ -485,7 +485,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_conflict_treelag_hurdle',
+            'modelname': 'onboard001_pgm_conflict_treelag_hurdle',
             'algorithm': hur_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_conflict_treelag',
@@ -499,7 +499,7 @@ def DefineEnsembleModels(level):
         ModelList.append(model)
 
         model = {
-            'modelname': 'fatalities002_pgm_conflict_sptime_dist_hurdle',
+            'modelname': 'onboard001_pgm_conflict_sptime_dist_hurdle',
             'algorithm': hur_regressor,
             'depvar': "ln_ged_sb_dep",
             'queryset': 'fatalities002_pgm_conflict_sptime_dist',
