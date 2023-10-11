@@ -12,7 +12,6 @@ from viewser import Queryset, Column
 import views_runs
 from views_partitioning import data_partitioner, legacy
 from stepshift import views
-import views_dataviz
 from views_runs import storage, ModelMetadata
 from views_runs.storage import store, retrieve, fetch_metadata
 from views_forecasts.extensions import *
@@ -62,11 +61,12 @@ def RetrieveStoredPredictions(ModelList, steps, EndOfHistory, dev_id, level, get
     ''' This function retrieves the predictions stored in ViEWS prediction storage for all models in the list passed to it.
     It assumes that each element in the list is a dictionary that contains a model['modelname'] '''
     i=0
-    stepcols = ['ln_ged_sb_dep']
-    for step in steps:
-        stepcols.append('step_pred_' + str(step))
+
     for model in ModelList:
         print(i, model['modelname'])
+        stepcols = ['ged_sb_dep'] if model['modelname'] != 'fatalities003_joint_narrow_xgb' else ['ln_ged_sb_dep']
+        for step in steps:
+            stepcols.append('step_pred_' + str(step))
         stored_modelname_calib = level + '_' + model['modelname'] + '_calib'
         stored_modelname_test = level + '_' + model['modelname'] + '_test'
         stored_modelname_future = level +  '_' + model['modelname'] + '_f' + str(EndOfHistory)
@@ -107,14 +107,14 @@ def RetrieveStoredPredictions(ModelList, steps, EndOfHistory, dev_id, level, get
 #    return (ModelList)
 
     # Calibration
-def CalibratePredictions(ModelList, FutureStart, steps):
+def CalibratePredictions(ModelList, steps, FutureStart=0):
     '''
     Function that adds dfs with calibrated predictions to ModelList
     '''
 
     print('Calibrating models')
 
-    stepcols = ['ln_ged_sb_dep']
+    stepcols = ['ged_sb_dep']
     for step in steps:
         stepcols.append('step_pred_' + str(step))
         
@@ -123,18 +123,17 @@ def CalibratePredictions(ModelList, FutureStart, steps):
         model['test_df_cal_expand'] = model['predictions_test_df'].copy()
     #    if IncludeFuture:
     #        model['future_df_cal_expand'] = model['predictions_future_df'].copy()
-        model['calib_df_calibrated'] = model['predictions_calib_df'].copy()
-        model['test_df_calibrated'] = model['predictions_test_df'].copy()
+        model['calib_df_cal_gam'] = model['predictions_calib_df'].copy()
+        model['test_df_cal_gam'] = model['predictions_test_df'].copy()
     #    if IncludeFuture:
     #        model['future_df_calibrated'] = model['predictions_future_df'].copy()
-        print(model['modelname'])
+        # print(model['modelname'])
         model['calibration_gams'] = [] # Will hold calibration GAM objects, one for each step
         for col in stepcols[1:]:
             thisstep = int(col[10:])
             thismonth = FutureStart + thisstep
             calibration_gam_dict = {
-                'Step': thisstep,
-                'GAM': []
+                'Step': thisstep
             }
             # Remove from model dfs rows where [col] has infinite values (due to the 2011 split of Sudan)
             df_calib = model['predictions_calib_df'][~np.isinf(model['predictions_calib_df'][col])].fillna(0)
@@ -143,32 +142,32 @@ def CalibratePredictions(ModelList, FutureStart, steps):
     #            df_future = model['predictions_future_df'][~np.isinf(model['predictions_future_df']['step_combined'])].fillna(0)
 
             (model['calib_df_cal_expand'][col],model['expanded'],model['shiftsize']) = mean_sd_calibrated(
-                y_true_calpart = df_calib['ln_ged_sb_dep'], 
+                y_true_calpart = df_calib['ged_sb_dep'],
                 y_pred_calpart = df_calib[col], 
                 y_pred_test = df_calib[col], 
                 shift=False, 
                 threshold = 0
             )
             (model['test_df_cal_expand'][col],model['expanded'],model['shiftsize']) = mean_sd_calibrated(
-                y_true_calpart = df_calib['ln_ged_sb_dep'], 
+                y_true_calpart = df_calib['ged_sb_dep'],
                 y_pred_calpart = df_calib[col], 
                 y_pred_test = df_test[col], 
                 shift=False, 
                 threshold = 0
             )
             if model['modelname'] == 'fat_hh20_Markov_glm' or model['modelname'] == 'fat_hh20_Markov_rf':
-                model['calib_df_calibrated'][col] = model['calib_df_cal_expand'][col]
-                model['test_df_calibrated'][col] = model['test_df_cal_expand'][col]
+                model['calib_df_cal_gam'][col] = model['calib_df_cal_expand'][col]
+                model['test_df_cal_gam'][col] = model['test_df_cal_expand'][col]
             else:
-                (model['calib_df_calibrated'][col], calibration_gam_dict['calibration_GAM']) = gam_calibrated(
-                        y_true_calpart = df_calib['ln_ged_sb_dep'], 
+                (model['calib_df_cal_gam'][col], calibration_gam_dict['calibration_GAM']) = gam_calibrated(
+                        y_true_calpart = df_calib['ged_sb_dep'],
                         y_pred_calpart = df_calib[col], 
                         y_pred_test = df_calib[col], 
                         n_splines = 15
                 )
                 #print(model['calibration_gam'].summary())
-                (model['test_df_calibrated'][col], gam) = gam_calibrated(
-                        y_true_calpart = df_calib['ln_ged_sb_dep'], 
+                (model['test_df_cal_gam'][col], gam) = gam_calibrated(
+                        y_true_calpart = df_calib['ged_sb_dep'],
                         y_pred_calpart = df_calib[col], 
                         y_pred_test = df_test[col], 
                         n_splines = 15
