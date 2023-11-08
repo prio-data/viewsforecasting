@@ -104,7 +104,7 @@ def predictions_pgm_maps_cont():
 
                 title_run = f'{prediction_title_name} in {str(vid2date(month_id))}, {var_name_run}'
                 textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
-                savefile = f'{predictions_pgm_folder}{dev_id}_cm_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
+                savefile = f'{predictions_pgm_folder}{dev_id}_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
                 
                 try:
                     masked=Mapper2(
@@ -199,7 +199,7 @@ def predictions_pgm_maps_dich():
 
                 title_run = f'{prediction_title_name} in {str(vid2date(month_id))}, {var_name_run}'
                 textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
-                savefile = f'{predictions_pgm_folder}{dev_id}_cm_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
+                savefile = f'{predictions_pgm_folder}{dev_id}_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
                 
                 try:
                     masked=Mapper2(
@@ -306,7 +306,7 @@ def predictions_pgm_maps_cont_change1():
                 if 'ged_sb_run_average_6_ln1' or 'ged_ns_run_average_6_ln1' or 'ged_os_run_average_6_ln1' in variable: human_name = 'running average at last month available'
                 title_run = f'Change of prediction from {human_name}, date {str(vid2date(month_id_temp))}, {var_name_run}'
                 textbox = f'Name: {dev_id}_{model_wanted}_{model_attempt},\n{var_run}_at_step{str(step)},\nlast input: {str(vid2date(EndOfHistory))}'
-                savefile = f'{cm_predictions_change_maps_folder}ChangeMaps_{dev_id}_cm_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
+                savefile = f'{cm_predictions_change_maps_folder}ChangeMaps_{dev_id}_{var_run_savefile}_{region_name}_{cmap_run}_step{step}.png'
                 
                 try:
                     masked=Mapper2(
