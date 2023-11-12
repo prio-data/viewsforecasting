@@ -1,7 +1,8 @@
 # model1_config.py
 
 modelname = 'fatalities003_nl_baseline_rf'
-algorithm = 'XGBRFRegressor'
+n_estimators = 100
+n_jobs = 12
 depvar = 'ged_sb_dep'
 data_train = 'baseline003'
 queryset = 'fatalities003_baseline'
