@@ -1,5 +1,7 @@
 # The ModelList is a list of dictionaries that define a range of models for the project
 
+import os
+from importlib.machinery import SourceFileLoader
 import sys
 # sys.path.append('../')
 sys.path.append('../Tools')
@@ -120,7 +122,12 @@ def manual_test():
     reg = FixedFirstSplitRegression()
     reg.fit(X, y)
     reg.predict(X)
-    
+
+
+def load_model_config(model_name):
+    config_path = os.path.join('model_configs', f'{model_name}_config.py')
+    model_config = SourceFileLoader('model_config', config_path).load_module()
+    return model_config
 
 
 
@@ -144,18 +151,19 @@ def DefineEnsembleModels(level):
 #        }
 #        ModelList.append(model)
         
-        model = {
-            'modelname':        'fatalities003_nl_baseline_rf',
-            'algorithm':        XGBRFRegressor(n_estimators=300, n_jobs=nj),
-            'depvar':           'ged_sb_dep',
-            'data_train':       'baseline003',
-            'queryset':         'fatalities003_baseline',
-            'preprocessing':    'float_it',
-            'level':            'cm',
-            'description':      'Baseline model with a few conflict history features as well as log population, random forests regression model.',
-            'long_description':  'A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'
+        model1_config = load_model_config('model1')
+        model1 = {
+            'modelname': model1_config.modelname,
+            'algorithm': model1_config.algorithm,
+            'depvar': model1_config.depvar,
+            'data_train': model1_config.data_train,
+            'queryset': model1_config.queryset,
+            'preprocessing': model1_config.preprocessing,
+            'level': model1_config.level,
+            'description': model1_config.description,
+            'long_description': model1_config.long_description,
         }
-        ModelList.append(model)
+        ModelList.append(model1)
 
         model = {
             'modelname':        'fatalities003_nl_conflicthistory_rf',
