@@ -25,12 +25,6 @@ from lightgbm import LGBMClassifier, LGBMRegressor
 
 from ViewsEstimators import *
 
-import sys
-sys.path.append('../')
-sys.path.append('../Tools')
-sys.path.append('../Intermediates')
-sys.path.append('../SystemUpdates/configs')
-
 class FixedFirstSplitRegression(BaseEstimator):
     """ Regression model which makes the first split according to a specified feature and then splits according to other 
     algorithms. The model optimizes onset-situation predictions by fitting a two-part model and combining predictions:
@@ -135,14 +129,7 @@ def DefineEnsembleModels(level):
     ModelList = []
 
     if level == 'cm':
-        from configs.fat_hh20_Markov_glm import model
-        ModelList.append(model)
-    
-    nj = 12
-      
-    print(model)
-    
-    """ nj = 12
+        nj = 12
 
 #        model = {
 #            'modelname':        'fatalities003_baseline_ons',
@@ -156,9 +143,18 @@ def DefineEnsembleModels(level):
 #            'long_description':  'A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'
 #        }
 #        ModelList.append(model)
-        from configs import fatalities003_nl_conflicthistory_rf
         
-        
+        model = {
+            'modelname':        'fatalities003_nl_baseline_rf',
+            'algorithm':        XGBRFRegressor(n_estimators=300, n_jobs=nj),
+            'depvar':           'ged_sb_dep',
+            'data_train':       'baseline003',
+            'queryset':         'fatalities003_baseline',
+            'preprocessing':    'float_it',
+            'level':            'cm',
+            'description':      'Baseline model with a few conflict history features as well as log population, random forests regression model.',
+            'long_description':  'A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'
+        }
         ModelList.append(model)
 
         model = {
@@ -449,7 +445,7 @@ def DefineEnsembleModels(level):
             'description':      '',
             'long_description': ''
         }
-        #ModelList.append(model) """
+        #ModelList.append(model)
 
     elif level == 'pgm':
 
@@ -475,7 +471,7 @@ def DefineEnsembleModels(level):
         hur_lgbm_regressor = HurdleRegression(clf_name='LGBMClassifier', reg_name='LGBMRegressor',
                                               clf_params=clf_lgbm_params, reg_params=reg_lgbm_params)
 
-    """  model = {
+        model = {
             'modelname': 'fatalities002_pgm_baseline_lgbm',
             'algorithm': lgbm_regressor,
             'depvar': "ln_ged_sb_dep",
@@ -642,10 +638,9 @@ def DefineEnsembleModels(level):
             'long_description':      ''
 
         }
-        ModelList.append(model) """
-    """ else:
+        ModelList.append(model)
+    else:
         raise Exception(f"Unrecognised level {level}: allowed values are cm or pgm")
-        pass """
 
     for model in ModelList:
         model['predstore_calib'] = level + '_' + model['modelname'] + '_calib'
