@@ -7,16 +7,14 @@ from sklearn.base import BaseEstimator
 from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from xgboost import XGBRegressor
-from xgboost import XGBClassifier
-from xgboost import XGBRFRegressor, XGBRFClassifier
-from lightgbm import LGBMClassifier, LGBMRegressor
+from sklearn.datasets import make_regression, make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.dummy import DummyClassifier
 
-#from lightgbm import LGBMClassifier, LGBMRegressor
+from sklearn.ensemble import HistGradientBoostingRegressor, HistGradientBoostingClassifier
+from xgboost import XGBRegressor, XGBClassifier, XGBRFRegressor, XGBRFClassifier
+from lightgbm import LGBMClassifier, LGBMRegressor
 
 
 class HurdleRegression(BaseEstimator):
@@ -30,10 +28,10 @@ class HurdleRegression(BaseEstimator):
         clf_params: dict of parameters to pass to classifier sub-model when initialized
         reg_params: dict of parameters to pass to regression sub-model when initialized
     """
-
+    # Define the constructor method for the class
     def __init__(self,
-                 clf_name: str = 'logistic',
-                 reg_name: str = 'linear',
+                 clf_name: str = 'logistic', # name of the classifier to use
+                 reg_name: str = 'linear', # name of the regressor to use
                  clf_params: Optional[dict] = None,
                  reg_params: Optional[dict] = None):
 
@@ -41,38 +39,54 @@ class HurdleRegression(BaseEstimator):
         self.reg_name = reg_name
         self.clf_params = clf_params
         self.reg_params = reg_params
-        self.clf_fi = []
-        self.reg_fi = []
 
     @staticmethod
-    def _resolve_estimator(func_name: str):
+    def _resolve_estimator(estimator_name: str):
         """ Lookup table for supported estimators.
         This is necessary because sklearn estimator default arguments
         must pass equality test, and instantiated sub-estimators are not equal. """
 
-        funcs = {'linear': LinearRegression(),
-                 'logistic': LogisticRegression(solver='liblinear'),
-                 'LGBMRegressor': LGBMRegressor(n_estimators=250),
-                 'LGBMClassifier': LGBMClassifier(n_estimators=250),
-                 'RFRegressor': XGBRFRegressor(n_estimators=250,n_jobs=-2),
-                 'RFClassifier': XGBRFClassifier(n_estimators=250,n_jobs=-2),
-                 'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
-                 'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
-                 'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=-2),
-                 'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=-2),
-                 'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
-                 'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
+        estimators = {
+                    'logistic': LogisticRegression(solver='liblinear'),
+                    'linear': LinearRegression(),
+                    
+                    'LGBMClassifier': LGBMClassifier(n_estimators=250),
+                    'LGBMRegressor': LGBMRegressor(n_estimators=250),
+
+                    'RFClassifier': XGBRFClassifier(n_estimators=250,n_jobs=-2),
+                    'RFRegressor': XGBRFRegressor(n_estimators=250,n_jobs=-2),
+
+                    'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
+                    'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
+
+                    'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=-2),
+                    'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=-2),
+
+                    'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
+                    'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
                 }
+        estimator = estimators.get(estimator_name)
 
-        return funcs[func_name]
+        return estimator
 
+    # Define the fit method for the class to train the model
     def fit(self,
             X: Union[np.ndarray, pd.DataFrame],
             y: Union[np.ndarray, pd.Series]):
-        X, y = check_X_y(X, y, dtype=None,
+        
+        # Use sklearn fucntionality to check X and y for consistent length and enforce X to be 2D and y 1D. 
+        # By default, X is checked to be non-empty and containing only finite values.
+        # Standard input checks are also applied to y, such as checking that y
+        # does not have np.nan or np.inf targets.
+        X, y = check_X_y(X, 
+                         y, 
+                         dtype=None,
                          accept_sparse=False,
                          accept_large_sparse=False,
-                         force_all_finite='allow-nan')
+                         force_all_finite=True) #'allow-nan'
+        
+        # Set the number of features seen during fit
+        self.n_features_in_ = X.shape[1]
 
         if X.shape[1] < 2:
             raise ValueError('Cannot fit model when n_features = 1')
@@ -80,44 +94,77 @@ class HurdleRegression(BaseEstimator):
         self.clf_ = self._resolve_estimator(self.clf_name)
         if self.clf_params:
             self.clf_.set_params(**self.clf_params)
-        self.clf_.fit(X, y > 0)
-        self.clf_fi = self.clf_.feature_importances_
+        if len(np.unique(y)) > 1:
+            self.clf_.fit(X, y > 0)
+        else:
+            # Handle the case where y has only one unique value
+            self.clf_ = DummyClassifier(strategy='most_frequent')
+            self.clf_.fit(X, y > 0)
 
         self.reg_ = self._resolve_estimator(self.reg_name)
         if self.reg_params:
             self.reg_.set_params(**self.reg_params)
         self.reg_.fit(X[y > 0], y[y > 0])
-        self.reg_fi = self.reg_.feature_importances_
 
         self.is_fitted_ = True
         return self
-
-
-#    def predict(self, X: Union[np.ndarray, pd.DataFrame]):
-    def predict_bck(self, X: Union[np.ndarray, pd.DataFrame]):
+    
+    def predict(self, X: Union[np.ndarray, pd.DataFrame]):
         """ Predict combined response using binary classification outcome """
         X = check_array(X, accept_sparse=False, accept_large_sparse=False)
         check_is_fitted(self, 'is_fitted_')
         return self.clf_.predict(X) * self.reg_.predict(X)
 
-    def predict(self, X: Union[np.ndarray, pd.DataFrame]):
-#    def predict_expected_value(self, X: Union[np.ndarray, pd.DataFrame]):
+    def predict_expected_value(self, X: Union[np.ndarray, pd.DataFrame]):
         """ Predict combined response using probabilistic classification outcome """
         X = check_array(X, accept_sparse=False, accept_large_sparse=False)
         check_is_fitted(self, 'is_fitted_')
         return self.clf_.predict_proba(X)[:, 1] * self.reg_.predict(X)
 
-def manual_test():
+
+def manual_test(clf_name:str='logistic', reg_name:str='linear'):
     """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
-    check_estimator(HurdleRegression)
-    from sklearn.datasets import make_regression
+    reg = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
+    check_estimator(reg)
     X, y = make_regression()
-    reg = HurdleRegression()
     reg.fit(X, y)
     reg.predict(X)
+
+
+def test_hurdle_regression(clf_name:str='logistic', reg_name:str='linear'):
+    """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
+
+    # Create a synthetic regression dataset
+    X_reg, y_reg = make_regression(n_samples=1000, n_features=20, n_informative=2, random_state=42)
+
+    # Create a synthetic classification dataset
+    X_clf, y_clf = make_classification(n_samples=1000, n_features=20, n_informative=2, n_redundant=10, random_state=42)
+
+    # Combine the two datasets
+    X = np.hstack([X_clf, X_reg])
+    y = y_clf * y_reg
+
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
+    # Instantiate a HurdleRegression object
+    hr = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
+    check_estimator(hr)
+    
+    # Fit the model to the data
+    hr.fit(X_train, y_train)
 
+    # Make predictions
+    y_pred = hr.predict(X_test)
 
+    # Evaluate the model
+    print('Mean Squared Error:', mean_squared_error(y_test, y_pred))
+    
+    # Check if predictions have the same shape as y
+    print(f"Shape of y_pred: {y_pred.shape}")
+    print(f"Shape of y_test: {y_test.shape}")
 
-#if __name__ == '__main__':
-#    manual_test()
+    assert y_pred.shape == y_test.shape, "Predictions and y do not have the same shape"
+
+    # Check if all predictions are either 0 or 1 (since it's a binary prediction) 
+    print(f"Unique values in y_pred: {np.unique(y_pred)}")
