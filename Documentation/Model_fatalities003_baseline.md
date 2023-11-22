@@ -1,0 +1,8 @@
+| Model                  | Included variable name   | Database variable name          | Transformations                                                                                                                     |
+|:-----------------------|:-------------------------|:--------------------------------|:------------------------------------------------------------------------------------------------------------------------------------|
+| fatalities003_baseline | 'ged_sb_dep'             | 'ged2_cm.ged_sb_best_sum_nokgi' | ["'missing.fill'"]                                                                                                                  |
+| fatalities003_baseline | 'ged_sb'                 | 'ged2_cm.ged_sb_best_sum_nokgi' | ["'missing.fill'"]                                                                                                                  |
+| fatalities003_baseline | 'decay_ged_sb_5'         | 'ged2_cm.ged_sb_best_sum_nokgi' | ["'missing.replace_na'", "'temporal.decay'", "'temporal.time_since'", "'bool.gte'", "'missing.replace_na'"]                         |
+| fatalities003_baseline | 'decay_ged_os_5'         | 'ged2_cm.ged_os_best_sum_nokgi' | ["'missing.replace_na'", "'temporal.decay'", "'temporal.time_since'", "'bool.gte'", "'missing.replace_na'"]                         |
+| fatalities003_baseline | 'splag_1_decay_ged_sb_5' | 'ged2_cm.ged_sb_best_sum_nokgi' | ["'missing.replace_na'", "'spatial.countrylag'", "'temporal.decay'", "'temporal.time_since'", "'bool.gte'", "'missing.replace_na'"] |
+| fatalities003_baseline | 'wdi_sp_pop_totl'        | 'wdi_cy.wdi_sp_pop_totl'        | ["'missing.replace_na'", "'missing.fill'", "'temporal.tlag'", "'missing.fill'"]                                                     |
