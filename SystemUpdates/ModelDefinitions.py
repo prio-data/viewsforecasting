@@ -1,23 +1,10 @@
 # The ModelList is a list of dictionaries that define a range of models for the project
 
-import sys
-# sys.path.append('../')
-sys.path.append('../Tools')
-#sys.path.append('../Intermediates')
-# sklearn
+import settings
+
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble import AdaBoostRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn import preprocessing
-from sklearn.linear_model import ElasticNet
-from sklearn.datasets import make_regression
-
 from xgboost import XGBRegressor, XGBRFRegressor
-
 from lightgbm import LGBMRegressor
 
 from Tools.ViewsEstimators import HurdleRegression

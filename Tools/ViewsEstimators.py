@@ -17,14 +17,14 @@ from xgboost import XGBRegressor, XGBClassifier, XGBRFRegressor, XGBRFClassifier
 from lightgbm import LGBMClassifier, LGBMRegressor
 
 
-class HurdleRegression(BaseEstimator):
+class HurdleRegressionWithOptionalFixedSplit(BaseEstimator):
     """ Regression model which handles excessive zeros by fitting a two-part model and combining predictions:
             1) binary classifier
             2) continuous regression
     Implementeted as a valid sklearn estimator, so it can be used in pipelines and GridSearch objects.
     Args:
-        clf_name: currently supports either 'logistic' or 'LGBMClassifier'
-        reg_name: currently supports either 'linear' or 'LGBMRegressor'
+        clf_name: name of a classifier sub-model to use
+        reg_name: name of a regression sub-model to use
         clf_params: dict of parameters to pass to classifier sub-model when initialized
         reg_params: dict of parameters to pass to regression sub-model when initialized
     """
@@ -72,8 +72,9 @@ class HurdleRegression(BaseEstimator):
     # Define the fit method for the class to train the model
     def fit(self,
             X: Union[np.ndarray, pd.DataFrame],
-            y: Union[np.ndarray, pd.Series]):
-        
+            y: Union[np.ndarray, pd.Series],
+            indicator: Optional[Union[np.ndarray, pd.Series]] = None):
+
         # Use sklearn fucntionality to check X and y for consistent length and enforce X to be 2D and y 1D. 
         # By default, X is checked to be non-empty and containing only finite values.
         # Standard input checks are also applied to y, such as checking that y
@@ -92,8 +93,10 @@ class HurdleRegression(BaseEstimator):
             raise ValueError('Cannot fit model when n_features = 1')
 
         self.clf_ = self._resolve_estimator(self.clf_name)
+        
         if self.clf_params:
             self.clf_.set_params(**self.clf_params)
+        
         if len(np.unique(y)) > 1:
             self.clf_.fit(X, y > 0)
         else:
@@ -101,34 +104,90 @@ class HurdleRegression(BaseEstimator):
             self.clf_ = DummyClassifier(strategy='most_frequent')
             self.clf_.fit(X, y > 0)
 
-        self.reg_ = self._resolve_estimator(self.reg_name)
-        if self.reg_params:
-            self.reg_.set_params(**self.reg_params)
-        self.reg_.fit(X[y > 0], y[y > 0])
+        # Fit regressor based on whether an indicator is provided
+        if indicator is not None:
+            self.reg_0 = self._resolve_estimator(self.reg_name)
+            self.reg_1 = self._resolve_estimator(self.reg_name)
+            if self.reg_params:
+                self.reg_0.set_params(**self.reg_params)
+                self.reg_1.set_params(**self.reg_params)
+
+            self.reg_0.fit(X[(y > 0) & (indicator == 0)], y[(y > 0) & (indicator == 0)])
+            self.reg_1.fit(X[(y > 0) & (indicator == 1)], y[(y > 0) & (indicator == 1)])
+        else:
+            # Initialize and fit a single regressor when no indicator is provided
+            self.reg_ = self._resolve_estimator(self.reg_name)
+            if self.reg_params:
+                self.reg_.set_params(**self.reg_params)
+            self.reg_.fit(X[y > 0], y[y > 0])
 
         self.is_fitted_ = True
         return self
     
-    def predict(self, X: Union[np.ndarray, pd.DataFrame]):
+    def predict(self, 
+                X: Union[np.ndarray, pd.DataFrame],
+                indicator: Optional[Union[np.ndarray, pd.Series]] = None):
         """ Predict combined response using binary classification outcome """
         X = check_array(X, accept_sparse=False, accept_large_sparse=False)
         check_is_fitted(self, 'is_fitted_')
-        return self.clf_.predict(X) * self.reg_.predict(X)
+    
+        if indicator is not None:
+            # Use different regressors for prediction based on the indicator
+            pred_0 = self.clf_.predict(X[indicator == 0]) * self.reg_0.predict(X[indicator == 0])
+            pred_1 = self.clf_.predict(X[indicator == 1]) * self.reg_1.predict(X[indicator == 1])
 
-    def predict_expected_value(self, X: Union[np.ndarray, pd.DataFrame]):
+            # Combine the predictions
+            pred = np.zeros(X.shape[0])
+            pred[indicator == 0] = pred_0
+            pred[indicator == 1] = pred_1
+        else:
+            pred = self.clf_.predict(X) * self.reg_.predict(X)
+
+        return pred
+
+    def predict_expected_value(self, 
+                               X: Union[np.ndarray, pd.DataFrame], 
+                               indicator: Optional[Union[np.ndarray, pd.Series]] = None):
         """ Predict combined response using probabilistic classification outcome """
         X = check_array(X, accept_sparse=False, accept_large_sparse=False)
         check_is_fitted(self, 'is_fitted_')
-        return self.clf_.predict_proba(X)[:, 1] * self.reg_.predict(X)
+        
+        if indicator is not None:
+            # Use different regressors for prediction based on the indicator
+            pred_0 = self.clf_.predict_proba(X[indicator == 0])[:, 1] * self.reg_0.predict(X[indicator == 0])
+            pred_1 = self.clf_.predict_proba(X[indicator == 1])[:, 1] * self.reg_1.predict(X[indicator == 1])
 
+            # Combine the predictions
+            pred = np.zeros(X.shape[0])
+            pred[indicator == 0] = pred_0
+            pred[indicator == 1] = pred_1
+        else:
+            pred = self.clf_.predict_proba(X)[:, 1] * self.reg_.predict(X)
+
+        return pred
+    
 
 def manual_test(clf_name:str='logistic', reg_name:str='linear'):
     """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
-    reg = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
+    # Test without indicator
+    reg = HurdleRegressionWithOptionalFixedSplit(clf_name=clf_name, reg_name=reg_name)
     check_estimator(reg)
-    X, y = make_regression()
+
+    # Create a regression dataset
+    X, y = make_regression(n_samples=1000, n_features=20, noise=0.1)
     reg.fit(X, y)
     reg.predict(X)
+
+    # Test with indicator
+    # Create a classification dataset for the indicator
+    _, indicator = make_classification(n_samples=1000, n_features=20, n_classes=2, n_clusters_per_class=1)
+
+    # Fit and predict with the indicator
+    reg.fit(X, y, indicator)
+    reg.predict(X, indicator)
+
+    print("Manual test passed for both scenarios (with and without indicator).")
+
 
 
 def test_hurdle_regression(clf_name:str='logistic', reg_name:str='linear'):
@@ -148,7 +207,7 @@ def test_hurdle_regression(clf_name:str='logistic', reg_name:str='linear'):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
     # Instantiate a HurdleRegression object
-    hr = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
+    hr = HurdleRegressionWithOptionalFixedSplit(clf_name=clf_name, reg_name=reg_name)
     check_estimator(hr)
     
     # Fit the model to the data
