@@ -1,128 +1,14 @@
 # The ModelList is a list of dictionaries that define a range of models for the project
 
-import sys
-# sys.path.append('../')
-sys.path.append('../Tools')
-#sys.path.append('../Intermediates')
-# sklearn
+import settings
+
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble import AdaBoostRegressor
-from sklearn import linear_model
-from sklearn.metrics import mean_squared_error
-from sklearn import preprocessing
-from sklearn.linear_model import ElasticNet
-from sklearn.datasets import make_regression
+from xgboost import XGBRegressor, XGBRFRegressor
+from lightgbm import LGBMRegressor
 
-from xgboost import XGBRegressor
-from xgboost import XGBClassifier
-from xgboost import XGBRFRegressor, XGBRFClassifier
-
-from lightgbm import LGBMClassifier, LGBMRegressor
-
-from ViewsEstimators import *
-
-class FixedFirstSplitRegression(BaseEstimator):
-    """ Regression model which makes the first split according to a specified feature and then splits according to other 
-    algorithms. The model optimizes onset-situation predictions by fitting a two-part model and combining predictions:
-            1) binary classifier
-            2) continuous regression
-    Implementeted as a valid sklearn estimator, so it can be used in pipelines and GridSearch objects.
-    Args:
-        ones_name: model to estimate if z variable is one (e.g. "onset")
-        zeros_name: model to estimate if z variable is zeros (e.g. "continuation")
-        ones_params: dict of parameters to pass to "ones" sub-model when initialized
-        zeros_params: dict of parameters to pass to "zeros" sub-model when initialized
-    """
-
-    def __init__(self,
-                 ones_name: str = 'RFRegressor',
-                 zeros_name: str = 'RFRegressor',
-                 ones_indicator: str = '',
-                 ones_params: Optional[dict] = None,
-                 zeros_params: Optional[dict] = None):
-
-        self.ones_name = ones_name
-        self.zeros_name = zeros_name
-        self.ones_indicator = ones_indicator
-        self.ones_params = ones_params
-        self.zeros_params = zeros_params
-        self.ones_fi = []
-        self.zeros_fi = []
-
-    @staticmethod
-    def _resolve_estimator(func_name: str):
-        """ Lookup table for supported estimators.
-        This is necessary because sklearn estimator default arguments
-        must pass equality test, and instantiated sub-estimators are not equal. """
-
-        funcs = {'linear': LinearRegression(),
-                 'logistic': LogisticRegression(solver='liblinear'),
-                 'LGBMRegressor': LGBMRegressor(n_estimators=250),
-                 'LGBMClassifier': LGBMClassifier(n_estimators=250),
-                 'RFRegressor': XGBRFRegressor(n_estimators=250,n_jobs=-2),
-                 'RFClassifier': XGBRFClassifier(n_estimators=250,n_jobs=-2),
-                 'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
-                 'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
-                 'XGBRegressor': XGBRegressor(n_estimators=100,learning_rate=0.05,n_jobs=-2),
-                 'XGBClassifier': XGBClassifier(n_estimators=100,learning_rate=0.05,n_jobs=-2),
-                 'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
-                 'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
-                }
-
-        return funcs[func_name]
-
-    def fit(self,
-            X: Union[np.ndarray, pd.DataFrame],
-            y: Union[np.ndarray, pd.Series],
-            z: Union[np.ndarray, pd.Series]):
-        X, y = check_X_y(X, y, dtype=None,
-                         accept_sparse=False,
-                         accept_large_sparse=False,
-                         force_all_finite='allow-nan')
-        z = X[ones_indicator]
-
-        if X.shape[1] < 2:
-            raise ValueError('Cannot fit model when n_features = 1')
-
-        self.ones_ = self._resolve_estimator(self.ones_name)
-        if self.ones_params:
-            self.ones_.set_params(**self.ones_params)
-        self.ones_.fit(X[z==1], y[z==1])
-        self.ones_fi = self.ones_.feature_importances_
-
-        self.zeros_ = self._resolve_estimator(self.zeros_name)
-        if self.zeros_params:
-            self.zeros_.set_params(**self.zeros_params)
-        self.zeros_.fit(X[z==0], y[z==0])
-        self.zeros_fi = self.zeros_.feature_importances_
-
-        self.is_fitted_ = True
-        return self
-
-
-    def predict(self, X: Union[np.ndarray, pd.DataFrame]):
-#    def predict_expected_value(self, X: Union[np.ndarray, pd.DataFrame]):
-        """ Predict combined response using probabilistic classification outcome """
-        X = check_array(X, accept_sparse=False, accept_large_sparse=False)
-        check_is_fitted(self, 'is_fitted_')
-#        predict = 
-        return self.clf_.predict_proba(X)[:, 1] * self.reg_.predict(X)
-
-def manual_test():
-    """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
-    check_estimator(HurdleRegression)
-    from sklearn.datasets import make_regression
-    X, y = make_regression()
-    reg = FixedFirstSplitRegression()
-    reg.fit(X, y)
-    reg.predict(X)
-    
-
-
+from Tools.models.hurdle_regression_model import HurdleRegression
+from Tools.models.fixed_first_split_regression_model import FixedFirstSplitRegression
 
 
 def DefineEnsembleModels(level):
@@ -131,18 +17,18 @@ def DefineEnsembleModels(level):
     if level == 'cm':
         nj = 12
 
-#        model = {
-#            'modelname':        'fatalities003_baseline_ons',
-#            'algorithm':        FixedFirstSplitRegression(ones_name='LGBMClassifier', zeros_name='LGBMRegressor',onset_indicator = ''),
-#            'depvar':           'ln_ged_sb_dep',
-#            'data_train':       'baseline002',
-#            'queryset':         'fatalities002_baseline',
-#            'preprocessing':    'float_it',
-#            'level':            'cm',
-#            'description':      'Baseline model with a few conflict history features as well as log population, random forests regression model.',
-#            'long_description':  'A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'
-#        }
-#        ModelList.append(model)
+        #model = {
+        #    'modelname':        'fatalities003_baseline_ons',
+        #    'algorithm':        FixedFirstSplitRegression(ones_name='LGBMClassifier', zeros_name='LGBMClassifier',onset_indicator = 'split_by'),
+        #    'depvar':           'ln_ged_sb_dep',
+        #    'data_train':       'baseline002',
+        #    'queryset':         'fatalities002_baseline',
+        #    'preprocessing':    'float_it',
+        #    'level':            'cm',
+        #    'description':      'Baseline model with a few conflict history features as well as log population, random forests regression model.',
+        #    'long_description':  'A very simple model with only five data columns (each column representing one feature): The number of fatalities in the same country at $t-1$, three decay functions of time since there was at least five fatalities in a single month, for each of the UCDP conflict types -- state-based, one-sided, or non-state conflict -- and log population size (Hegre2020RP,Pettersson2021JPR).The features in the baseline are included in all the models described below. This ensures that all models in the ensemble provides at least moderately good predictions, while guaranteeing diversity in feature sets and modelling approaches.'
+        #}
+        #ModelList.append(model)
         
         model = {
             'modelname':        'fatalities003_nl_baseline_rf',
