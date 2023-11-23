@@ -56,8 +56,8 @@ class HurdleRegression(BaseEstimator):
                     'LGBMRegressor': LGBMRegressor(n_estimators=250, random_state=random_state),
                     'LGBMClassifier': LGBMClassifier(n_estimators=250, random_state=random_state),
 
-                    'RFRegressor': RandomForestRegressor(n_estimators=250, random_state=random_state),
-                    'RFClassifier': RandomForestClassifier(n_estimators=250, random_state=random_state),
+                    'RFRegressor': RandomForestRegressor(n_estimators=250, n_jobs=-2, random_state=random_state),
+                    'RFClassifier': RandomForestClassifier(n_estimators=250, n_jobs=-2, random_state=random_state),
 
                     'XGBRFRegressor': XGBRFRegressor(n_estimators=100, learning_rate=0.05, random_state=random_state),
                     'XGBRFClassifier': XGBRFClassifier(n_estimators=100, learning_rate=0.05, random_state=random_state),
@@ -65,8 +65,8 @@ class HurdleRegression(BaseEstimator):
                     'GBMRegressor': GradientBoostingRegressor(n_estimators=200, random_state=random_state),
                     'GBMClassifier': GradientBoostingClassifier(n_estimators=200, random_state=random_state),
 
-                    'XGBRegressor': XGBRegressor(n_estimators=100, learning_rate=0.05, random_state=random_state),
-                    'XGBClassifier': XGBClassifier(n_estimators=100, learning_rate=0.05, random_state=random_state),
+                    'XGBRegressor': XGBRegressor(n_estimators=100, learning_rate=0.05, n_jobs=-2, random_state=random_state),
+                    'XGBClassifier': XGBClassifier(n_estimators=100, learning_rate=0.05, n_jobs=-2, random_state=random_state),
                     
                     'HGBRegressor': HistGradientBoostingRegressor(max_iter=200, random_state=random_state),
                     'HGBClassifier': HistGradientBoostingClassifier(max_iter=200, random_state=random_state),
