@@ -4,21 +4,14 @@ import pandas as pd
 
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.base import BaseEstimator
-from sklearn.utils.estimator_checks import check_estimator
 from sklearn.utils.validation import check_X_y, check_array, check_is_fitted
 
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingRegressor, GradientBoostingClassifier, HistGradientBoostingRegressor, HistGradientBoostingClassifier
-from sklearn.datasets import make_regression, make_classification
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
 
 from xgboost import XGBRegressor, XGBClassifier, XGBRFRegressor, XGBRFClassifier
 from lightgbm import LGBMClassifier, LGBMRegressor
 
 
-####################
-# HurdleRegression #
-####################
 class HurdleRegression(BaseEstimator):
     """ Regression model which handles excessive zeros by fitting a two-part model and combining predictions:
             1) binary classifier
@@ -71,6 +64,9 @@ class HurdleRegression(BaseEstimator):
                     'HGBClassifier': HistGradientBoostingClassifier(max_iter=200, random_state=random_state),
                 }
         estimator = estimators.get(estimator_name)
+        
+        if estimator is None:
+            raise ValueError(f"Unknown estimator: {estimator_name}")
 
         return estimator
 
@@ -94,7 +90,7 @@ class HurdleRegression(BaseEstimator):
         
         # Instantiate the classifier
         self.clf_ = self._resolve_estimator(self.clf_name, random_state=42)
-
+        
         # If defined, add parameters to the classifier
         if self.clf_params:
             self.clf_.set_params(**self.clf_params)
@@ -172,155 +168,3 @@ class HurdleRegression(BaseEstimator):
         combined_predictions = clf_predictions_bin * reg_predictions
 
         return combined_predictions
-
-
-def test_hurdle_regression(clf_name:str='logistic', 
-                           reg_name:str='linear'):
-    """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset resembling distribution for hurdle regression."""
-    # Create a synthetic dataset that simulates dataset with many zeroes
-    X_reg, y_reg = make_regression(n_samples=1000, n_features=20)
-    X_clf, y_clf = make_classification(n_samples=1000, n_features=20)
-    X = np.hstack([X_clf, X_reg])
-    y = y_clf * y_reg
-
-    # Split the data into training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-
-    # Instantiate a HurdleRegression object
-    hr = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
-
-    # Fit the model to the data
-    hr.fit(X_train, y_train)
-
-    # Make predictions with probability of positive class from the classifier
-    y_pred = hr.predict(X_test)
-    print('Mean Squared Error for combined predictions with positive class probability from the classifier:', int(mean_squared_error(y_test, y_pred)))
-    assert y_pred.shape == y_test.shape, "Predictions and y do not have the same shape"
-
-    # Make predictions with binary outcome from the classifier
-    y_pred_bin = hr.predict_bin(X_test)
-    print('Mean Squared Error or combined predictions with binary outcome from the classifier:', int(mean_squared_error(y_test, y_pred_bin)))
-    assert y_pred_bin.shape == y_test.shape, "Probability predictions and y do not have the same shape"
-
-
-############ WIP ############
-# FixedFirstSplitRegression #
-############ WIP ############
-class FixedFirstSplitRegression(BaseEstimator):
-    def __init__(self,
-                 ones_model_name: str = 'RFRegressor',
-                 zeros_model_name: str = 'RFRegressor',
-                 ones_model_params: Optional[dict] = None,
-                 zeros_model_params: Optional[dict] = None,
-                 split_by: str = ''):
-        
-        self.ones_model_name = ones_model_name
-        self.zeros_model_name = zeros_model_name
-        self.ones_model_params = ones_model_params
-        self.zeros_model_params = zeros_model_params
-        self.split_by = split_by
-
-        self.ones_ = None
-        self.zeros_ = None
-
-    @staticmethod
-    def _resolve_estimator(estimator_name: str):
-        funcs = {
-            'linear': LinearRegression(),
-            'logistic': LogisticRegression(solver='liblinear'),
-
-            'LGBMRegressor': LGBMRegressor(n_estimators=250),
-            'LGBMClassifier': LGBMClassifier(n_estimators=250),
-
-            'RFRegressor': RandomForestRegressor(n_estimators=250),
-            'RFClassifier': RandomForestClassifier(n_estimators=250),
-
-            'GBMRegressor': GradientBoostingRegressor(n_estimators=200),
-            'GBMClassifier': GradientBoostingClassifier(n_estimators=200),
-
-            'XGBRegressor': XGBRegressor(n_estimators=100, learning_rate=0.05),
-            'XGBClassifier': XGBClassifier(n_estimators=100, learning_rate=0.05),
-
-            'HGBRegressor': HistGradientBoostingRegressor(max_iter=200),
-            'HGBClassifier': HistGradientBoostingClassifier(max_iter=200),
-        }
-
-        return funcs[estimator_name]
-
-    def fit(self, 
-            X: Union[np.ndarray, pd.DataFrame], 
-            y: Union[np.ndarray, pd.Series],
-            ):
-    
-        """ Fit the model based on the indicator values. """
-        if isinstance(X, np.ndarray):
-            X = pd.DataFrame(X)
-        if self.split_by not in X.columns:
-            raise ValueError(f"split_by column '{self.split_by}' not found in X")
-
-        split_indicator = X[self.split_by].astype(int)
-        X = X.drop(columns=[self.split_by])
-        X, y = check_X_y(X, y, accept_sparse=False, force_all_finite='allow-nan', dtype=np.float64)
-
-        self.ones_ = self._resolve_estimator(self.ones_model_name)
-        if self.ones_model_params:
-            self.ones_.set_params(**self.ones_model_params)
-        self.ones_.fit(X[split_indicator == 1], y[split_indicator == 1])
-
-        self.zeros_ = self._resolve_estimator(self.zeros_model_name)
-        if self.zeros_model_params:
-            self.zeros_.set_params(**self.zeros_model_params)
-        self.zeros_.fit(X[split_indicator == 0], y[split_indicator == 0])
-
-        self.is_fitted_ = True
-        return self
-
-    def predict(self, X: Union[np.ndarray, pd.DataFrame]):
-        """ Predict the response based on the split_by indicator values. """
-        if isinstance(X, np.ndarray):
-            X = pd.DataFrame(X)
-
-        check_is_fitted(self, 'is_fitted_')
-
-        if self.split_by not in X:
-            raise ValueError(f"split_by column '{self.split_by}' not found in X")
-
-        split_indicator = X[self.split_by].astype(int)
-        X = X.drop(columns=[self.split_by])
-
-        pred_ones = self.ones_.predict(X[split_indicator == 1])
-        pred_zeros = self.zeros_.predict(X[split_indicator == 0])
-
-        pred = np.zeros(X.shape[0])
-        pred[split_indicator == 1] = pred_ones
-        pred[split_indicator == 0] = pred_zeros
-
-      # Create a DataFrame with predictions and split_by values
-        result = pd.DataFrame({
-            'prediction': pred,
-            'split_by': split_indicator
-        })
-
-        return result
-
-def test_fixed_first_split_regression(zeros_model_name:str='linear', 
-                                      ones_model_name:str='linear', 
-                                      split_by = "split_by"):
-    """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
-    # Create a regression dataset
-    X, y = make_classification(n_samples=100, n_features=20)
-
-    # Convert to DataFrame and add a 'split_by' column
-    X = pd.DataFrame(X, columns=[f'feature_{i}' for i in range(X.shape[1])])
-    X['split_by'] = np.random.randint(0, 2, len(y))  # Random 0s and 1s for the indicator
-
-    # Initialize and fit the FixedFirstSplitRegression model
-    reg = FixedFirstSplitRegression(zeros_model_name=zeros_model_name, 
-                                    ones_model_name=ones_model_name, 
-                                    split_by=split_by)
-
-    reg.fit(X, y)
-
-    # Make predictions
-    result = reg.predict(X)
-    print("Predictions:", result)
