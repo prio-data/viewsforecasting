@@ -158,9 +158,9 @@ class HurdleRegression(BaseEstimator):
         check_is_fitted(self, 'is_fitted_')
 
         if X.shape[1] != self.n_features_in_:
-            raise ValueError(f"Number of features of the model must match the input.
-                             Model n_features_in_ is {self.n_features_in_} 
-                             and input n_features is {X.shape[1]}")
+            raise ValueError("Number of features of the model must match the input."
+                             f"Model n_features_in_ is {self.n_features_in_}" 
+                             f"and input n_features is {X.shape[1]}")
 
         # Predict with the classifier - take classes, 0 or 1
         clf_predictions_bin = self.clf_.predict(X)
@@ -176,8 +176,8 @@ class HurdleRegression(BaseEstimator):
 
 def test_hurdle_regression(clf_name:str='logistic', 
                            reg_name:str='linear'):
-    """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
-    # Create a synthetic dataset that simlutaes a datasets with many zeroes
+    """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset resembling distribution for hurdle regression."""
+    # Create a synthetic dataset that simulates dataset with many zeroes
     X_reg, y_reg = make_regression(n_samples=1000, n_features=20)
     X_clf, y_clf = make_classification(n_samples=1000, n_features=20)
     X = np.hstack([X_clf, X_reg])
@@ -188,20 +188,19 @@ def test_hurdle_regression(clf_name:str='logistic',
 
     # Instantiate a HurdleRegression object
     hr = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
-    #check_estimator(hr)
 
     # Fit the model to the data
     hr.fit(X_train, y_train)
 
-    # Make predictions
+    # Make predictions with probability of positive class from the classifier
     y_pred = hr.predict(X_test)
-    print('Mean Squared Error:', int(mean_squared_error(y_test, y_pred)))
+    print('Mean Squared Error for combined predictions with positive class probability from the classifier:', int(mean_squared_error(y_test, y_pred)))
     assert y_pred.shape == y_test.shape, "Predictions and y do not have the same shape"
 
-    # Make predictions
-    y_pred_prob = hr.predict_expected_value(X_test)
-    print('Mean Squared Error for multiplies probabilities:', int(mean_squared_error(y_test, y_pred_prob)))
-    assert y_pred_prob.shape == y_test.shape, "Probability predictions and y do not have the same shape"
+    # Make predictions with binary outcome from the classifier
+    y_pred_bin = hr.predict_bin(X_test)
+    print('Mean Squared Error or combined predictions with binary outcome from the classifier:', int(mean_squared_error(y_test, y_pred_bin)))
+    assert y_pred_bin.shape == y_test.shape, "Probability predictions and y do not have the same shape"
 
 
 ############ WIP ############
