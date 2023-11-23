@@ -94,7 +94,7 @@ class HurdleRegression(BaseEstimator):
         # Set the number of features seen during fit
         self.n_features_in_ = X.shape[1]
 
-        if X.shape[1] < 2:
+        if X.shape[1] == 1:
             raise ValueError('Cannot fit model when n_features = 1')
 
         # Instantiate the classifier
