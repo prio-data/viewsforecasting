@@ -7,7 +7,8 @@ from sklearn.ensemble import GradientBoostingRegressor
 from xgboost import XGBRegressor, XGBRFRegressor
 from lightgbm import LGBMRegressor
 
-from Tools.ViewsEstimators import HurdleRegression, FixedFirstSplitRegression
+from Tools.models.hurdle_regression_model import HurdleRegression
+from Tools.models.fixed_first_split_regression_model import FixedFirstSplitRegression
 
 
 def DefineEnsembleModels(level):
