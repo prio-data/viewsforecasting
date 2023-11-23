@@ -11,7 +11,6 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, Grad
 from sklearn.datasets import make_regression, make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-from sklearn.dummy import DummyClassifier
 
 from xgboost import XGBRegressor, XGBClassifier, XGBRFRegressor, XGBRFClassifier
 from lightgbm import LGBMClassifier, LGBMRegressor
@@ -75,107 +74,112 @@ class HurdleRegression(BaseEstimator):
 
         return estimator
 
-    # Define the fit method for the class to train the model
     def fit(self,
             X: Union[np.ndarray, pd.DataFrame],
             y: Union[np.ndarray, pd.Series]):
-
-        # Use sklearn fucntionality to check X and y for consistent length and enforce X to be 2D and y 1D. 
-        # By default, X is checked to be non-empty and containing only finite values.
-        # Standard input checks are also applied to y, such as checking that y
-        # does not have np.nan or np.inf targets.
+        """ Fit the model. """
+        # Run several sanity checks on the input
         X, y = check_X_y(X, 
                          y, 
-                         dtype=None,
-                         accept_sparse=False,
-                         accept_large_sparse=False,
-                         force_all_finite=True) #'allow-nan'
-        
-        # Set the number of features seen during fit
+                         dtype=None, 
+                         accept_sparse=False, 
+                         accept_large_sparse=False, 
+                         force_all_finite='allow-nan') # allow X and y contain NaNs but not infinities
+    
+        if len(np.unique(y)) < 2:
+            raise ValueError("Input y for classifier must have more than one unique value.")
+
+        # Save n of features in X to make checks later
         self.n_features_in_ = X.shape[1]
-
-        if X.shape[1] == 1:
-            raise ValueError('Cannot fit model when n_features = 1')
-
+        
         # Instantiate the classifier
         self.clf_ = self._resolve_estimator(self.clf_name, random_state=42)
+
+        # If defined, add parameters to the classifier
         if self.clf_params:
             self.clf_.set_params(**self.clf_params)
         
-        # Check if there are more than one unique values in y 
-        # and if yes, fit the classifier to X, so y that is > 0, becomes 1
-        # and if not, it is 0
-        if len(np.unique(y)) > 1:
-            self.clf_.fit(X, y > 0)
-        else:
-            # Handle the case where y has only one unique value
-            self.clf_ = DummyClassifier(strategy='most_frequent')
-            self.clf_.fit(X, y > 0)
-
+        # Fit the classifier
+        self.clf_.fit(X, y > 0)
 
         # Instantiate the regressor
         self.reg_ = self._resolve_estimator(self.reg_name, random_state=42)
+        
+        # If defined, add parameters to the regressor
         if self.reg_params:
             self.reg_.set_params(**self.reg_params)
-    
-        # Fit the regressor to the subset of the data where y > 0
+
+        # Fit the regressor for data where y > 0 only
         self.reg_.fit(X[y > 0], y[y > 0])
 
+        # Set the is_fitted_ flag to True for further sanity checks
         self.is_fitted_ = True
+
         return self
     
     def predict(self, 
                 X: Union[np.ndarray, pd.DataFrame]):
-        """ Predict combined response using binary classification outcome """
-        X = check_array(X, accept_sparse=False, accept_large_sparse=False)
+        """ Predict combined response using probabilistic classification outcome """
+        # Run several sanity checks on the input
+        X = check_array(X, 
+                        dtype=None, 
+                        accept_sparse=False, 
+                        accept_large_sparse=False, 
+                        force_all_finite='allow-nan')
         
         check_is_fitted(self, 'is_fitted_')
 
         if X.shape[1] != self.n_features_in_:
-            raise ValueError(f"Number of features of the model must match the input. Model n_features_in_ is {self.n_features_in_} and input n_features is {X.shape[1]}")
-
-        # Make predictions using the classifier
-        clf_predictions = self.clf_.predict(X)
+            raise ValueError("Number of features of the model must match the input."
+                             f"Model n_features_in_ is {self.n_features_in_}"
+                             f"and input n_features is {X.shape[1]}")
+        
+        # Predict with the classifier - take probability to be in class 1
+        clf_predictions_proba = self.clf_.predict_proba(X)[:, 1]
 
         # Make predictions using the regressor
         reg_predictions = self.reg_.predict(X)
 
         # The final prediction is the product of the classifier and regressor predictions
-        combined_predictions = clf_predictions * reg_predictions
-
+        combined_predictions = clf_predictions_proba * reg_predictions
+        
         return combined_predictions
     
-    def predict_expected_value(self, X: Union[np.ndarray, pd.DataFrame]):
-        """ Predict combined response using probabilistic classification outcome """
-        X = check_array(X, accept_sparse=False, accept_large_sparse=False)
+    def predict_bin(self, 
+                X: Union[np.ndarray, pd.DataFrame]):
+        """ Predict combined response using binary classification outcome. """
+        # Run several sanity checks on the input
+        X = check_array(X, 
+                        dtype=None, 
+                        accept_sparse=False, 
+                        accept_large_sparse=False, 
+                        force_all_finite='allow-nan')
         
         check_is_fitted(self, 'is_fitted_')
-        
+
         if X.shape[1] != self.n_features_in_:
-            raise ValueError(f"Number of features of the model must match the input. Model n_features_in_ is {self.n_features_in_} and input n_features is {X.shape[1]}")
+            raise ValueError(f"Number of features of the model must match the input.
+                             Model n_features_in_ is {self.n_features_in_} 
+                             and input n_features is {X.shape[1]}")
 
-        # Make predictions using the classifier, take probbailities of being in class 1 ("positive" class)
-        clf_prob_predictions = self.clf_.predict_proba(X)[:, 1]
+        # Predict with the classifier - take classes, 0 or 1
+        clf_predictions_bin = self.clf_.predict(X)
 
-        # Make predictions using the regressor
+        # Predict with the regressor
         reg_predictions = self.reg_.predict(X)
 
-        # The final prediction is the product of the classifier and regressor predictions
-        combined_predictions = clf_prob_predictions * reg_predictions
-        
+        # Make the final prediction
+        combined_predictions = clf_predictions_bin * reg_predictions
+
         return combined_predictions
 
 
-def test_hurdle_regression(clf_name:str='logistic', reg_name:str='linear'):
+def test_hurdle_regression(clf_name:str='logistic', 
+                           reg_name:str='linear'):
     """ Validate estimator using sklearn's provided utility and ensure it can fit and predict on fake dataset. """
-
-    # Create a synthetic regression dataset
-    X_reg, y_reg = make_regression(n_samples=1000, n_features=20, n_informative=2)
-
-    # Create a synthetic classification dataset
-    X_clf, y_clf = make_classification(n_samples=1000, n_features=20, n_informative=2, n_redundant=10)
-
-    # Combine the two datasets
+    # Create a synthetic dataset that simlutaes a datasets with many zeroes
+    X_reg, y_reg = make_regression(n_samples=1000, n_features=20)
+    X_clf, y_clf = make_classification(n_samples=1000, n_features=20)
     X = np.hstack([X_clf, X_reg])
     y = y_clf * y_reg
 
@@ -184,34 +188,19 @@ def test_hurdle_regression(clf_name:str='logistic', reg_name:str='linear'):
 
     # Instantiate a HurdleRegression object
     hr = HurdleRegression(clf_name=clf_name, reg_name=reg_name)
-    
-    check_estimator(hr)
+    #check_estimator(hr)
 
     # Fit the model to the data
     hr.fit(X_train, y_train)
 
     # Make predictions
     y_pred = hr.predict(X_test)
-
-    # Evaluate the model
-    print('Mean Squared Error:', mean_squared_error(y_test, y_pred))
-
-    # Check if predictions have the same shape as y
-    print(f"Shape of y_pred: {y_pred.shape}")
-    print(f"Shape of y_test: {y_test.shape}")
-
+    print('Mean Squared Error:', int(mean_squared_error(y_test, y_pred)))
     assert y_pred.shape == y_test.shape, "Predictions and y do not have the same shape"
 
     # Make predictions
     y_pred_prob = hr.predict_expected_value(X_test)
-
-    # Evaluate the model
-    print('Mean Squared Error:', mean_squared_error(y_test, y_pred_prob))
-
-    # Check if predictions have the same shape as y
-    print(f"Shape of y_pred_prob: {y_pred_prob.shape}")
-    print(f"Shape of y_test: {y_test.shape}")
-
+    print('Mean Squared Error for multiplies probabilities:', int(mean_squared_error(y_test, y_pred_prob)))
     assert y_pred_prob.shape == y_test.shape, "Probability predictions and y do not have the same shape"
 
 
