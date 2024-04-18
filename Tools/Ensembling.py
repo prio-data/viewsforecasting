@@ -272,7 +272,7 @@ def calibrate_pg_with_c(df_pgm, df_cm, column, df_pg_id_c_id=None, log_feature=F
 # helper function for pgm-cm calibration, which fetches country-ids for pg-ids
 def fetch_df_pg_id_c_id():
     qs = (Queryset("jed_pgm_cm", "priogrid_month")
-          .with_column(Column("country_id", from_table="country_month", from_column="country_id")
+          .with_column(Column("country_id", from_loa="country_month", from_column="country_id")
 
                        )
           )
