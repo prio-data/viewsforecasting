@@ -13,6 +13,7 @@ def compute_markov(partitioner_dict, EndOfHistory, depvar, predict_type, model_t
     qs2 = Queryset(markov_params.qs,'country_month')
 
     data = qs2.fetch()
+    data = data.fillna(0)
     data.to_parquet('tmps/tmp_data.parquet')
 
     pd.DataFrame({'s':markov_params.steps}).to_parquet('tmps/tmp_steps.parquet')
