@@ -47,7 +47,7 @@ def publish_querysets():
             .transform.ops.ln()
             )
 
-        .with_column(Column("vdem_v2x_libdem", from_loa = "country_year", from_column = "vdem_v12_v2x_libdem")
+        .with_column(Column("vdem_v2x_libdem", from_loa = "country_year", from_column = "vdem_v2x_libdem")
             .transform.missing.replace_na()
             .transform.temporal.tlag(12)
             .transform.missing.fill()

@@ -27,6 +27,9 @@ def SummarizeTable(dfname,df):
 
 
 def FetchTable(Queryset, name):
+    print()
+    print(f'fetching {name}')
+    print()
     df = Queryset.fetch().astype(float)
     df.name = name
     SummarizeTable(name,df)
