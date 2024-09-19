@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout views_pipeline repository
+    - name: Checkout viewsforecasting repository
       uses: actions/checkout@v3
       with:
-        repository: lujzi05/views_pipeline
+        repository: lujzi05/viewsforecasting
         token: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
 
-    - name: Clone viewsforecasting repository
+    - name: Clone views_pipeline repository
       run: |
         git clone https://github.com/your_username/lujzi05/views_pipeline.git
         cd views_pipeline
@@ -29,10 +29,12 @@ jobs:
 
     - name: Run Python script  
       run: |
+        cd views_pipeline
         python documentation/catalogs/generate_links_to_querysets.py
 
     - name: Commit and Push Changes
       run: |
+        cd views_pipeline
         git add documentation/catalogs/cm_model_catalog.md
         git commit -m "Automated changes by GitHub Actions"
         git push origin create_cm_catalog_01
