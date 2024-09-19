@@ -1,0 +1,23 @@
+name: dispatch event to views_pipeline on changes in cm_querysets.py and pgm_querysets.py
+
+# Trigger on file changes in viewsforecasting
+on:
+  push:
+    branches:
+      - github_workflows
+    paths:
+      - Tools/cm_querysets.py
+      - Tools/pgm_querysets.py
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger repository dispatch in views_pipeline
+      run: |
+        curl -X POST \
+          -H "Authorization: token ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/lujzi05/views_pipeline/dispatches \
+          -d '{"event_type": "trigger-generate_links_to_querysets"}'
