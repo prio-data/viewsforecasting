@@ -4,8 +4,8 @@ name: dispatch event to views_pipeline on changes in cm_querysets.py and pgm_que
 on:
   push:
     branches:
-      - github_workflows
       - main
+      - github_workflows
     paths:
       - Tools/cm_querysets.py
       - Tools/pgm_querysets.py
