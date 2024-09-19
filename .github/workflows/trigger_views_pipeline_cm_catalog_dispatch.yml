@@ -1,4 +1,4 @@
-name: dispatch event to views_pipeline on changes in cm_querysets.py and pgm_querysets.py
+name: Update views_pipeline on Changes in cm_querysets.py and pgm_querysets.py
 
 # Trigger on file changes in viewsforecasting
 on:
@@ -18,12 +18,12 @@ jobs:
     - name: Checkout viewsforecasting repository
       uses: actions/checkout@v3
       with:
-        repository: lujzi05/viewsforecasting
+        repository: prio-data/viewsforecasting
         token: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
 
     - name: Clone views_pipeline repository
       run: |
-        git clone https://github.com/your_username/lujzi05/views_pipeline.git
+        git clone https://github.com/prio-data/views_pipeline.git
         cd views_pipeline
         git checkout create_cm_catalog_01
 
