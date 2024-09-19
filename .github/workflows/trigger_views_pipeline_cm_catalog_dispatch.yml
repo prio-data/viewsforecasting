@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - github_workflows
+      - main
     paths:
       - Tools/cm_querysets.py
       - Tools/pgm_querysets.py
