@@ -11,14 +11,32 @@ on:
       - Tools/pgm_querysets.py
 
 jobs:
-  dispatch:
+  modify-views_pipeline:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger repository dispatch in views_pipeline
+    - name: Checkout views_pipeline repository
+      uses: actions/checkout@v3
+      with:
+        repository: lujzi05/views_pipeline
+        token: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
+
+    - name: Clone viewsforecasting repository
       run: |
-        curl -X POST \
-          -H "Authorization: token ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/lujzi05/views_pipeline/dispatches \
-          -d '{"event_type": "trigger-generate_links_to_querysets"}'
+        git clone https://github.com/your_username/lujzi05/views_pipeline.git
+        cd views_pipeline
+        git checkout create_cm_catalog_01
+
+    - name: Run Python script  
+      run: |
+        python documentation/catalogs/generate_links_to_querysets.py
+
+    - name: Commit and Push Changes
+      run: |
+        git add documentation/catalogs/cm_model_catalog.md
+        git commit -m "Automated changes by GitHub Actions"
+        git push origin create_cm_catalog_01
+      env:
+        GITHUB_TOKEN: ${{ secrets.GVIEWS_PIPELINE_ACCESS_TOKENN }}
+
+
