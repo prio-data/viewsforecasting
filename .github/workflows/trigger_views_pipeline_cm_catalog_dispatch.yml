@@ -20,7 +20,6 @@ jobs:
       run: echo "Starting workflow to update views_pipeline..."
 
     - name: Checkout viewsforecasting repository
-      run: echo "Checking out viewsforecasting repository..."
       uses: actions/checkout@v3
       with:
         repository: prio-data/viewsforecasting
