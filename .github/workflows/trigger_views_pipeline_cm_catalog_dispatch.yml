@@ -48,8 +48,7 @@ jobs:
         cd views_pipeline
         git add documentation/catalogs/cm_model_catalog.md
         git commit -m "Automated changes by GitHub Actions"
-        git push origin create_cm_catalog_01
-      env:
-        GITHUB_TOKEN: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
+        git push https://${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}:x-oauth-basic@github.com/prio-data/views_pipeline.git create_cm_catalog_01
+      
 
 
