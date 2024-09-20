@@ -30,17 +30,11 @@ jobs:
 
     - name: Clone viewsforecasting repository 
       run: |
-        cd views_pipeline
-        git clone https://github.com/prio-data/viewsforecasting.git ../viewsforecasting
+        git clone https://github.com/prio-data/viewsforecasting.git 
+        cd viewsforecasting
         git status
-
-    # TODO: this step should be removed when merged to main
-    - name: Checkout github_workflows branch in viewsforecasting
-      run: |
-        cd ../viewsforecasting
-        git status
-        git checkout github_workflows
-        git status
+        git checkout github_workflows 
+      # TODO: git checkout github_workflows should be removed when merged to main
 
     - name: Run Python script  
       run: |
@@ -58,7 +52,7 @@ jobs:
         cd views_pipeline
         git status
         git add documentation/catalogs/cm_model_catalog.md
-        git commit -m "Automated changes by GitHub Actions"
+        git commit -m "Automated changes by GitHub Actions" || echo "Nothing to commit"
         git push https://${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}:x-oauth-basic@github.com/prio-data/views_pipeline.git create_cm_catalog_01
       
 
