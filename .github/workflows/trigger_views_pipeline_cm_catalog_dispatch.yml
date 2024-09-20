@@ -16,36 +16,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Echo Step 1 - Starting Workflow
-      run: echo "Starting workflow to update views_pipeline..."
-
     - name: Checkout viewsforecasting repository
       uses: actions/checkout@v3
       with:
         repository: prio-data/viewsforecasting
         token: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
 
-    - name: Echo Step 2 - Cloning views_pipeline repository
-      run: echo "Cloning views_pipeline repository..."
-
     - name: Clone views_pipeline repository
       run: |
         git clone https://github.com/prio-data/views_pipeline.git
         cd views_pipeline
         git checkout create_cm_catalog_01
-      continue-on-error: false
 
-    - name: Echo Step 3 - Running generate_links_to_querysets.py
-      run: echo "Running generate_links_to_querysets.py..."
+    - name: Clone viewsforecasting repository 
+      run: |
+        cd views_pipeline
+        git clone https://github.com/prio-data/viewsforecasting.git ../viewsforecasting
 
     - name: Run Python script  
       run: |
         cd views_pipeline
         python documentation/catalogs/generate_links_to_querysets.py
-      continue-on-error: false
-
-    - name: Echo Step 4 - Committing changes
-      run: echo "Committing and pushing changes..."
 
     - name: Commit and Push Changes
       run: |
@@ -55,8 +46,5 @@ jobs:
         git push origin create_cm_catalog_01
       env:
         GITHUB_TOKEN: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
-
-    - name: Echo Step 5 - Workflow completed
-      run: echo "Workflow completed successfully!"
 
 
