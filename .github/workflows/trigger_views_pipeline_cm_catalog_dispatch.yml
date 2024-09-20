@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - github_workflows 
+      - github_workflows # TODO: remove when merge to main
     paths:
       - Tools/cm_querysets.py
       - Tools/pgm_querysets.py
@@ -33,11 +33,11 @@ jobs:
         cd views_pipeline
         git clone https://github.com/prio-data/viewsforecasting.git ../viewsforecasting
 
-    # this step should be removed when merged to main
+    # TODO: this step should be removed when merged to main
     - name: Checkout github_workflows branch in viewsforecasting
       run: |
         cd ../viewsforecasting
-        git checkout GitHub_workflows
+        git checkout github_workflows
 
     - name: Run Python script  
       run: |
