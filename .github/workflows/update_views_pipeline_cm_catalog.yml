@@ -1,0 +1,57 @@
+name: Update views_pipeline on Changes in cm_querysets.py and pgm_querysets.py
+
+# Trigger on file changes in viewsforecasting
+on:
+  push:
+    branches:
+      - main
+      - github_workflows # TODO: remove when merge to main
+    paths:
+      - Tools/cm_querysets.py
+      - Tools/pgm_querysets.py
+  workflow_dispatch: # enables manual triggering
+
+jobs:
+  modify-views_pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout viewsforecasting repository 
+      uses: actions/checkout@v3
+      with:
+        repository: prio-data/viewsforecasting
+        token: ${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}
+
+    - name: Clone views_pipeline repository
+      run: |
+        git clone https://github.com/prio-data/views_pipeline.git
+        cd views_pipeline
+        git status
+
+    - name: Clone viewsforecasting repository 
+      run: |
+        git clone https://github.com/prio-data/viewsforecasting.git 
+        cd viewsforecasting
+        git checkout github_workflows 
+      # TODO: git checkout github_workflows should be removed when merged to main
+
+    - name: Run Python script  
+      run: |
+        cd views_pipeline
+        git status
+        python documentation/catalogs/generate_links_to_querysets.py
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+
+    - name: Commit and Push Changes
+      run: |
+        cd views_pipeline
+        git add documentation/catalogs/cm_model_catalog.md
+        git commit -m "Automated changes by GitHub Actions" || echo "Nothing to commit"
+        git push https://${{ secrets.VIEWS_PIPELINE_ACCESS_TOKEN }}:x-oauth-basic@github.com/prio-data/views_pipeline.git 
+      
+
+
