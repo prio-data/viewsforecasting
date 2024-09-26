@@ -26,7 +26,7 @@ jobs:
       run: |
         git clone https://github.com/prio-data/views_pipeline.git
         cd views_pipeline
-        git checkout create_cm_catalog_01
+        git status
 
     - name: Clone viewsforecasting repository 
       run: |
