@@ -91,7 +91,7 @@ variables_wanted_predictions_dich = {'step_combined_sb'}
 #additionally for the titles, this is the opportunity to give the output a human name
 steps_wanted_prediction_fat = {3, 6, 12, 36}
 prediction_title_name = 'Predicted fatalities'
-prediction_dich_title_name = 'Predicted dichotomous fatalities'
+prediction_dich_title_name = 'Predicted probability of conflict'
 
 #choices for line, bar, pie charts
 #note that dichotomous only has line choices, as that is the only additional graph type requested for this outcome
@@ -123,7 +123,7 @@ cumulative_steps_line_charts = {12, 36}
 line_dictionary_cm = dictionary_stand_1p_10k
 line_dictionary_cm_dich = dichotomous_dictionary_cm
 line_title_cm = "Predicted fatalities per month"
-line_title_cm_dich = "Predicted fatalities dichotomous per month"
+line_title_cm_dich = "Predicted probability of conflict per month"
 line_x_size = 15
 line_y_size = 15
 line_x_rotation = 45

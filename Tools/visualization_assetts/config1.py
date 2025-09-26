@@ -1,7 +1,7 @@
 from Tools.visualization_assetts.external_imports_all import*
 #choose the global end of history
 #ensure that the choices you are making exist wihtin the internal storage
-EndOfHistory = 530
+EndOfHistory = 538
 
 #which model do you want to be graphed within this notebook (accepts one model only)
 #if you want a different model, rerun this entire notebook again with that new name
@@ -28,7 +28,7 @@ top_wanted = 1
 
 #do you want to include specific countries, write true or false if not, write true and specify countries as a list below, e.g. country = (79,80)
 more_countries = True
-country = (245,218)
+country = (245,218, 124)
 
 
 #specify how your dropbox connected to main ViEWS folder is called

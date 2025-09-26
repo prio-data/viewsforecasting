@@ -1131,4 +1131,9 @@ def get_pgm_querysets():
               qs_sptime_dist
               ]
 
+    for qs in qslist:
+        print(f'publishing {qs.name}')
+        qs.publish()
+
     return qslist
+
