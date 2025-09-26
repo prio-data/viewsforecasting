@@ -2737,12 +2737,11 @@ def get_cm_querysets():
                                 .transform.missing.fill()
                                 )
 
-                   .with_column(Column("avg_fprod_value", from_loa="country_year",
-                                       from_column="avg_fprod_value")
-                                .transform.missing.fill()
-                                .transform.temporal.tlag(12)
-                                .transform.missing.fill()
-                                )
+                  # .with_column(Column("avg_fprod_value", from_loa="country_year",
+                   #                    from_column="avg_fprod_value")
+                   #             .transform.missing.fill()
+                   #             .transform.temporal.tlag(12)
+                   #             .transform.missing.fill()
 
                    .with_column(Column("avg_protein_pcap_day", from_loa="country_year",
                                        from_column="avg_protein_pcap_day")
@@ -2751,30 +2750,32 @@ def get_cm_querysets():
                                 .transform.missing.fill()
                                 )
 
-                   .with_column(Column("gdp_pc_ppp", from_loa="country_year", from_column="gdp_pc_ppp")
-                                .transform.missing.fill()
-                                .transform.temporal.tlag(12)
-                                .transform.missing.fill()
-                                )
+              # These four are no longer supposed by FAO – removed as of September 2025
 
-                   .with_column(Column("kcal_pcap_day", from_loa="country_year", from_column="kcal_pcap_day")
-                                .transform.missing.fill()
-                                .transform.temporal.tlag(12)
-                                .transform.missing.fill()
-                                )
+             #      .with_column(Column("gdp_pc_ppp", from_loa="country_year", from_column="gdp_pc_ppp")
+             #                   .transform.missing.fill()
+             #                   .transform.temporal.tlag(12)
+             #                   .transform.missing.fill()
+             #                   )
 
-                   .with_column(Column("kcal_pcap_day_cerotu", from_loa="country_year",
-                                       from_column="kcal_pcap_day_cerotu")
-                                .transform.missing.fill()
-                                .transform.temporal.tlag(12)
-                                .transform.missing.fill()
-                                )
+              #     .with_column(Column("kcal_pcap_day", from_loa="country_year", from_column="kcal_pcap_day")
+              #                  .transform.missing.fill()
+              #                  .transform.temporal.tlag(12)
+              #                  .transform.missing.fill()
+              #                  )
 
-                   .with_column(Column("pcap_fprod_var", from_loa="country_year", from_column="pcap_fprod_var")
-                                .transform.missing.fill()
-                                .transform.temporal.tlag(12)
-                                .transform.missing.fill()
-                                )
+              #    .with_column(Column("kcal_pcap_day_cerotu", from_loa="country_year",
+              #                         from_column="kcal_pcap_day_cerotu")
+              #                  .transform.missing.fill()
+              #                  .transform.temporal.tlag(12)
+              #                  .transform.missing.fill()
+              #                  )
+
+              #     .with_column(Column("pcap_fprod_var", from_loa="country_year", from_column="pcap_fprod_var")
+              #                  .transform.missing.fill()
+              #                  .transform.temporal.tlag(12)
+              #                  .transform.missing.fill()
+              #                  )
 
                    .with_column(Column("pcap_fsupply_var", from_loa="country_year",
                                        from_column="pcap_fsupply_var")
@@ -2867,12 +2868,13 @@ def get_cm_querysets():
                                 .transform.missing.fill()
                                 )
 
-                   .with_column(Column("pct_undernourished", from_loa="country_year",
-                                       from_column="pct_undernourished")
-                                .transform.missing.fill()
-                                .transform.temporal.tlag(12)
-                                .transform.missing.fill()
-                                )
+              # This one is no longer supposed by FAO – removed as of September 2025
+                 #  .with_column(Column("pct_undernourished", from_loa="country_year",
+                 #                      from_column="pct_undernourished")
+                 #               .transform.missing.fill()
+                 #               .transform.temporal.tlag(12)
+                 #               .transform.missing.fill()
+                 #               )
 
                    .with_column(Column("pol_stability", from_loa="country_year", from_column="pol_stability")
                                 .transform.missing.fill()
